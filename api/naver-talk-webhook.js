@@ -1,5 +1,5 @@
 import { handleEvent } from "../lib/flow.js";
-import { readJson, json } from "../lib/http.js";
+import { readJson, json, empty, isPreflight } from "../lib/http.js";
 
 export const config = {
   maxDuration: 30
@@ -7,6 +7,7 @@ export const config = {
 
 export default {
   async fetch(request) {
+    if (isPreflight(request)) return empty();
     if (request.method === "GET") {
       return json({
         ok: true,

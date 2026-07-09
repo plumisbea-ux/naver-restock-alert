@@ -1,176 +1,187 @@
-# 네이버 톡톡 재입고 알림 MVP
+# Naver Restock Alert MVP
 
-네이버 스마트스토어 품절 옵션 고객을 톡톡 재입고 알림 대기자로 저장하고, mock 재입고 후 톡톡/카카오 알림톡 발송 payload를 기록하는 1차 MVP입니다.
+네이버 스마트스토어의 품절 옵션 고객을 톡톡 재입고 알림 대기자로 전환하는 1차 MVP입니다.
 
-이 버전은 실제 네이버 커머스 API, 네이버 톡톡 보내기 API, 카카오 알림톡 API를 호출하지 않습니다. 대신 실제 연동 시 주고받을 데이터 형태에 가깝게 mock 데이터를 구성하고, 나중에 실제 API 함수만 교체할 수 있도록 분리했습니다.
+이번 버전은 **GitHub Pages용 mock 스마트스토어 화면**과 **Vercel용 mock Webhook/API**를 분리했습니다.
 
-## 구현된 1차 기능
+## 현재 구현 범위
 
-- 고객이 특정 상품을 타고 톡톡 페이지를 연 open 이벤트 인식
-- `options.from` 또는 `referer` URL에서 상품번호 추출
-- mock 상품/옵션/재고 데이터 조회
-- 품절 옵션 탐지
-- `재입고 신청` 퀵버튼 제공
-- 품절 옵션을 버튼으로 제공
-- `톡톡으로 받기` / `카카오톡도` 채널 선택
-- 카카오 선택 시 개인정보 수집 동의 플로우
-- mock 전화번호 저장
-- 대기자 저장
-- 신청 후 약 10초 뒤 mock 재입고 처리
-- mock 네이버 톡톡 보내기 API payload 로그 생성
-- 카카오 동의 시 mock 카카오 알림톡 payload 로그 생성
-- 관리자 대시보드 및 대화 시뮬레이터
+- 옷 카테고리 mock 스마트스토어 상품 8개
+- 상품 상세 화면, 색상/사이즈 옵션 선택 UI
+- 옵션 조합별 재고 mock DB 관리
+- 품절 옵션 표시
+- `톡톡하기` 클릭 시 실제 톡톡 URL 새 탭 열기
+- 동시에 mock `open` webhook payload 생성
+- 톡톡 챗봇 Webhook 흐름
+  - 상품 context 인식
+  - 품절 옵션 감지
+  - `재입고 신청` 버튼 응답
+  - 품절 옵션 버튼 응답
+  - `톡톡으로 받기` / `카카오톡도` 버튼 응답
+  - 카카오 선택 시 개인정보 수집 동의 및 전화번호 저장
+- 우측 관리창에서 옵션 재고 수동 변경
+- 재고가 `0 → 1 이상`이 되는 순간 해당 옵션 대기자에게 mock 톡톡/카카오 재입고 알림 발송 로그 생성
 
-## 파일 구조
+## 중요한 구조
 
 ```text
-.
-├── api
-│   ├── admin-state.js
-│   ├── mock-restock-tick.js
-│   ├── naver-talk-webhook.js
-│   ├── reset-mock.js
-│   ├── test-open.js
-│   └── test-send.js
-├── lib
-│   ├── db.js
-│   ├── flow.js
-│   ├── http.js
-│   ├── mockSenders.js
-│   ├── naverTalkMessages.js
-│   ├── naverTalkParser.js
-│   └── restock.js
-├── data
-│   └── mock-store.js
-├── docs
-│   ├── MOCK_PAYLOADS.md
-│   └── REAL_API_SWAP_GUIDE.md
-├── index.html
-├── package.json
-├── vercel.json
-└── .env.example
+GitHub Pages
+- mock 스마트스토어 화면
+- 상품 목록/상세/옵션 선택
+- 우측 재고 관리창
+- 실제 톡톡 탭 열기
+
+Vercel
+- /api/naver-talk-webhook
+- /api/admin-state
+- /api/update-stock
+- /api/reset-mock
+- mock DB와 mock send payload 처리
 ```
 
-## Vercel 배포 방법
+GitHub Pages만으로는 네이버 톡톡 Webhook을 받을 수 없습니다. GitHub Pages는 정적 페이지이기 때문입니다. 실제 톡톡 챗봇 응답은 네이버 톡톡 파트너센터의 Webhook URL을 Vercel API로 등록해야 동작합니다.
 
-### 1. GitHub 저장소 생성
+## 배포 순서
+
+### 1. GitHub에 업로드
 
 ```bash
-git init
 git add .
-git commit -m "initial mock restock alert mvp"
-git branch -M main
-git remote add origin https://github.com/YOUR_ID/naver-restock-alert-mvp.git
-git push -u origin main
+git commit -m "Implement smartstore mock and manual restock admin"
+git push origin main
 ```
 
-### 2. Vercel에서 Import
+### 2. GitHub Pages 켜기
 
-1. Vercel 로그인
-2. Add New → Project
-3. GitHub 저장소 선택
-4. Deploy
-
-배포 후 루트 URL에 접속하면 대시보드가 열립니다.
+저장소에서:
 
 ```text
-https://YOUR_PROJECT.vercel.app/
+Settings
+→ Pages
+→ Build and deployment
+→ Source: GitHub Actions
 ```
 
-네이버 톡톡 Webhook URL에는 아래 주소를 넣으면 됩니다.
+배포 후 예시 주소:
 
 ```text
-https://YOUR_PROJECT.vercel.app/api/naver-talk-webhook
+https://plumisbea-ux.github.io/naver-restock-alert/
 ```
 
-## 로컬 실행
+### 3. Vercel 연결
 
-```bash
-npm install
-npm run dev
-```
+Vercel에서 같은 GitHub 저장소를 Import 합니다.
 
-브라우저에서 접속:
+배포 후 API 주소 예시:
 
 ```text
-http://localhost:3000
+https://naver-restock-alert.vercel.app/api/naver-talk-webhook
 ```
 
-## 테스트 흐름
+### 4. GitHub Pages 화면에서 API Base 확인
 
-1. 루트 대시보드 접속
-2. `상품 타고 톡톡 열기` 클릭
-3. `재입고 신청` 클릭
-4. 품절 옵션 `M` 또는 `XL` 클릭
-5. `톡톡으로 받기` 또는 `카카오톡도` 클릭
-6. 카카오톡을 선택한 경우 `동의하고 계속` 클릭
-7. 약 10초 후 관리자 대시보드의 발송 로그 확인
-
-## 직접 API 테스트
-
-### 상품 context 있는 open 이벤트
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/json;charset=UTF-8" \
-  -d '{
-    "event":"open",
-    "user":"al-2eGuGr5WQOnco1_V-FQ",
-    "options":{
-      "inflow":"button",
-      "referer":"https://smartstore.naver.com/mock-store/products/100000001",
-      "from":"100000001",
-      "friend":false,
-      "under14":false,
-      "under19":false
-    }
-  }' \
-  "http://localhost:3000/api/naver-talk-webhook"
-```
-
-### 버튼 클릭 mock send 이벤트
-
-```bash
-curl -X POST \
-  -H "Content-Type: application/json;charset=UTF-8" \
-  -d '{
-    "event":"send",
-    "user":"al-2eGuGr5WQOnco1_V-FQ",
-    "textContent":{
-      "text":"재입고 신청",
-      "code":"APPLY_RESTOCK:prod_hoodie_001",
-      "inputType":"typing"
-    }
-  }' \
-  "http://localhost:3000/api/naver-talk-webhook"
-```
-
-## 실제 API로 바꿀 위치
-
-- 네이버 톡톡 보내기 API: `lib/mockSenders.js`의 `sendMockNaverTalk()` 교체
-- 카카오 알림톡 API: `lib/mockSenders.js`의 `sendMockKakaoAlimtalk()` 교체
-- 네이버 커머스 상품/재고 API: `data/mock-store.js`와 `lib/db.js`를 실제 DB/API 조회로 교체
-- 영구 DB: 현재는 Vercel Function 메모리 mock DB입니다. 운영 전 Supabase/Postgres/Redis 등으로 교체하세요.
-
-## 주의사항
-
-현재 mock DB는 메모리 기반입니다. Vercel 서버리스 인스턴스가 재시작되면 데이터가 초기화될 수 있습니다. 1차 검증용으로만 사용하고, 베타 운영 전에는 DB를 붙이세요.
-
-카카오 알림톡 문구는 정보성 문구만 넣는 전제로 작성했습니다. 실제 운영 시 템플릿 승인과 개인정보 수집/이용 동의 절차를 반드시 확인하세요.
-
-## GitHub Pages로 화면만 열기
-
-이 프로젝트는 Vercel에서는 `/api` 백엔드 mock까지 동작하고, GitHub Pages에서는 `index.html`의 브라우저 내부 mock 모드로 화면 시뮬레이터만 동작합니다.
-
-1. `.github/workflows/pages.yml` 파일이 포함되어 있는지 확인합니다.
-2. GitHub 저장소에 push합니다.
-3. GitHub 저장소에서 `Settings` → `Pages`로 이동합니다.
-4. `Build and deployment`의 `Source`를 `GitHub Actions`로 선택합니다.
-5. `Actions` 탭에서 `Deploy static dashboard to GitHub Pages`가 성공할 때까지 기다립니다.
-6. 배포 주소는 보통 아래 형식입니다.
+우측 `관리창`을 열고 API Base가 아래처럼 되어 있는지 확인합니다.
 
 ```text
-https://YOUR_GITHUB_ID.github.io/YOUR_REPOSITORY_NAME/
+https://naver-restock-alert.vercel.app
 ```
 
-주의: GitHub Pages는 정적 호스팅이므로 네이버 톡톡 Webhook URL로는 사용할 수 없습니다. 실제 Webhook 테스트 주소는 계속 Vercel의 `/api/naver-talk-webhook`을 사용하세요.
+프로젝트명이 다르면 본인의 Vercel 주소로 바꿔 저장하세요.
+
+## 네이버 톡톡 설정
+
+네이버 톡톡 파트너센터에서 Webhook URL에 아래 주소를 등록합니다.
+
+```text
+https://naver-restock-alert.vercel.app/api/naver-talk-webhook
+```
+
+처음에는 이벤트를 아래만 켜는 것을 권장합니다.
+
+```text
+open
+send
+```
+
+`echo`는 챗봇이 보낸 메시지가 다시 들어오는 이벤트라 반복 응답 위험이 있어 나중에 켜는 것을 권장합니다.
+
+## 실제 테스트 흐름
+
+1. GitHub Pages mock 스마트스토어 접속
+2. 상품 상세 진입
+3. 품절 옵션 확인
+4. `톡톡하기` 클릭
+5. 실제 톡톡 탭이 새 창으로 열림
+6. 파트너센터 Webhook이 Vercel로 연결되어 있으면 톡톡 안에서 챗봇 응답 진행
+7. 고객이 재입고 알림 신청
+8. GitHub Pages 우측 관리창에서 해당 옵션 재고를 `0 → 1 이상`으로 수정
+9. Vercel mock API가 해당 대기자에게 재입고 알림 payload를 생성
+10. 우측 관리창의 발송 로그에서 확인
+
+## API 목록
+
+### `GET /api/admin-state`
+
+현재 mock DB 상태를 반환합니다.
+
+### `POST /api/naver-talk-webhook`
+
+네이버 톡톡 Webhook mock/실제 이벤트를 받습니다.
+
+예시 open:
+
+```json
+{
+  "event": "open",
+  "user": "mock_page_user",
+  "options": {
+    "inflow": "button",
+    "referer": "https://plumisbea-ux.github.io/naver-restock-alert/?productNo=200000001",
+    "from": "200000001"
+  }
+}
+```
+
+### `POST /api/update-stock`
+
+관리자가 재고를 바꿉니다. `0 → 1 이상`으로 바뀌면 대기자 알림이 발송됩니다.
+
+```json
+{
+  "option_id": "opt_knit_black_004",
+  "stock_quantity": 5
+}
+```
+
+### `POST /api/reset-mock`
+
+mock DB를 초기 상태로 되돌립니다.
+
+## 실제 API 교체 위치
+
+현재는 모든 네이버/카카오 API 호출을 mock payload로 저장합니다.
+
+실제 발송으로 바꿀 위치:
+
+```text
+lib/mockSenders.js
+```
+
+실제 DB로 바꿀 위치:
+
+```text
+lib/db.js
+```
+
+스마트스토어 상품/옵션/재고 API로 바꿀 위치:
+
+```text
+data/mock-store.js
+api/update-stock.js
+```
+
+## 한계
+
+- GitHub Pages 화면에서 실제 톡톡 UI 내부 메시지를 직접 조작할 수는 없습니다.
+- 실제 톡톡 대화는 네이버 톡톡이 Webhook 이벤트를 Vercel로 보내야 시작됩니다.
+- Vercel의 메모리 mock DB는 영구 저장소가 아닙니다. 베타 운영 전에는 Supabase/Postgres/Redis 등으로 교체해야 합니다.

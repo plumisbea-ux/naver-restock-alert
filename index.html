@@ -1,400 +1,254 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>네이버 톡톡 재입고 알림 MVP</title>
-    <style>
-      :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17202a; background: #f5f7fa; }
-      body { margin: 0; }
-      header { background: #0f172a; color: white; padding: 28px 32px; }
-      header h1 { margin: 0 0 8px; font-size: 28px; }
-      header p { margin: 0; opacity: 0.82; }
-      main { display: grid; grid-template-columns: minmax(320px, 460px) 1fr; gap: 20px; padding: 20px; }
-      section { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
-      h2 { margin: 0 0 14px; font-size: 18px; }
-      h3 { margin: 18px 0 10px; font-size: 15px; }
-      button { border: 0; border-radius: 10px; padding: 10px 12px; cursor: pointer; font-weight: 700; background: #16a34a; color: white; margin: 4px 4px 4px 0; }
-      button.secondary { background: #334155; }
-      button.danger { background: #dc2626; }
-      button.light { background: #e2e8f0; color: #0f172a; }
-      input { width: calc(100% - 22px); padding: 10px; border-radius: 10px; border: 1px solid #cbd5e1; margin: 4px 0 8px; }
-      pre { background: #0b1020; color: #d1e7ff; border-radius: 12px; padding: 12px; overflow: auto; max-height: 420px; }
-      .chat { border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; background: #f8fafc; min-height: 220px; }
-      .bubble { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px 12px; margin: 10px 0; white-space: pre-wrap; }
-      .bubble.user { background: #dcfce7; margin-left: 40px; }
-      .quick-buttons { margin: 8px 0 14px; }
-      .grid { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
-      .metric { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
-      .metric b { display: block; font-size: 24px; margin-bottom: 4px; }
-      table { border-collapse: collapse; width: 100%; font-size: 13px; }
-      th, td { text-align: left; border-bottom: 1px solid #e5e7eb; padding: 8px; vertical-align: top; }
-      th { color: #64748b; }
-      .muted { color: #64748b; font-size: 13px; }
-      @media (max-width: 900px) { main { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, 1fr); } }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>네이버 톡톡 재입고 알림 MVP</h1>
-      <p>실제 API 호출 없이 네이버 톡톡 payload와 카카오 알림톡 payload를 mock 로그로 검증하는 1차 모델</p>
-      <p style="margin-top:8px;font-size:13px;opacity:.7">GitHub Pages에서는 브라우저 내부 mock 모드로 동작하고, Vercel에서는 /api 백엔드 mock으로 동작합니다.</p>
-    </header>
-    <main>
-      <section>
-        <h2>톡톡 대화 시뮬레이터</h2>
-        <p class="muted">아래 버튼은 실제 네이버 톡톡 이벤트와 같은 JSON을 /api/naver-talk-webhook으로 POST합니다.</p>
-        <button onclick="sendOpen()">상품 타고 톡톡 열기</button>
-        <button class="secondary" onclick="sendOpenNoContext()">상품 context 없이 열기</button>
-        <button class="danger" onclick="resetMock()">Mock 초기화</button>
-        <div class="chat" id="chat"></div>
-        <h3>직접 메시지 보내기</h3>
-        <input id="manualText" placeholder="예: 재입고 신청, M, 010-1234-5678" />
-        <button onclick="sendManual()">메시지 전송</button>
-      </section>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PLUMIS WEAR | Mock SmartStore Restock Alert</title>
+  <style>
+    :root {
+      --naver: #03c75a;
+      --line: #e5e8eb;
+      --text: #1f2328;
+      --muted: #7b8494;
+      --soft: #f6f8fa;
+      --danger: #e5484d;
+      --blue: #4f7cff;
+      --panel: #111827;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: #fff; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .topbar { height: 24px; border-bottom: 1px solid #f1f3f5; color: #8a8f98; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+    .header { max-width: 1180px; margin: 0 auto; padding: 28px 16px 18px; display: grid; grid-template-columns: 220px 1fr 260px; align-items: center; gap: 16px; }
+    .talk-badge { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 0; background: #073f1d; color: #fff; font-weight: 800; box-shadow: 0 8px 18px rgba(3,199,90,.15); }
+    .talk-badge small { font-weight: 500; opacity: .82; }
+    .brand { text-align: center; font-size: 32px; letter-spacing: 1px; font-family: Georgia, serif; font-weight: 700; }
+    .brand span { color: var(--naver); font-family: inherit; margin-left: 8px; }
+    .search { justify-self: end; height: 42px; min-width: 250px; border: 1px solid var(--line); border-radius: 999px; padding: 0 16px; display: flex; align-items: center; gap: 10px; color: #9aa3ad; font-size: 13px; }
+    .nav { border-top: 1px solid #f0f2f4; border-bottom: 1px solid #f0f2f4; }
+    .nav-inner { max-width: 1180px; margin: 0 auto; padding: 0 16px; height: 52px; display: flex; align-items: center; justify-content: center; gap: 34px; font-size: 15px; }
+    .nav-inner b { color: #000; }
+    .notice-strip { background: #f4f0ff; height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #4b4b69; }
+    .layout { max-width: 1180px; margin: 0 auto; padding: 36px 16px 80px; }
+    .breadcrumb { font-size: 12px; color: #9aa3ad; text-align: right; margin-bottom: 8px; }
+    .section-title { font-size: 26px; font-weight: 800; border-bottom: 2px solid #2b2f36; padding-bottom: 18px; margin-bottom: 22px; }
+    .tabs { display: flex; gap: 18px; font-size: 14px; margin-bottom: 24px; color: #777; }
+    .tabs b { color: #111; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 18px; }
+    .card { position: relative; border: 0; background: transparent; text-align: left; padding: 0; }
+    .rank { position: absolute; left: 0; top: 0; z-index: 2; width: 28px; height: 28px; background: #222; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+    .img { height: 260px; border: 1px solid #f0f1f3; background: linear-gradient(145deg, #efefef, #fafafa); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .img::before { content: ""; width: 132px; height: 174px; border-radius: 54px 54px 18px 18px; background: var(--cloth, #d8dde3); box-shadow: inset 0 0 0 12px rgba(255,255,255,.25); }
+    .img::after { content: "PLUMIS"; position: absolute; right: 14px; top: 12px; font-family: Georgia, serif; font-weight: 700; font-size: 13px; color: #1d3d27; }
+    .swatches { position: absolute; right: 10px; top: 44px; display: grid; gap: 7px; }
+    .swatches i { width: 14px; height: 18px; border: 1px solid #d8dee4; background: var(--c); }
+    .card-title { margin: 10px 0 6px; font-size: 14px; line-height: 1.38; min-height: 39px; }
+    .discount { font-size: 13px; color: #fb2942; font-weight: 800; }
+    .price { font-size: 17px; font-weight: 900; margin-left: 4px; }
+    .meta { margin-top: 6px; color: #9aa3ad; font-size: 12px; }
+    .soldout-pill { display: inline-block; margin-top: 8px; border: 1px solid #ffd5d8; color: var(--danger); background: #fff7f7; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 700; }
 
-      <section>
-        <h2>관리자 대시보드</h2>
-        <div class="grid" id="metrics"></div>
-        <h3>상품/옵션</h3>
-        <div id="products"></div>
-        <h3>대기자</h3>
-        <div id="waitlists"></div>
-        <h3>발송 로그</h3>
-        <div id="logs"></div>
-        <h3>최근 API 응답</h3>
-        <pre id="lastResponse">아직 요청 없음</pre>
-      </section>
-    </main>
+    .detail { display: none; grid-template-columns: 560px 1fr; gap: 58px; border-top: 1px solid #f0f2f4; padding-top: 42px; }
+    .detail.active { display: grid; }
+    .detail-img { height: 560px; border: 1px solid #f0f1f3; background: linear-gradient(145deg, #f1f1f1, #fff); display: flex; align-items: center; justify-content: center; position: relative; }
+    .detail-img::before { content: ""; width: 280px; height: 360px; border-radius: 116px 116px 24px 24px; background: var(--cloth, #d8dde3); box-shadow: inset 0 0 0 22px rgba(255,255,255,.22); }
+    .detail-img::after { content: "PLUMIS"; position: absolute; right: 28px; top: 28px; font-family: Georgia, serif; font-weight: 700; font-size: 22px; color: #1d3d27; }
+    .detail-title { font-size: 21px; line-height: 1.45; margin: 0 0 12px; }
+    .review { color: #777; font-size: 13px; margin-bottom: 16px; }
+    .price-box { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+    .list-price { color: #777; text-decoration: line-through; font-size: 16px; }
+    .detail-price { font-size: 30px; font-weight: 900; margin-top: 4px; }
+    .benefits { border-bottom: 1px solid var(--line); padding-bottom: 22px; margin-bottom: 24px; display: grid; gap: 10px; color: #4b5563; font-size: 14px; }
+    .option-label { font-size: 15px; font-weight: 700; margin: 22px 0 10px; }
+    .dropdown { border: 1px solid #cad1d8; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+    .drop-head { height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #fff; }
+    .drop-list { border-top: 1px solid var(--line); max-height: 260px; overflow: auto; background: #fff; }
+    .drop-option { width: 100%; height: 48px; border: 0; border-bottom: 1px solid #edf0f2; background: #fff; text-align: left; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; }
+    .drop-option:hover { background: #f8fafb; }
+    .drop-option.soldout { color: #a3aab5; background: #f3f5f7; }
+    .selected-box { border: 1px solid #d8dee4; border-radius: 8px; padding: 16px; margin: 16px 0; background: #fff; display: none; }
+    .selected-box.active { display: block; }
+    .total { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 18px; }
+    .total b { color: #e60023; font-size: 27px; }
+    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .action-row button { height: 54px; border-radius: 8px; border: 1px solid var(--naver); background: #fff; font-weight: 800; font-size: 16px; }
+    .action-row .buy { background: var(--naver); color: #fff; }
+    .action-row .gray { border-color: #d8dee4; color: #333; }
+    .talk-inline { height: 54px; width: 100%; margin-top: 12px; border: 0; border-radius: 8px; background: #073f1d; color: #fff; font-weight: 900; font-size: 17px; }
+    .back { margin-bottom: 22px; border: 0; background: #f3f5f7; border-radius: 8px; padding: 10px 14px; }
 
-    <script>
+    .admin-toggle { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50; border: 0; border-radius: 999px; background: var(--panel); color: #fff; padding: 12px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.24); writing-mode: vertical-rl; letter-spacing: 2px; font-weight: 800; }
+    .admin { position: fixed; right: 0; top: 0; bottom: 0; width: 390px; z-index: 60; background: #fff; border-left: 1px solid var(--line); box-shadow: -20px 0 50px rgba(0,0,0,.12); transform: translateX(100%); transition: .22s ease; display: flex; flex-direction: column; }
+    .admin.open { transform: translateX(0); }
+    .admin-head { padding: 18px; background: var(--panel); color: #fff; display: flex; align-items: center; justify-content: space-between; }
+    .admin-head button { border: 1px solid rgba(255,255,255,.28); background: transparent; color: #fff; border-radius: 8px; padding: 6px 10px; }
+    .admin-body { padding: 16px; overflow: auto; }
+    .admin h3 { margin: 18px 0 10px; font-size: 16px; }
+    .api-box { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: #fbfcfd; }
+    .api-box input { width: 100%; height: 38px; border: 1px solid #d8dee4; border-radius: 8px; padding: 0 10px; margin-top: 8px; font-size: 12px; }
+    .api-row { display: flex; gap: 8px; margin-top: 8px; }
+    .mini { height: 34px; border: 1px solid #d8dee4; background: #fff; border-radius: 8px; padding: 0 10px; }
+    .mini.primary { border-color: var(--naver); color: #007a3d; font-weight: 800; }
+    .stock-row { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: grid; grid-template-columns: 1fr 72px 54px; gap: 8px; align-items: center; }
+    .stock-row .name { font-size: 13px; font-weight: 700; }
+    .stock-row .state { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .stock-row input { height: 34px; border: 1px solid #d8dee4; border-radius: 8px; padding: 0 8px; }
+    .stock-row button { height: 34px; border: 0; border-radius: 8px; background: var(--naver); color: #fff; font-weight: 800; }
+    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fbfcfd; }
+    .metric b { display: block; font-size: 20px; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .log { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 12px; white-space: pre-wrap; background: #fbfcfd; }
+    .log strong { display: block; margin-bottom: 4px; color: #111; }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 100; background: rgba(17,24,39,.96); color: #fff; padding: 12px 16px; border-radius: 999px; box-shadow: 0 12px 30px rgba(0,0,0,.24); display: none; max-width: 760px; font-size: 14px; }
+    .toast.show { display: block; }
+    .dev-note { margin-top: 16px; padding: 14px; background: #fff8e6; border: 1px solid #ffe1a3; border-radius: 10px; font-size: 13px; line-height: 1.55; color: #5c4300; }
+    @media (max-width: 980px) { .header { grid-template-columns: 1fr; text-align: center; } .talk-badge, .search { justify-self: center; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .detail { grid-template-columns: 1fr; } .admin { width: min(100vw, 390px); } }
+  </style>
+</head>
+<body>
+  <div class="topbar">NAVER ㅣ 스마트스토어 · mock storefront</div>
+  <header class="header">
+    <button class="talk-badge" id="headerTalkBtn">💬 알림받기 <small>관심고객수 156,544</small></button>
+    <div class="brand">PLUMIS<span>WEAR</span></div>
+    <div class="search">검색어를 입력해주세요 🔍</div>
+  </header>
+  <nav class="nav"><div class="nav-inner"><b>쇼핑LIVE</b><b>베스트</b><span>신상품</span><span>남성</span><span>여성</span><span>키즈</span><span>아울렛</span><span>FOR YOU</span><span>더보기</span></div></nav>
+  <div class="notice-strip">🟩 네이버 톡톡 기반 재입고 알림 MVP · 실제 API는 mock payload로 대체</div>
 
-      const IS_STATIC_PAGES = location.hostname.endsWith("github.io") || location.search.includes("static=1");
-      const nativeFetch = window.fetch.bind(window);
+  <main class="layout">
+    <section id="listView">
+      <div class="breadcrumb">홈 &gt; 베스트 mock 상품</div>
+      <h1 class="section-title">베스트</h1>
+      <div class="tabs"><b>✓ 실시간</b><span>일간</span><span>주간</span><span>월간</span></div>
+      <div class="grid" id="productGrid"></div>
+    </section>
 
-      function clone(value) { return JSON.parse(JSON.stringify(value)); }
-      function nowIso() { return new Date().toISOString(); }
-      function makeId(prefix) { return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`; }
+    <section id="detailView" class="detail"></section>
+  </main>
 
-      const STATIC_SEED = {
-        sellers: [{ id: "seller_001", store_name: "테스트 스마트스토어", talk_account_id: "wc_testtalk", kakao_channel_id: "@테스트스토어", plan: "FREE_TEST", status: "ACTIVE" }],
-        products: [
-          { id: "prod_hoodie_001", seller_id: "seller_001", product_no: "100000001", product_name: "베이직 오버핏 후드티", product_url: "https://smartstore.naver.com/mock-store/products/100000001", status: "PARTIAL_OUT_OF_STOCK", is_active: true, low_stock_threshold: 3, has_options: true },
-          { id: "prod_belt_001", seller_id: "seller_001", product_no: "100000002", product_name: "프린터 전사벨트", product_url: "https://smartstore.naver.com/mock-store/products/100000002", status: "FULL_OUT_OF_STOCK", is_active: true, low_stock_threshold: 3, has_options: true }
-        ],
-        product_options: [
-          { id: "opt_hoodie_s", product_id: "prod_hoodie_001", option_id: "S", original_option_name: "S", current_option_name: "S", stock_quantity: 5, previous_stock_quantity: 5, stock_status: "NORMAL", notice_text: null },
-          { id: "opt_hoodie_m", product_id: "prod_hoodie_001", option_id: "M", original_option_name: "M", current_option_name: "M [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "PARTIAL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" },
-          { id: "opt_hoodie_l", product_id: "prod_hoodie_001", option_id: "L", original_option_name: "L", current_option_name: "L", stock_quantity: 2, previous_stock_quantity: 2, stock_status: "LOW_STOCK", notice_text: null },
-          { id: "opt_hoodie_xl", product_id: "prod_hoodie_001", option_id: "XL", original_option_name: "XL", current_option_name: "XL [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "PARTIAL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" },
-          { id: "opt_hoodie_xxl", product_id: "prod_hoodie_001", option_id: "XXL", original_option_name: "XXL", current_option_name: "XXL", stock_quantity: 7, previous_stock_quantity: 7, stock_status: "NORMAL", notice_text: null },
-          { id: "opt_belt_basic", product_id: "prod_belt_001", option_id: "basic", original_option_name: "기본형", current_option_name: "기본형 [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "FULL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" }
-        ],
-        stock_events: [], waitlists: [], notification_queue: [], message_logs: [], consent_logs: [], sessions: {},
-        mock_users: { "al-2eGuGr5WQOnco1_V-FQ": { mock_phone_number: "010-1234-5678" } }
-      };
+  <button class="admin-toggle" id="adminToggle">관리창</button>
+  <aside class="admin" id="adminPanel">
+    <div class="admin-head"><strong>재고/알림 관리</strong><button id="adminClose">닫기</button></div>
+    <div class="admin-body">
+      <div class="api-box">
+        <b>연결 모드</b>
+        <p style="font-size:12px;color:#6b7280;line-height:1.5;margin:8px 0 0">GitHub Pages에서는 백엔드가 없으므로 Vercel API를 호출합니다. 실패하면 브라우저 내부 mock으로 동작합니다.</p>
+        <input id="apiBase" placeholder="https://naver-restock-alert.vercel.app" />
+        <div class="api-row"><button class="mini primary" id="saveApi">저장</button><button class="mini" id="reloadState">상태 새로고침</button><button class="mini" id="resetState">초기화</button></div>
+        <div id="modeText" style="font-size:12px;color:#6b7280;margin-top:8px"></div>
+      </div>
 
-      let staticDb = clone(STATIC_SEED);
+      <h3>요약</h3>
+      <div class="metric-grid" id="metrics"></div>
 
-      function staticGetProductById(id) { return staticDb.products.find((p) => p.id === id); }
-      function staticGetProductOptions(productId) { return staticDb.product_options.filter((o) => o.product_id === productId); }
-      function staticGetOptionById(id) { return staticDb.product_options.find((o) => o.id === id); }
-      function staticGetOutOfStockOptions(productId) { return staticGetProductOptions(productId).filter((o) => Number(o.stock_quantity) <= 0); }
-      function staticGetSession(userId) {
-        if (!staticDb.sessions[userId]) staticDb.sessions[userId] = { stage: "EMPTY", product_id: null, option_id: null, awaiting_phone: false };
-        return staticDb.sessions[userId];
-      }
-      function staticUpdateSession(userId, patch) { Object.assign(staticGetSession(userId), patch, { updated_at: nowIso() }); }
-      function staticButton(title, code = null) { return { type: "TEXT", data: { title, ...(code ? { code } : {}) } }; }
-      function staticText(text, buttons = []) {
-        const message = { event: "send", textContent: { text } };
-        if (buttons.length) message.textContent.quickReply = { buttonList: buttons };
-        return message;
-      }
-      function staticWaitCount(productId, optionId) { return staticDb.waitlists.filter((w) => w.product_id === productId && w.option_id === optionId && w.status !== "CANCELLED").length; }
-      function staticAdminState() {
-        const productCount = staticDb.products.length;
-        const partialOutOptions = staticDb.product_options.filter((o) => o.stock_quantity <= 0).length;
-        const fullOutProducts = staticDb.products.filter((p) => staticGetProductOptions(p.id).every((o) => o.stock_quantity <= 0)).length;
-        return {
-          ok: true,
-          metrics: {
-            productCount,
-            partialOutOptions,
-            fullOutProducts,
-            waitingCount: staticDb.waitlists.filter((w) => w.status === "WAITING").length,
-            notifiedCount: staticDb.waitlists.filter((w) => w.status === "NOTIFIED").length,
-            kakaoOptInCount: staticDb.waitlists.filter((w) => w.kakao_opt_in).length,
-            messageLogCount: staticDb.message_logs.length
-          },
-          sellers: staticDb.sellers,
-          products: staticDb.products.map((p) => ({ ...p, options: staticGetProductOptions(p.id) })),
-          waitlists: staticDb.waitlists.map((w) => ({ ...w, product_name: staticGetProductById(w.product_id)?.product_name || "-", option_name: staticGetOptionById(w.option_id)?.original_option_name || "-" })),
-          message_logs: staticDb.message_logs.slice(0, 50),
-          consent_logs: staticDb.consent_logs.slice(0, 50),
-          stock_events: staticDb.stock_events.slice(-50).reverse(),
-          sessions: staticDb.sessions
-        };
-      }
-      function staticExtractProduct(eventBody) {
-        const productNo = eventBody?.options?.from || String(eventBody?.options?.referer || "").match(/\/products\/(\d+)/)?.[1];
-        return staticDb.products.find((p) => String(p.product_no) === String(productNo));
-      }
-      function staticOptionPrompt(product, options) {
-        return staticText(`어떤 옵션에 대한 재입고 알림을 원하시나요?\n상품명: ${product.product_name}`, options.map((o) => staticButton(o.original_option_name, `SELECT_OPTION:${product.id}:${o.id}`)));
-      }
-      function staticChannelPrompt(product, option) {
-        return staticText(`선택 옵션: ${option.original_option_name}\n재입고 알림을 어디로 받아보시겠어요?`, [
-          staticButton("톡톡으로 받기", `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}`),
-          staticButton("카카오톡도", `CHANNEL:KAKAO:${product.id}:${option.id}`)
-        ]);
-      }
-      function staticComplete({ userId, productId, optionId, kakaoOptIn = false, phoneNumber = null, channelPreference = "NAVER_TALK_ONLY" }) {
-        let waitlist = staticDb.waitlists.find((w) => w.product_id === productId && w.option_id === optionId && w.talk_user_id === userId && w.status !== "CANCELLED");
-        if (!waitlist) {
-          waitlist = { id: makeId("waitlist"), seller_id: "seller_001", product_id: productId, option_id: optionId, talk_user_id: userId, phone_number: null, kakao_opt_in: false, channel_preference: "NAVER_TALK_ONLY", status: "WAITING", requested_at: nowIso(), restocked_at: null, notified_at: null };
-          staticDb.waitlists.push(waitlist);
-        }
-        waitlist.phone_number = phoneNumber || waitlist.phone_number;
-        waitlist.kakao_opt_in = Boolean(kakaoOptIn || waitlist.kakao_opt_in);
-        waitlist.channel_preference = channelPreference;
-        if (kakaoOptIn && phoneNumber) {
-          staticDb.consent_logs.unshift({ id: makeId("consent"), waitlist_id: waitlist.id, talk_user_id: userId, phone_number: phoneNumber, consent_type: "KAKAO_RESTOCK_ALERT", consented_at: nowIso() });
-        }
-        staticUpdateSession(userId, { stage: "COMPLETED", product_id: productId, option_id: optionId });
-        setTimeout(() => staticProcessRestock(waitlist.id), 10000);
-        const product = staticGetProductById(productId);
-        const option = staticGetOptionById(optionId);
-        const channelText = waitlist.kakao_opt_in ? "톡톡과 카카오톡" : "톡톡";
-        return staticText(`재입고 알림 신청이 완료되었습니다.\n상품명: ${product.product_name}\n옵션: ${option.original_option_name}\n수신 채널: ${channelText}\n현재 대기인원: ${staticWaitCount(productId, optionId)}명\nGitHub Pages mock 모드에서는 약 10초 후 브라우저 안에서 발송 로그가 생성됩니다.`);
-      }
-      function staticBuildRestockText(product, option, waitCount) {
-        return `[재입고 안내]\n${product.product_name} ${option.original_option_name} 옵션이 재입고되었습니다.\n대기인원 ${waitCount}명\n재고는 조기 소진될 수 있습니다.\n상품 확인: ${product.product_url}`;
-      }
-      function staticProcessRestock(waitlistId) {
-        const waitlist = staticDb.waitlists.find((w) => w.id === waitlistId);
-        if (!waitlist || waitlist.status === "NOTIFIED") return;
-        const product = staticGetProductById(waitlist.product_id);
-        const option = staticGetOptionById(waitlist.option_id);
-        const beforeStock = option.stock_quantity;
-        option.previous_stock_quantity = beforeStock;
-        option.stock_quantity = Math.max(3, beforeStock + 3);
-        option.stock_status = "RESTOCKED";
-        option.current_option_name = option.original_option_name;
-        product.status = "RESTOCKED";
-        const waitCount = staticWaitCount(waitlist.product_id, waitlist.option_id);
-        const text = staticBuildRestockText(product, option, waitCount);
-        staticDb.stock_events.unshift({ id: makeId("stock_event"), product_id: product.id, option_id: option.id, event_type: "RESTOCKED", previous_stock: beforeStock, current_stock: option.stock_quantity, created_at: nowIso() });
-        staticDb.message_logs.unshift({ id: makeId("msg"), waitlist_id: waitlist.id, product_id: product.id, option_id: option.id, channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", send_status: "SENT", sent_at: nowIso(), created_at: nowIso(), payload: { requestUrl: "MOCK https://gw.talk.naver.com/chatbot/v1/event", body: { event: "send", user: waitlist.talk_user_id, textContent: { text } } } });
-        if (waitlist.kakao_opt_in && waitlist.phone_number) {
-          staticDb.message_logs.unshift({ id: makeId("msg"), waitlist_id: waitlist.id, product_id: product.id, option_id: option.id, channel: "KAKAO_ALIMTALK", message_type: "RESTOCK_ALERT", send_status: "SENT", sent_at: nowIso(), created_at: nowIso(), payload: { requestUrl: "MOCK Kakao Alimtalk Provider API", body: { phoneNumber: waitlist.phone_number, message: text } } });
-        }
-        waitlist.status = "NOTIFIED";
-        waitlist.restocked_at = nowIso();
-        waitlist.notified_at = nowIso();
-        refreshAdmin();
-      }
-      function staticHandleWebhook(body) {
-        const userId = body.user || USER_ID;
-        if (body.event === "open") {
-          const product = staticExtractProduct(body);
-          if (!product) {
-            staticUpdateSession(userId, { stage: "PRODUCT_SELECT" });
-            return staticText("상품 정보를 자동으로 확인하지 못했습니다.\n재입고 알림을 원하시는 상품을 선택해 주세요.", staticDb.products.map((p) => staticButton(p.product_name.slice(0, 10), `APPLY_RESTOCK:${p.id}`)));
-          }
-          const out = staticGetOutOfStockOptions(product.id);
-          staticUpdateSession(userId, { stage: "OPENED_PRODUCT", product_id: product.id, option_id: null });
-          if (!out.length) return staticText(`현재 ${product.product_name} 상품에는 품절 옵션이 없습니다.`);
-          return staticText(`현재 보고 계신 상품은 ${product.product_name}입니다.\n품절 옵션: ${out.map((o) => o.original_option_name).join(", ")}\n원하시는 옵션이 재입고되면 톡톡으로 알려드릴 수 있습니다.\n재입고 알림을 신청하시겠어요?`, [staticButton("재입고 신청", `APPLY_RESTOCK:${product.id}`)]);
-        }
-        const session = staticGetSession(userId);
-        const text = body?.textContent?.text?.trim() || "";
-        const code = body?.textContent?.code?.trim() || "";
-        const source = code || text;
-        if (source.startsWith("APPLY_RESTOCK") || text.includes("재입고") || text.includes("알림")) {
-          const productId = source.split(":")[1] || session.product_id || staticDb.products[0].id;
-          const product = staticGetProductById(productId);
-          const out = staticGetOutOfStockOptions(product.id);
-          staticUpdateSession(userId, { stage: "OPTION_SELECT", product_id: product.id, option_id: null });
-          return staticOptionPrompt(product, out);
-        }
-        if (source.startsWith("SELECT_OPTION")) {
-          const [, productId, optionId] = source.split(":");
-          const product = staticGetProductById(productId || session.product_id);
-          const option = staticGetOptionById(optionId);
-          staticUpdateSession(userId, { stage: "CHANNEL_SELECT", product_id: product.id, option_id: option.id });
-          return staticChannelPrompt(product, option);
-        }
-        if (source.startsWith("CHANNEL:NAVER_TALK_ONLY")) {
-          const parts = source.split(":");
-          return staticComplete({ userId, productId: parts[2] || session.product_id, optionId: parts[3] || session.option_id });
-        }
-        if (source.startsWith("CHANNEL:KAKAO")) {
-          const parts = source.split(":");
-          staticUpdateSession(userId, { stage: "KAKAO_CONSENT", product_id: parts[2] || session.product_id, option_id: parts[3] || session.option_id });
-          return staticText("카카오톡으로도 재입고 알림을 받으려면 휴대전화번호 수집 동의가 필요합니다.\n\n수집 항목: 휴대전화번호\n수집 목적: 신청하신 상품의 재입고 알림 발송\n보관 기간: 알림 발송 후 30일 또는 신청 취소 시 즉시 삭제\n동의하지 않아도 톡톡 알림은 이용할 수 있습니다.", [staticButton("동의하고 계속", "CONSENT:KAKAO_RESTOCK_ALERT"), staticButton("톡톡만 받기", "CHANNEL:NAVER_TALK_ONLY")]);
-        }
-        if (source.startsWith("CONSENT:KAKAO_RESTOCK_ALERT") || text.includes("동의")) {
-          const phone = staticDb.mock_users[userId]?.mock_phone_number || "010-1234-5678";
-          return staticComplete({ userId, productId: session.product_id, optionId: session.option_id, kakaoOptIn: true, phoneNumber: phone, channelPreference: "NAVER_TALK_AND_KAKAO" });
-        }
-        return staticText("재입고 알림 신청을 도와드릴게요. 아래 버튼을 눌러 신청을 시작해 주세요.", [staticButton("재입고 신청", "APPLY_RESTOCK")]);
-      }
-      async function staticFetch(url, options = {}) {
-        const path = String(url).replace(location.origin, "");
-        let body = {};
-        if (options.body) body = JSON.parse(options.body);
-        if (path.startsWith("/api/naver-talk-webhook")) return new Response(JSON.stringify(staticHandleWebhook(body)), { headers: { "Content-Type": "application/json" } });
-        if (path.startsWith("/api/admin-state")) return new Response(JSON.stringify(staticAdminState()), { headers: { "Content-Type": "application/json" } });
-        if (path.startsWith("/api/reset-mock")) { staticDb = clone(STATIC_SEED); return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } }); }
-        return nativeFetch(url, options);
-      }
-      async function apiFetch(url, options = {}) {
-        if (IS_STATIC_PAGES && String(url).startsWith("/api/")) return staticFetch(url, options);
-        return nativeFetch(url, options);
-      }
+      <h3>현재 상품 옵션 재고</h3>
+      <div id="stockEditor"></div>
 
-      const USER_ID = "al-2eGuGr5WQOnco1_V-FQ";
-      const chat = document.querySelector("#chat");
-      const lastResponse = document.querySelector("#lastResponse");
+      <h3>대기자</h3>
+      <div id="waitlists"></div>
 
-      function addBubble(text, who = "bot") {
-        const div = document.createElement("div");
-        div.className = `bubble ${who}`;
-        div.textContent = text;
-        chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight;
-      }
+      <h3>발송 로그</h3>
+      <div id="logs"></div>
 
-      function renderQuickReply(response) {
-        const list = response?.textContent?.quickReply?.buttonList || [];
-        if (!list.length) return;
-        const wrap = document.createElement("div");
-        wrap.className = "quick-buttons";
-        list.forEach((buttonData) => {
-          const b = document.createElement("button");
-          b.className = "light";
-          b.textContent = buttonData.data.title;
-          b.onclick = () => sendText(buttonData.data.title, buttonData.data.code);
-          wrap.appendChild(b);
-        });
-        chat.appendChild(wrap);
-      }
+      <div class="dev-note">
+        실제 톡톡 화면에서 챗봇 메시지가 뜨려면 네이버 톡톡 파트너센터의 Webhook URL이 Vercel의 <b>/api/naver-talk-webhook</b>으로 등록되어 있어야 합니다. 이 GitHub Pages 화면은 상품 유입/옵션/재고 관리 UI를 보여주는 mock 스마트스토어입니다.
+      </div>
+    </div>
+  </aside>
 
-      async function postWebhook(payload) {
-        const res = await apiFetch("/api/naver-talk-webhook", {
-          method: "POST",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        lastResponse.textContent = JSON.stringify({ request: payload, response: data }, null, 2);
-        if (data?.textContent?.text) addBubble(data.textContent.text, "bot");
-        renderQuickReply(data);
-        await refreshAdmin();
-        setTimeout(refreshAdmin, 11000);
-      }
+  <div class="toast" id="toast"></div>
 
-      async function sendOpen() {
-        addBubble("[상품 페이지에서 톡톡 열기]", "user");
-        await postWebhook({
-          event: "open",
-          user: USER_ID,
-          options: {
-            inflow: "button",
-            referer: "https://smartstore.naver.com/mock-store/products/100000001",
-            from: "100000001",
-            friend: false,
-            under14: false,
-            under19: false
-          }
-        });
-      }
+<script>
+const TALK_URL = "https://talk.naver.com/ct/wocay2r";
+const DEFAULT_API_BASE = "https://naver-restock-alert.vercel.app";
+let apiBase = localStorage.getItem("RESTOCK_API_BASE") || DEFAULT_API_BASE;
+let remoteOk = false;
+let selectedProductNo = new URLSearchParams(location.search).get("productNo") || "200000001";
+let selectedColor = null;
+let selectedOptionId = null;
+let openColor = false;
+let openSize = false;
 
-      async function sendOpenNoContext() {
-        addBubble("[상품 context 없이 톡톡 열기]", "user");
-        await postWebhook({
-          event: "open",
-          user: USER_ID,
-          options: {
-            inflow: "list",
-            referer: "https://talk.naver.com/",
-            friend: false,
-            under14: false,
-            under19: false
-          }
-        });
-      }
-
-      async function sendText(text, code) {
-        addBubble(text, "user");
-        await postWebhook({
-          event: "send",
-          user: USER_ID,
-          textContent: {
-            text,
-            ...(code ? { code } : {}),
-            inputType: "typing"
-          }
-        });
-      }
-
-      async function sendManual() {
-        const input = document.querySelector("#manualText");
-        const text = input.value.trim();
-        if (!text) return;
-        input.value = "";
-        await sendText(text);
-      }
-
-      async function resetMock() {
-        await apiFetch("/api/reset-mock", { method: "POST" });
-        chat.innerHTML = "";
-        lastResponse.textContent = "Mock DB reset completed.";
-        await refreshAdmin();
-      }
-
-      function td(value) {
-        return `<td>${value ?? "-"}</td>`;
-      }
-
-      async function refreshAdmin() {
-        const res = await apiFetch("/api/admin-state");
-        const data = await res.json();
-        const m = data.metrics;
-        document.querySelector("#metrics").innerHTML = [
-          ["상품", m.productCount],
-          ["품절 옵션", m.partialOutOptions],
-          ["완전 품절", m.fullOutProducts],
-          ["대기", m.waitingCount],
-          ["발송 완료", m.notifiedCount],
-          ["카카오 동의", m.kakaoOptInCount],
-          ["로그", m.messageLogCount]
-        ].map(([label, value]) => `<div class="metric"><b>${value}</b>${label}</div>`).join("");
-
-        document.querySelector("#products").innerHTML = data.products.map((product) => `
-          <h3>${product.product_name}</h3>
-          <table>
-            <thead><tr><th>옵션</th><th>재고</th><th>상태</th><th>안내문구</th></tr></thead>
-            <tbody>${product.options.map((option) => `<tr>${td(option.original_option_name)}${td(option.stock_quantity)}${td(option.stock_status)}${td(option.notice_text)}</tr>`).join("")}</tbody>
-          </table>
-        `).join("");
-
-        document.querySelector("#waitlists").innerHTML = data.waitlists.length ? `
-          <table>
-            <thead><tr><th>상품</th><th>옵션</th><th>채널</th><th>전화번호</th><th>상태</th><th>신청시각</th></tr></thead>
-            <tbody>${data.waitlists.map((w) => `<tr>${td(w.product_name)}${td(w.option_name)}${td(w.channel_preference)}${td(w.phone_number)}${td(w.status)}${td(w.requested_at)}</tr>`).join("")}</tbody>
-          </table>` : `<p class="muted">아직 대기자가 없습니다.</p>`;
-
-        document.querySelector("#logs").innerHTML = data.message_logs.length ? `
-          <table>
-            <thead><tr><th>시각</th><th>채널</th><th>타입</th><th>상태</th><th>Payload</th></tr></thead>
-            <tbody>${data.message_logs.slice(0, 10).map((log) => `<tr>${td(log.created_at)}${td(log.channel)}${td(log.message_type)}${td(log.send_status)}<td><code>${JSON.stringify(log.payload).slice(0, 180)}...</code></td></tr>`).join("")}</tbody>
-          </table>` : `<p class="muted">아직 발송 로그가 없습니다.</p>`;
-      }
-
-      refreshAdmin();
-      setInterval(refreshAdmin, 5000);
-    </script>
-  </body>
+const fallbackState = {
+  products: [
+    { id:"prod_knit_collar_001", product_no:"200000001", product_name:"케이블 니트 카라 반팔 셔츠", price:147570, list_price:167300, discount_rate:12, category:"니트/셔츠", image_theme:"cream", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_rugby_002", product_no:"200000002", product_name:"스트라이프 럭비 카라 티셔츠", price:86700, list_price:99000, discount_rate:12, category:"티셔츠", image_theme:"navy", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_oxford_003", product_no:"200000003", product_name:"라이트 블루 옥스포드 셔츠", price:103470, list_price:129000, discount_rate:19, category:"셔츠", image_theme:"sky", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_pants_004", product_no:"200000004", product_name:"코튼 와이드 밴딩 팬츠", price:141270, list_price:159000, discount_rate:11, category:"팬츠", image_theme:"olive", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_logo_tee_005", product_no:"200000005", product_name:"미니멀 로고 베이직 티셔츠", price:62370, list_price:69000, discount_rate:10, category:"티셔츠", image_theme:"brown", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_cardigan_006", product_no:"200000006", product_name:"소프트 크롭 카디건", price:116070, list_price:139000, discount_rate:16, category:"카디건", image_theme:"pink", status:"FULL_OUT_OF_STOCK" },
+    { id:"prod_shorts_007", product_no:"200000007", product_name:"나일론 유틸리티 쇼츠", price:76070, list_price:89000, discount_rate:14, category:"쇼츠", image_theme:"gray", status:"PARTIAL_OUT_OF_STOCK" },
+    { id:"prod_jacket_008", product_no:"200000008", product_name:"린넨 블렌드 싱글 자켓", price:189000, list_price:219000, discount_rate:13, category:"아우터", image_theme:"linen", status:"PARTIAL_OUT_OF_STOCK" }
+  ],
+  product_options: [
+    opt("opt_knit_black_004","prod_knit_collar_001","블랙(031) / 004",0), opt("opt_knit_black_005","prod_knit_collar_001","블랙(031) / 005",0), opt("opt_knit_navy_004","prod_knit_collar_001","네이비(166) / 004",7), opt("opt_knit_oat_005","prod_knit_collar_001","오트밀(118) / 005",2), opt("opt_knit_blue_004","prod_knit_collar_001","그레이 블루(AEY) / 004",0),
+    opt("opt_rugby_navy_s","prod_rugby_002","네이비 / S",4), opt("opt_rugby_navy_m","prod_rugby_002","네이비 / M",0), opt("opt_rugby_green_l","prod_rugby_002","그린 / L",1), opt("opt_rugby_green_xl","prod_rugby_002","그린 / XL",0),
+    opt("opt_oxford_sky_004","prod_oxford_003","스카이블루 / 004",0), opt("opt_oxford_sky_005","prod_oxford_003","스카이블루 / 005",6), opt("opt_oxford_white_004","prod_oxford_003","화이트 / 004",0), opt("opt_oxford_white_005","prod_oxford_003","화이트 / 005",3),
+    opt("opt_pants_beige_004","prod_pants_004","베이지 / 004",5), opt("opt_pants_beige_005","prod_pants_004","베이지 / 005",0), opt("opt_pants_khaki_004","prod_pants_004","카키 / 004",0), opt("opt_pants_khaki_005","prod_pants_004","카키 / 005",2),
+    opt("opt_logo_brown_s","prod_logo_tee_005","브라운 / S",9), opt("opt_logo_brown_m","prod_logo_tee_005","브라운 / M",0), opt("opt_logo_black_l","prod_logo_tee_005","블랙 / L",0), opt("opt_logo_black_xl","prod_logo_tee_005","블랙 / XL",4),
+    opt("opt_cardigan_ivory_s","prod_cardigan_006","아이보리 / S",0), opt("opt_cardigan_ivory_m","prod_cardigan_006","아이보리 / M",0), opt("opt_cardigan_pink_s","prod_cardigan_006","핑크 / S",0), opt("opt_cardigan_pink_m","prod_cardigan_006","핑크 / M",0),
+    opt("opt_shorts_gray_s","prod_shorts_007","차콜 / S",6), opt("opt_shorts_gray_m","prod_shorts_007","차콜 / M",0), opt("opt_shorts_black_l","prod_shorts_007","블랙 / L",2), opt("opt_shorts_black_xl","prod_shorts_007","블랙 / XL",0),
+    opt("opt_jacket_linen_004","prod_jacket_008","내추럴 / 004",1), opt("opt_jacket_linen_005","prod_jacket_008","내추럴 / 005",0), opt("opt_jacket_navy_004","prod_jacket_008","네이비 / 004",4), opt("opt_jacket_navy_005","prod_jacket_008","네이비 / 005",0)
+  ], waitlists: [], message_logs: [], stock_events: [], consent_logs: []
+};
+let state = JSON.parse(localStorage.getItem("RESTOCK_LOCAL_STATE") || "null") || structuredClone(fallbackState);
+function opt(id, product_id, name, stock) { return { id, product_id, original_option_name:name, current_option_name: stock<=0 ? name+" [품절]" : name, stock_quantity:stock }; }
+function money(n){ return Number(n).toLocaleString("ko-KR")+"원"; }
+function theme(t){ return { cream:"#e7e1d3", navy:"#1f2a44", sky:"#b7d4e8", olive:"#8a8e73", brown:"#8c6d5a", pink:"#e8c3ce", gray:"#7b7f87", linen:"#d3c4a6" }[t] || "#ddd"; }
+function productOptions(productId){ return state.product_options || state.products.find(p=>p.id===productId)?.options || []; }
+function normalizeRemote(data){ if (!data) return state; const product_options = []; (data.products||[]).forEach(p => (p.options||[]).forEach(o => product_options.push(o))); return { ...data, product_options }; }
+function saveLocal(){ localStorage.setItem("RESTOCK_LOCAL_STATE", JSON.stringify(state)); }
+function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"), 4500); }
+async function api(path, opts={}){ const base=(apiBase||"").replace(/\/$/,""); const res=await fetch(base+path, { ...opts, headers: { "Content-Type":"application/json", ...(opts.headers||{}) }}); if(!res.ok) throw new Error(res.status+" "+res.statusText); return await res.json(); }
+async function loadState(){
+  document.getElementById("apiBase").value = apiBase;
+  try { const data = await api("/api/admin-state"); state = normalizeRemote(data); remoteOk = true; document.getElementById("modeText").textContent = "원격 Vercel API 연결됨: " + apiBase; }
+  catch(e){ remoteOk = false; document.getElementById("modeText").textContent = "브라우저 내부 mock 모드: API 연결 실패 또는 미설정"; }
+  renderAll();
+}
+function calcMetrics(){ const opts=state.product_options||[]; return { productCount: state.products.length, partialOutOptions: opts.filter(o=>Number(o.stock_quantity)<=0).length, waitingCount:(state.waitlists||[]).filter(w=>w.status==="WAITING").length, notifiedCount:(state.waitlists||[]).filter(w=>w.status==="NOTIFIED").length, messageLogCount:(state.message_logs||[]).length }; }
+function renderGrid(){
+  const grid=document.getElementById("productGrid");
+  grid.innerHTML = state.products.map((p,i)=>{
+    const opts=productOptions(p.id); const out=opts.filter(o=>Number(o.stock_quantity)<=0).length;
+    return `<button class="card" onclick="openDetail('${p.product_no}')" style="--cloth:${theme(p.image_theme)}"><span class="rank">${i+1}</span><div class="img"><div class="swatches"><i style="--c:#efe8dd"></i><i style="--c:#101725"></i><i style="--c:#c7ccd3"></i></div></div><div class="card-title">[로그인 10% 쿠폰] ${p.product_name}</div><span class="discount">${p.discount_rate||10}%</span><span class="price">${money(p.price)}</span><div class="meta">★ 4.${(i+7)%10} · 리뷰 ${3+i*7}</div>${out?`<span class="soldout-pill">품절 옵션 ${out}개 · 톡톡알림 가능</span>`:""}</button>`;
+  }).join("");
+}
+window.openDetail = function(productNo){ selectedProductNo=String(productNo); history.replaceState(null,"","?productNo="+productNo); selectedColor=null; selectedOptionId=null; openColor=false; openSize=false; renderDetail(); window.scrollTo({top:0,behavior:"smooth"}); };
+function splitOpt(name){ const [color, size] = String(name).replace(" [품절]","").split(" / "); return { color: color || name, size: size || "단일" }; }
+function getProduct(){ return state.products.find(p=>String(p.product_no)===String(selectedProductNo)) || state.products[0]; }
+function groupedOptions(p){ const opts=productOptions(p.id); const colors=[...new Set(opts.map(o=>splitOpt(o.original_option_name).color))]; const sizes=selectedColor ? opts.filter(o=>splitOpt(o.original_option_name).color===selectedColor) : []; return { opts, colors, sizes }; }
+function renderDetail(){
+  const p=getProduct(); const {opts,colors,sizes}=groupedOptions(p); const option=opts.find(o=>o.id===selectedOptionId); const soldOut=option && Number(option.stock_quantity)<=0;
+  document.getElementById("listView").style.display="none"; const d=document.getElementById("detailView"); d.classList.add("active");
+  d.innerHTML = `<div><button class="back" onclick="backToList()">← 목록으로</button><div class="detail-img" style="--cloth:${theme(p.image_theme)}"></div></div><div><h2 class="detail-title">[로그인 10% 쿠폰] ${p.product_name}</h2><div class="review">★ 4.92 · 최근 6개월 4.94 · 리뷰 ${Math.floor(12+Math.random()*50)}</div><div class="price-box"><div class="list-price">${money(p.list_price||Math.round(p.price*1.12))}</div><div class="detail-price">${money(p.price)}</div><div style="color:#777;font-size:13px;margin-top:4px">무료배송</div></div><div class="benefits"><div><b style="color:#03c75a">N+</b> 최대 적립 포인트 17,855원</div><div>평균 2일 이내 도착 확률 91%</div><div>옵션 조합별 재고를 mock DB로 관리 중</div></div><div class="option-label">옵션 선택 (필수) <span style="color:#e60023">*</span></div>${colorDropdown(colors)}${sizeDropdown(sizes)}<div class="selected-box ${option?"active":""}">${option?`<b>${option.original_option_name}</b><div style="font-size:13px;color:${soldOut?'#e5484d':'#6b7280'};margin-top:4px">${soldOut?'품절 · 톡톡 재입고 알림 신청 가능':'재고 '+option.stock_quantity+'개'}</div><div class="total"><span>총 1개</span><b>${money(p.price)}</b></div>`:""}</div><div class="action-row"><button>🎁 선물하기</button><button class="buy" onclick="buyNow()">N 구매하기</button><button class="gray">♡ 찜하기</button><button class="gray">🛍 장바구니</button></div><button class="talk-inline" onclick="openTalkForCurrent()">💬 톡톡하기 · 품절 옵션 재입고 알림</button></div>`;
+  renderAdmin();
+}
+window.backToList = function(){ document.getElementById("listView").style.display="block"; document.getElementById("detailView").classList.remove("active"); history.replaceState(null,"",location.pathname); };
+function colorDropdown(colors){ return `<div class="dropdown"><div class="drop-head" onclick="openColor=!openColor;renderDetail()"><span>${selectedColor?"색상 / "+selectedColor:"색상"}</span><span>${openColor?'⌃':'⌄'}</span></div>${openColor?`<div class="drop-list">${colors.map(c=>`<button class="drop-option" onclick="selectColor('${c.replace(/'/g,"\\'")}')"><span>${c}</span><span>›</span></button>`).join("")}</div>`:""}</div>`; }
+function sizeDropdown(sizes){ return `<div class="dropdown"><div class="drop-head" onclick="if(!selectedColor) return toast('색상을 먼저 선택하세요'); openSize=!openSize;renderDetail()"><span>${selectedOptionId ? (sizes.find(o=>o.id===selectedOptionId)?.original_option_name || '사이즈') : '사이즈'}</span><span>${openSize?'⌃':'⌄'}</span></div>${openSize?`<div class="drop-list">${sizes.map(o=>{const sp=splitOpt(o.original_option_name); const sold=Number(o.stock_quantity)<=0; return `<button class="drop-option ${sold?'soldout':''}" onclick="selectOption('${o.id}')"><span>${sp.size}</span><span>${sold?'품절 · 알림 가능':'재고 '+o.stock_quantity}</span></button>`}).join("")}</div>`:""}</div>`; }
+window.selectColor = function(c){ selectedColor=c; selectedOptionId=null; openColor=false; openSize=true; renderDetail(); };
+window.selectOption = function(id){ selectedOptionId=id; openSize=false; renderDetail(); };
+window.buyNow = function(){ const o=(state.product_options||[]).find(x=>x.id===selectedOptionId); if(!o) return toast('옵션을 선택하세요.'); if(Number(o.stock_quantity)<=0) return toast('품절 옵션입니다. 톡톡하기로 재입고 알림을 신청하세요.'); toast('mock 구매: 실제 결제는 구현하지 않았습니다.'); };
+function renderAdmin(){
+  const m=calcMetrics(); document.getElementById("metrics").innerHTML = `<div class="metric"><b>${m.productCount}</b><span>상품 수</span></div><div class="metric"><b>${m.partialOutOptions}</b><span>품절 옵션</span></div><div class="metric"><b>${m.waitingCount}</b><span>대기자</span></div><div class="metric"><b>${m.notifiedCount}</b><span>알림 완료</span></div>`;
+  const p=getProduct(); const opts=productOptions(p.id);
+  document.getElementById("stockEditor").innerHTML = opts.map(o=>{const waiting=(state.waitlists||[]).filter(w=>w.option_id===o.id&&w.status==="WAITING").length; return `<div class="stock-row"><div><div class="name">${o.original_option_name}</div><div class="state">현재 ${o.stock_quantity}개 · 대기 ${waiting}명 ${Number(o.stock_quantity)<=0?'· 품절':''}</div></div><input type="number" min="0" value="${o.stock_quantity}" id="stock_${o.id}"/><button onclick="updateStock('${o.id}')">적용</button></div>`; }).join("");
+  document.getElementById("waitlists").innerHTML = (state.waitlists||[]).length ? state.waitlists.slice(0,10).map(w=>`<div class="log"><strong>${w.product_name||w.product_id}</strong>${w.option_name||w.option_id}\n${w.channel_preference||''} · ${w.status} · ${w.phone_number||'톡톡만'}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나 API 테스트를 진행하세요.</div>`;
+  document.getElementById("logs").innerHTML = (state.message_logs||[]).length ? state.message_logs.slice(0,10).map(l=>`<div class="log"><strong>${l.channel} · ${l.message_type}</strong>${typeof l.payload==='string'?l.payload:JSON.stringify(l.payload||{},null,2).slice(0,900)}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
+}
+function renderAll(){ renderGrid(); if (new URLSearchParams(location.search).get("productNo")) renderDetail(); else renderAdmin(); }
+window.updateStock = async function(optionId){ const val=Number(document.getElementById("stock_"+optionId).value||0); if(remoteOk){ try{ const r=await api("/api/update-stock", { method:"POST", body:JSON.stringify({ option_id: optionId, stock_quantity: val }) }); toast(`재고 반영 완료 · 발송 ${r.result?.notified_count||0}건`); await loadState(); return; }catch(e){ toast('원격 API 실패: 브라우저 mock으로 처리합니다.'); remoteOk=false; } } updateStockLocal(optionId,val); renderAll(); };
+function updateStockLocal(optionId,val){ const o=state.product_options.find(x=>x.id===optionId); if(!o) return; const before=Number(o.stock_quantity); o.stock_quantity=val; o.current_option_name=val<=0?o.original_option_name+' [품절]':o.original_option_name; state.stock_events.unshift({event_type: before<=0&&val>0?'RESTOCKED':'STOCK_UPDATED', option_id:optionId, previous_stock:before, current_stock:val, created_at:new Date().toISOString()}); if(before<=0&&val>0){ const waiting=(state.waitlists||[]).filter(w=>w.option_id===optionId&&w.status==='WAITING'); waiting.forEach(w=>{ const p=state.products.find(p=>p.id===w.product_id); w.status='NOTIFIED'; w.notified_at=new Date().toISOString(); state.message_logs.unshift({channel:'NAVER_TALK', message_type:'RESTOCK_ALERT', payload:{body:{event:'send', user:w.talk_user_id, textContent:{text:`[재입고 안내]\n${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다. : 대기인원 ${waiting.length}명`}}}}); if(w.kakao_opt_in) state.message_logs.unshift({channel:'KAKAO_ALIMTALK', message_type:'RESTOCK_ALERT', payload:{phoneNumber:w.phone_number, message:`${p?.product_name} ${o.original_option_name} 재입고`}}); }); toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`); } saveLocal(); }
+window.openTalkForCurrent = async function(){ await openTalk(getProduct()); };
+document.getElementById("headerTalkBtn").onclick=()=>openTalk(getProduct());
+async function openTalk(product){ const payload={event:'open', user:'mock_page_user', options:{inflow:'button', referer:`https://plumisbea-ux.github.io/naver-restock-alert/?productNo=${product.product_no}`, from:String(product.product_no), friend:false, under14:false, under19:false}}; if(remoteOk){ try{ const r=await api('/api/naver-talk-webhook',{method:'POST',body:JSON.stringify(payload)}); state.message_logs = state.message_logs || []; state.message_logs.unshift({channel:'MOCK_OPEN',message_type:'OPEN_RESPONSE',payload:r}); renderAdmin(); }catch(e){} } window.open(TALK_URL, '_blank', 'noopener'); toast('실제 톡톡 탭을 열었습니다. 톡톡 안의 챗봇 응답은 파트너센터 Webhook 연결 후 표시됩니다.'); }
+document.getElementById("adminToggle").onclick=()=>document.getElementById("adminPanel").classList.add("open"); document.getElementById("adminClose").onclick=()=>document.getElementById("adminPanel").classList.remove("open");
+document.getElementById("saveApi").onclick=()=>{ apiBase=document.getElementById("apiBase").value.trim()||DEFAULT_API_BASE; localStorage.setItem("RESTOCK_API_BASE",apiBase); loadState(); };
+document.getElementById("reloadState").onclick=()=>loadState(); document.getElementById("resetState").onclick=async()=>{ if(remoteOk){ try{ await api('/api/reset-mock',{method:'POST'}); await loadState(); toast('원격 mock DB 초기화 완료'); return; }catch(e){} } state=structuredClone(fallbackState); saveLocal(); renderAll(); toast('브라우저 mock 초기화 완료'); };
+loadState();
+</script>
+</body>
 </html>

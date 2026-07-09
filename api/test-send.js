@@ -1,8 +1,9 @@
 import { handleEvent } from "../lib/flow.js";
-import { json } from "../lib/http.js";
+import { json, empty, isPreflight } from "../lib/http.js";
 
 export default {
   async fetch(request) {
+    if (isPreflight(request)) return empty();
     const url = new URL(request.url);
     const text = url.searchParams.get("text") || "재입고 신청";
     const code = url.searchParams.get("code") || undefined;

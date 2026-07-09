@@ -1,5 +1,5 @@
 import { db, getOptionById, getProductById, getProductOptions } from "../lib/db.js";
-import { json } from "../lib/http.js";
+import { json, empty, isPreflight } from "../lib/http.js";
 
 function decorateWaitlist(waitlist) {
   const product = getProductById(waitlist.product_id);
@@ -34,7 +34,8 @@ function dashboardMetrics(store) {
 }
 
 export default {
-  async fetch() {
+  async fetch(request) {
+    if (isPreflight(request)) return empty();
     const store = db();
     return json({
       ok: true,
