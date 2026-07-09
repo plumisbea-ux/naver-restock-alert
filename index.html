@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>네이버 톡톡 재입고 알림 MVP</title>
+    <style>
+      :root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17202a; background: #f5f7fa; }
+      body { margin: 0; }
+      header { background: #0f172a; color: white; padding: 28px 32px; }
+      header h1 { margin: 0 0 8px; font-size: 28px; }
+      header p { margin: 0; opacity: 0.82; }
+      main { display: grid; grid-template-columns: minmax(320px, 460px) 1fr; gap: 20px; padding: 20px; }
+      section { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06); }
+      h2 { margin: 0 0 14px; font-size: 18px; }
+      h3 { margin: 18px 0 10px; font-size: 15px; }
+      button { border: 0; border-radius: 10px; padding: 10px 12px; cursor: pointer; font-weight: 700; background: #16a34a; color: white; margin: 4px 4px 4px 0; }
+      button.secondary { background: #334155; }
+      button.danger { background: #dc2626; }
+      button.light { background: #e2e8f0; color: #0f172a; }
+      input { width: calc(100% - 22px); padding: 10px; border-radius: 10px; border: 1px solid #cbd5e1; margin: 4px 0 8px; }
+      pre { background: #0b1020; color: #d1e7ff; border-radius: 12px; padding: 12px; overflow: auto; max-height: 420px; }
+      .chat { border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; background: #f8fafc; min-height: 220px; }
+      .bubble { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px 12px; margin: 10px 0; white-space: pre-wrap; }
+      .bubble.user { background: #dcfce7; margin-left: 40px; }
+      .quick-buttons { margin: 8px 0 14px; }
+      .grid { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
+      .metric { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; }
+      .metric b { display: block; font-size: 24px; margin-bottom: 4px; }
+      table { border-collapse: collapse; width: 100%; font-size: 13px; }
+      th, td { text-align: left; border-bottom: 1px solid #e5e7eb; padding: 8px; vertical-align: top; }
+      th { color: #64748b; }
+      .muted { color: #64748b; font-size: 13px; }
+      @media (max-width: 900px) { main { grid-template-columns: 1fr; } .grid { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>네이버 톡톡 재입고 알림 MVP</h1>
+      <p>실제 API 호출 없이 네이버 톡톡 payload와 카카오 알림톡 payload를 mock 로그로 검증하는 1차 모델</p>
+    </header>
+    <main>
+      <section>
+        <h2>톡톡 대화 시뮬레이터</h2>
+        <p class="muted">아래 버튼은 실제 네이버 톡톡 이벤트와 같은 JSON을 /api/naver-talk-webhook으로 POST합니다.</p>
+        <button onclick="sendOpen()">상품 타고 톡톡 열기</button>
+        <button class="secondary" onclick="sendOpenNoContext()">상품 context 없이 열기</button>
+        <button class="danger" onclick="resetMock()">Mock 초기화</button>
+        <div class="chat" id="chat"></div>
+        <h3>직접 메시지 보내기</h3>
+        <input id="manualText" placeholder="예: 재입고 신청, M, 010-1234-5678" />
+        <button onclick="sendManual()">메시지 전송</button>
+      </section>
+
+      <section>
+        <h2>관리자 대시보드</h2>
+        <div class="grid" id="metrics"></div>
+        <h3>상품/옵션</h3>
+        <div id="products"></div>
+        <h3>대기자</h3>
+        <div id="waitlists"></div>
+        <h3>발송 로그</h3>
+        <div id="logs"></div>
+        <h3>최근 API 응답</h3>
+        <pre id="lastResponse">아직 요청 없음</pre>
+      </section>
+    </main>
+
+    <script>
+      const USER_ID = "al-2eGuGr5WQOnco1_V-FQ";
+      const chat = document.querySelector("#chat");
+      const lastResponse = document.querySelector("#lastResponse");
+
+      function addBubble(text, who = "bot") {
+        const div = document.createElement("div");
+        div.className = `bubble ${who}`;
+        div.textContent = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      function renderQuickReply(response) {
+        const list = response?.textContent?.quickReply?.buttonList || [];
+        if (!list.length) return;
+        const wrap = document.createElement("div");
+        wrap.className = "quick-buttons";
+        list.forEach((buttonData) => {
+          const b = document.createElement("button");
+          b.className = "light";
+          b.textContent = buttonData.data.title;
+          b.onclick = () => sendText(buttonData.data.title, buttonData.data.code);
+          wrap.appendChild(b);
+        });
+        chat.appendChild(wrap);
+      }
+
+      async function postWebhook(payload) {
+        const res = await fetch("/api/naver-talk-webhook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        lastResponse.textContent = JSON.stringify({ request: payload, response: data }, null, 2);
+        if (data?.textContent?.text) addBubble(data.textContent.text, "bot");
+        renderQuickReply(data);
+        await refreshAdmin();
+        setTimeout(refreshAdmin, 11000);
+      }
+
+      async function sendOpen() {
+        addBubble("[상품 페이지에서 톡톡 열기]", "user");
+        await postWebhook({
+          event: "open",
+          user: USER_ID,
+          options: {
+            inflow: "button",
+            referer: "https://smartstore.naver.com/mock-store/products/100000001",
+            from: "100000001",
+            friend: false,
+            under14: false,
+            under19: false
+          }
+        });
+      }
+
+      async function sendOpenNoContext() {
+        addBubble("[상품 context 없이 톡톡 열기]", "user");
+        await postWebhook({
+          event: "open",
+          user: USER_ID,
+          options: {
+            inflow: "list",
+            referer: "https://talk.naver.com/",
+            friend: false,
+            under14: false,
+            under19: false
+          }
+        });
+      }
+
+      async function sendText(text, code) {
+        addBubble(text, "user");
+        await postWebhook({
+          event: "send",
+          user: USER_ID,
+          textContent: {
+            text,
+            ...(code ? { code } : {}),
+            inputType: "typing"
+          }
+        });
+      }
+
+      async function sendManual() {
+        const input = document.querySelector("#manualText");
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = "";
+        await sendText(text);
+      }
+
+      async function resetMock() {
+        await fetch("/api/reset-mock", { method: "POST" });
+        chat.innerHTML = "";
+        lastResponse.textContent = "Mock DB reset completed.";
+        await refreshAdmin();
+      }
+
+      function td(value) {
+        return `<td>${value ?? "-"}</td>`;
+      }
+
+      async function refreshAdmin() {
+        const res = await fetch("/api/admin-state");
+        const data = await res.json();
+        const m = data.metrics;
+        document.querySelector("#metrics").innerHTML = [
+          ["상품", m.productCount],
+          ["품절 옵션", m.partialOutOptions],
+          ["완전 품절", m.fullOutProducts],
+          ["대기", m.waitingCount],
+          ["발송 완료", m.notifiedCount],
+          ["카카오 동의", m.kakaoOptInCount],
+          ["로그", m.messageLogCount]
+        ].map(([label, value]) => `<div class="metric"><b>${value}</b>${label}</div>`).join("");
+
+        document.querySelector("#products").innerHTML = data.products.map((product) => `
+          <h3>${product.product_name}</h3>
+          <table>
+            <thead><tr><th>옵션</th><th>재고</th><th>상태</th><th>안내문구</th></tr></thead>
+            <tbody>${product.options.map((option) => `<tr>${td(option.original_option_name)}${td(option.stock_quantity)}${td(option.stock_status)}${td(option.notice_text)}</tr>`).join("")}</tbody>
+          </table>
+        `).join("");
+
+        document.querySelector("#waitlists").innerHTML = data.waitlists.length ? `
+          <table>
+            <thead><tr><th>상품</th><th>옵션</th><th>채널</th><th>전화번호</th><th>상태</th><th>신청시각</th></tr></thead>
+            <tbody>${data.waitlists.map((w) => `<tr>${td(w.product_name)}${td(w.option_name)}${td(w.channel_preference)}${td(w.phone_number)}${td(w.status)}${td(w.requested_at)}</tr>`).join("")}</tbody>
+          </table>` : `<p class="muted">아직 대기자가 없습니다.</p>`;
+
+        document.querySelector("#logs").innerHTML = data.message_logs.length ? `
+          <table>
+            <thead><tr><th>시각</th><th>채널</th><th>타입</th><th>상태</th><th>Payload</th></tr></thead>
+            <tbody>${data.message_logs.slice(0, 10).map((log) => `<tr>${td(log.created_at)}${td(log.channel)}${td(log.message_type)}${td(log.send_status)}<td><code>${JSON.stringify(log.payload).slice(0, 180)}...</code></td></tr>`).join("")}</tbody>
+          </table>` : `<p class="muted">아직 발송 로그가 없습니다.</p>`;
+      }
+
+      refreshAdmin();
+      setInterval(refreshAdmin, 5000);
+    </script>
+  </body>
+</html>
