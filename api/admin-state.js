@@ -20,7 +20,7 @@ function dashboardMetrics(store) {
   }).length;
   const waitingCount = store.waitlists.filter((item) => item.status === "WAITING").length;
   const notifiedCount = store.waitlists.filter((item) => item.status === "NOTIFIED").length;
-  const kakaoOptInCount = store.waitlists.filter((item) => item.kakao_opt_in).length;
+  const smsOptInCount = store.waitlists.filter((item) => item.sms_opt_in || item.channel_preference === "NAVER_TALK_AND_SMS").length;
 
   return {
     productCount,
@@ -28,7 +28,7 @@ function dashboardMetrics(store) {
     fullOutProducts,
     waitingCount,
     notifiedCount,
-    kakaoOptInCount,
+    smsOptInCount,
     messageLogCount: store.message_logs.length
   };
 }

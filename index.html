@@ -37,12 +37,51 @@
     .nav-btn.active { color: #000; font-weight: 800; border-bottom-color: #111; }
     .notice-strip { background: #f4f0ff; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #4b4b69; padding: 8px 16px; text-align: center; }
     .layout { max-width: 1180px; margin: 0 auto; padding: 34px 16px 88px; }
-    .hero { height: 210px; border-radius: 4px; overflow: hidden; background: linear-gradient(110deg, #111 0%, #27221d 52%, #efe5d5 52%, #f6efe5 100%); color: #fff; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; margin-bottom: 38px; }
-    .hero-copy { padding: 36px; }
-    .hero-copy small { display: block; opacity: .72; letter-spacing: 2px; margin-bottom: 12px; }
-    .hero-copy h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.2; }
-    .hero-copy p { margin: 0; opacity: .84; }
-    .hero-card { justify-self: center; width: 210px; height: 170px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.38); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: #111; font-weight: 900; box-shadow: 0 20px 50px rgba(0,0,0,.18); backdrop-filter: blur(4px); }
+    .hero { position: relative; min-height: 380px; border-radius: 30px; overflow: hidden; color: #fff; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr); align-items: center; gap: 24px; margin-bottom: 22px; padding: 38px; background:
+      radial-gradient(circle at 82% 18%, rgba(3,199,90,.42), transparent 30%),
+      radial-gradient(circle at 12% 82%, rgba(255,255,255,.16), transparent 32%),
+      linear-gradient(135deg, #07130d 0%, #102417 45%, #ebe0cf 46%, #f8f3e9 100%);
+      box-shadow: 0 28px 70px rgba(13, 27, 42, .18); }
+    .hero::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size: 34px 34px; opacity: .62; pointer-events: none; }
+    .hero-copy { position: relative; z-index: 1; max-width: 640px; }
+    .eyebrow-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.12); border-radius: 999px; color: rgba(255,255,255,.92); font-size: 12px; font-weight: 900; letter-spacing: .8px; backdrop-filter: blur(8px); }
+    .eyebrow.green { color: #063d1e; background: #b6ffd7; border-color: rgba(182,255,215,.8); }
+    .hero-copy h1 { margin: 0 0 18px; font-size: clamp(36px, 5vw, 58px); line-height: 1.05; letter-spacing: -1.8px; }
+    .hero-copy h1 .accent { display: inline-block; color: #b6ffd7; }
+    .hero-copy p { margin: 0; max-width: 560px; color: rgba(255,255,255,.82); font-size: 17px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    .hero-actions button { border: 0; border-radius: 999px; padding: 13px 18px; font-weight: 900; }
+    .hero-actions .primary { background: var(--naver); color: #fff; box-shadow: 0 14px 32px rgba(3,199,90,.32); }
+    .hero-actions .secondary { background: rgba(255,255,255,.13); color: #fff; border: 1px solid rgba(255,255,255,.22); }
+    .hero-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 24px; max-width: 650px; }
+    .hero-metric { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.11); border: 1px solid rgba(255,255,255,.15); backdrop-filter: blur(8px); }
+    .hero-metric b { display: block; font-size: 20px; margin-bottom: 4px; }
+    .hero-metric span { font-size: 12px; color: rgba(255,255,255,.74); line-height: 1.45; }
+    .hero-card { position: relative; z-index: 1; justify-self: stretch; min-height: 300px; color: #111827; background: rgba(255,255,255,.88); border: 1px solid rgba(255,255,255,.7); border-radius: 28px; box-shadow: 0 24px 55px rgba(10,21,30,.2); padding: 20px; backdrop-filter: blur(10px); }
+    .demo-phone { background: #fff; border: 1px solid #e9edf1; border-radius: 24px; padding: 16px; box-shadow: inset 0 0 0 6px #f7f8fa; }
+    .demo-phone-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 14px; border-bottom: 1px solid #eef1f4; font-weight: 900; }
+    .demo-flow { display: grid; gap: 10px; padding-top: 14px; }
+    .demo-bubble { border-radius: 16px; padding: 12px; background: #f4f7fb; font-size: 13px; line-height: 1.5; }
+    .demo-bubble.naver { background: #e9fff2; border: 1px solid #c8f4d8; }
+    .demo-chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
+    .demo-chip { border-radius: 999px; padding: 6px 9px; background: #111827; color: #fff; font-size: 11px; font-weight: 800; }
+    .service-intro { margin: 0 0 34px; display: grid; grid-template-columns: 1fr 1.35fr; gap: 18px; align-items: stretch; }
+    .intro-copy, .intro-card { border: 1px solid #e8ecef; border-radius: 22px; background: #fff; box-shadow: 0 16px 42px rgba(16, 24, 40, .06); }
+    .intro-copy { padding: 26px; background: linear-gradient(180deg, #ffffff 0%, #f8fbf9 100%); }
+    .intro-copy small { display: inline-flex; color: var(--naver); font-weight: 900; margin-bottom: 10px; }
+    .intro-copy h2 { margin: 0 0 12px; font-size: 28px; line-height: 1.25; letter-spacing: -.7px; }
+    .intro-copy p { margin: 0; color: #667085; line-height: 1.72; }
+    .intro-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 18px; }
+    .intro-card { padding: 18px; box-shadow: none; }
+    .intro-card .icon { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #ecfdf3; margin-bottom: 12px; font-size: 18px; }
+    .intro-card b { display: block; margin-bottom: 8px; font-size: 15px; }
+    .intro-card span { display: block; color: #667085; font-size: 13px; line-height: 1.55; }
+    .demo-guide { margin: -12px 0 36px; padding: 18px; border-radius: 20px; background: #111827; color: #fff; display: grid; grid-template-columns: 160px 1fr; gap: 14px; align-items: center; }
+    .demo-guide b { font-size: 16px; }
+    .guide-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .guide-step { padding: 12px; border-radius: 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.09); font-size: 12px; line-height: 1.45; color: rgba(255,255,255,.82); }
+    .guide-step strong { display: block; color: #b6ffd7; margin-bottom: 4px; font-size: 13px; }
     .breadcrumb { font-size: 12px; color: #9aa3ad; text-align: right; margin-bottom: 8px; }
     .section-title { font-size: 26px; font-weight: 900; border-bottom: 2px solid #2b2f36; padding-bottom: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; }
     .section-title small { font-size: 13px; color: #8a94a4; font-weight: 500; }
@@ -120,13 +159,15 @@
       .detail { grid-template-columns: 1fr; }
       .detail-img { height: 520px; }
       .admin { width: min(100vw, 420px); }
-      .hero { grid-template-columns: 1fr; height: auto; }
+      .hero { grid-template-columns: 1fr; height: auto; padding: 26px; border-radius: 22px; }
       .hero-card { display: none; }
+      .hero-metrics, .service-intro, .intro-grid, .demo-guide, .guide-steps { grid-template-columns: 1fr; }
+      .demo-guide { align-items: start; }
     }
   </style>
 </head>
 <body>
-  <div class="topbar"><span>네이버 스마트스토어 mock 화면</span><span>상품/옵션/재고 DB 가정</span><span>톡톡 챗봇 연동 테스트</span></div>
+  <div class="topbar"><span>셀러 홍보용 데모 페이지</span><span>가상 스마트스토어 + 톡톡 챗봇 흐름</span><span>옵션별 재입고 수요 저장 시뮬레이터</span></div>
   <header class="header">
     <div class="store-tools"><button class="talk-badge" id="headerTalkBtn">💬 톡톡하기</button><span>문의 · 재입고 알림</span></div>
     <button class="brand" id="brandBtn">PLUMIS<span>WEAR</span></button>
@@ -148,9 +189,57 @@
   <main class="layout">
     <section id="listView">
       <div class="hero">
-        <div class="hero-copy"><small>SUMMER RESTOCK SIGNAL</small><h1>품절된 옵션도<br/>고객 수요로 저장합니다</h1><p>가상 스마트스토어에서 상품을 보고 톡톡하기를 눌러 재입고 알림 흐름을 테스트하세요.</p></div>
-        <div class="hero-card">PLUMIS<br/>WEAR</div>
+        <div class="hero-copy">
+          <div class="eyebrow-row">
+            <span class="eyebrow green">SELLER DEMO</span>
+            <span class="eyebrow">SMARTSTORE RESTOCK ALERT</span>
+            <span class="eyebrow">톡톡 기반 수요 회수</span>
+          </div>
+          <h1>품절된 옵션도<br/><span class="accent">구매 의도</span>로 저장합니다</h1>
+          <p>고객이 품절 옵션을 보고 그냥 나가기 전에, 톡톡 챗봇으로 재입고 알림 대기자를 만들고 재입고 순간 다시 불러오는 과정을 보여주는 셀러 설명용 데모입니다.</p>
+          <div class="hero-actions">
+            <button class="primary" onclick="navigateCategory('best')">상품 데모 보기</button>
+            <button class="secondary" onclick="document.getElementById('adminPanel').classList.add('open')">관리창 열기</button>
+          </div>
+          <div class="hero-metrics">
+            <div class="hero-metric"><b>옵션별</b><span>색상/사이즈 조합마다 재고와 품절 상태를 분리 관리</span></div>
+            <div class="hero-metric"><b>고객별</b><span>톡톡 user와 상품 context를 저장해 대기자 DB 구성</span></div>
+            <div class="hero-metric"><b>재입고 시</b><span>재고가 0에서 1 이상으로 바뀌면 알림 발송 흐름 실행</span></div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="demo-phone">
+            <div class="demo-phone-head"><span>💬 톡톡 재입고 챗봇</span><span style="color:#03c75a">LIVE MOCK</span></div>
+            <div class="demo-flow">
+              <div class="demo-bubble">“케이블 니트 카라 반팔 셔츠에 대해 문의를 해주셨군요!”</div>
+              <div class="demo-bubble naver"><b>품절 옵션 감지</b><br/>블랙 / M, 그레이블루 / L</div>
+              <div class="demo-bubble">고객이 원하는 옵션을 선택하면 대기자로 저장됩니다.</div>
+              <div class="demo-chip-row"><span class="demo-chip">재입고 알림받기</span><span class="demo-chip">톡톡 + SMS</span></div>
+            </div>
+          </div>
+        </div>
       </div>
+      <section class="service-intro">
+        <div class="intro-copy">
+          <small>이 데모로 설명할 수 있는 것</small>
+          <h2>품절 때문에 사라지는 고객을<br/>재입고 대기자로 전환합니다</h2>
+          <p>스마트스토어 상품 상세에서 고객이 톡톡하기를 누른 상황을 가정하고, 어떤 상품에서 들어왔는지 인식한 뒤 품절 옵션만 골라 재입고 알림 신청 버튼을 제공합니다. 셀러는 오른쪽 관리창에서 재고를 바꿔 재입고 알림 발송까지 직접 시연할 수 있습니다.</p>
+        </div>
+        <div class="intro-grid">
+          <div class="intro-card"><div class="icon">🧭</div><b>상품 context 인식</b><span>고객이 어떤 상품에서 톡톡을 열었는지 open webhook payload로 가정합니다.</span></div>
+          <div class="intro-card"><div class="icon">📦</div><b>품절 옵션만 추출</b><span>색상/사이즈 조합별 mock DB에서 재고 0인 옵션만 버튼으로 보여줍니다.</span></div>
+          <div class="intro-card"><div class="icon">🔔</div><b>재입고 알림 발송</b><span>관리창에서 재고를 1 이상으로 바꾸면 해당 대기자에게 알림 payload를 생성합니다.</span></div>
+        </div>
+      </section>
+      <section class="demo-guide">
+        <b>시연 순서</b>
+        <div class="guide-steps">
+          <div class="guide-step"><strong>1. 상품 선택</strong>옷 상품 상세에서 색상/사이즈 재고를 확인합니다.</div>
+          <div class="guide-step"><strong>2. 톡톡하기</strong>상품번호를 담은 mock open 이벤트를 서버로 보냅니다.</div>
+          <div class="guide-step"><strong>3. 알림 신청</strong>실제 톡톡 챗봇에서 품절 옵션 재입고 알림을 신청합니다.</div>
+          <div class="guide-step"><strong>4. 재고 변경</strong>관리창에서 재고를 채워 재입고 알림 발송을 시연합니다.</div>
+        </div>
+      </section>
       <div class="breadcrumb" id="breadcrumb">PLUMIS WEAR &gt; 베스트</div>
       <div class="section-title"><span id="sectionTitle">BEST</span><small id="sectionSubtitle">실시간 인기 상품</small></div>
       <div class="tabs"><b>인기순</b><span>리뷰 많은순</span><span>낮은가격순</span><span>신상품순</span></div>
@@ -167,6 +256,7 @@
       <div class="setting-row"><input id="apiBase" placeholder="https://naver-restock-alert.vercel.app" /><button id="saveApi">연결</button></div>
       <div class="setting-row"><select id="adminProductSelect"></select><button id="reloadState">새로고침</button></div>
       <div class="setting-row"><button class="admin-action" id="resetState">mock DB 초기화</button><button class="admin-action" id="mockWaitlistBtn">선택 유저 대기자 생성</button></div>
+      <div class="setting-row"><button class="admin-action" id="mockSmsWaitlistBtn">선택 유저 SMS 대기자 생성</button></div>
       <h3>요약</h3><div class="metrics" id="metrics"></div>
       <h3>옵션 재고 수정</h3><div id="stockEditor"></div>
       <h3>대기자</h3><div id="waitlists"></div>
@@ -252,6 +342,7 @@ function navigateCategory(cat) {
   renderAll();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+window.navigateCategory = navigateCategory;
 
 function renderUsers() {
   const users = getMockUsers();
@@ -367,7 +458,7 @@ function renderAdmin() {
     const waiting = (state.waitlists || []).filter(w => w.option_id === o.id && w.status === "WAITING").length;
     return `<div class="stock-row"><div><div class="name">${escapeHtml(o.original_option_name)}</div><div class="state">현재 ${o.stock_quantity}개 · 대기 ${waiting}명 ${Number(o.stock_quantity) <= 0 ? "· 품절" : ""}</div></div><input type="number" min="0" value="${o.stock_quantity}" id="stock_${o.id}"/><button onclick="updateStock('${o.id}')">적용</button></div>`;
   }).join("");
-  document.getElementById("waitlists").innerHTML = (state.waitlists || []).length ? state.waitlists.slice(0, 12).map(w => `<div class="log"><strong>${escapeHtml(w.product_name || w.product_id)}</strong>${escapeHtml(w.option_name || w.option_id)}\n고객: ${escapeHtml(w.talk_user_id)} · ${w.channel_preference || ""} · ${w.status}\n${w.phone_number || "톡톡만"}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나, “선택 유저 대기자 생성”으로 서버 mock 대기자를 만드세요.</div>`;
+  document.getElementById("waitlists").innerHTML = (state.waitlists || []).length ? state.waitlists.slice(0, 12).map(w => `<div class="log"><strong>${escapeHtml(w.product_name || w.product_id)}</strong>${escapeHtml(w.option_name || w.option_id)}\n고객: ${escapeHtml(w.talk_user_id)} · ${w.channel_preference || ""} · ${w.status}\n${w.phone_number ? "SMS: " + escapeHtml(w.phone_number) : "톡톡만 또는 SMS 동의 대기"}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나, “선택 유저 대기자 생성”으로 서버 mock 대기자를 만드세요.</div>`;
   document.getElementById("logs").innerHTML = (state.message_logs || []).length ? state.message_logs.slice(0, 12).map(l => `<div class="log"><strong>${escapeHtml(l.channel)} · ${escapeHtml(l.message_type)}</strong>${escapeHtml(typeof l.payload === "string" ? l.payload : JSON.stringify(l.payload || {}, null, 2).slice(0, 1000))}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
 }
 
@@ -396,7 +487,7 @@ function updateStockLocal(optionId, val) {
   state.stock_events.unshift({ event_type: before <= 0 && val > 0 ? "RESTOCKED" : "STOCK_UPDATED", option_id: optionId, previous_stock: before, current_stock: val, created_at: new Date().toISOString() });
   if (before <= 0 && val > 0) {
     const waiting = (state.waitlists || []).filter(w => w.option_id === optionId && w.status === "WAITING");
-    waiting.forEach(w => { const p = state.products.find(p => p.id === w.product_id); w.status = "NOTIFIED"; w.notified_at = new Date().toISOString(); state.message_logs.unshift({ channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", payload: { body: { event: "send", user: w.talk_user_id, textContent: { text: `[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명` } } } }); if (w.kakao_opt_in) state.message_logs.unshift({ channel: "KAKAO_ALIMTALK", message_type: "RESTOCK_ALERT", payload: { phoneNumber: w.phone_number, message: `[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고` } }); });
+    waiting.forEach(w => { const p = state.products.find(p => p.id === w.product_id); w.status = "NOTIFIED"; w.notified_at = new Date().toISOString(); state.message_logs.unshift({ channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", payload: { body: { event: "send", user: w.talk_user_id, textContent: { text: `[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명` } } } }); if ((w.sms_opt_in || w.channel_preference === "NAVER_TALK_AND_SMS") && w.phone_number) state.message_logs.unshift({ channel: "SMS", message_type: "RESTOCK_ALERT", payload: { phoneNumber: w.phone_number, message: `[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고` } }); });
     toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`);
   }
 }
@@ -429,7 +520,7 @@ async function openTalk(product) {
   toast(`실제 톡톡 탭을 열었습니다. 상품 context: from=${productNo}. 테스트 고객 ${selectedMockUser}는 mock open에만 적용됩니다.`);
 }
 
-async function createMockWaitlist() {
+async function createMockWaitlist(channel = "NAVER_TALK_ONLY") {
   const product = getProduct();
   const option = state.product_options.find(o => o.id === selectedOptionId) || productOptions(product.id).find(o => Number(o.stock_quantity) <= 0);
   if (!option) return toast("품절 옵션이 없습니다.");
@@ -438,7 +529,8 @@ async function createMockWaitlist() {
     await postTalkEvent(makeOpenPayload(product));
     await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `APPLY_RESTOCK:${product.id}`, code: `APPLY_RESTOCK:${product.id}` } });
     await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `SELECT_OPTION:${product.id}:${option.id}`, code: `SELECT_OPTION:${product.id}:${option.id}` } });
-    await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}`, code: `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}` } });
+    const channelCode = channel === "NAVER_TALK_AND_SMS" ? `CHANNEL:SMS:${product.id}:${option.id}` : `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}`;
+    await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: channelCode, code: channelCode } });
     await updateRemoteState();
     renderAll();
     toast(`${selectedMockUser} 대기자 생성 완료: ${product.product_name} / ${option.original_option_name}`);
@@ -459,7 +551,8 @@ document.getElementById("saveApi").onclick = () => { apiBase = document.getEleme
 document.getElementById("reloadState").onclick = () => loadState();
 document.getElementById("resetState").onclick = async () => { if (remoteOk) { try { const r = await api("/api/naver-talk-webhook", { method: "POST", body: JSON.stringify({ event: "admin.reset" }) }); state = normalizeRemote(r.state); renderAll(); toast("원격 mock DB 초기화 완료"); return; } catch (e) {} } state = clone(seedData); renderAll(); toast("브라우저 mock 초기화 완료"); };
 document.getElementById("adminProductSelect").onchange = (e) => { selectedProductNo = e.target.value; renderDetail(); };
-document.getElementById("mockWaitlistBtn").onclick = createMockWaitlist;
+document.getElementById("mockWaitlistBtn").onclick = () => createMockWaitlist();
+document.getElementById("mockSmsWaitlistBtn").onclick = () => createMockWaitlist("NAVER_TALK_AND_SMS");
 window.addEventListener("hashchange", () => { currentCategory = location.hash.replace("#", "") || "best"; renderAll(); });
 
 loadState();

@@ -29,7 +29,7 @@ export default {
 
     return json({
       request: mockOpenEvent,
-      response: handleEvent(mockOpenEvent)
+      response: await handleEvent(mockOpenEvent)
     });
   }
 };

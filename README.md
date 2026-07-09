@@ -41,6 +41,31 @@ https://naver-restock-alert.vercel.app/api/naver-talk-webhook
 https://naver-restock-alert.vercel.app/api/naver-talk-webhook
 ```
 
+
+## 셀러 설명용 데모 구성
+
+이번 버전은 단순 테스트 페이지가 아니라, 셀러에게 서비스를 보여주고 설명하기 위한 데모 랜딩 영역을 포함합니다.
+
+상단 히어로 섹션은 다음 메시지를 전달하도록 구성했습니다.
+
+```text
+품절된 옵션도 구매 의도로 저장합니다.
+고객이 품절 옵션을 보고 나가기 전에 톡톡 챗봇으로 재입고 알림 대기자를 만들고, 재입고 순간 다시 불러오는 서비스입니다.
+```
+
+화면에서 바로 설명할 수 있는 포인트:
+
+```text
+1. 상품 context 인식
+2. 옵션별 품절 감지
+3. 톡톡 재입고 알림 신청
+4. 고객별 대기자 저장
+5. 관리창 재고 변경
+6. 재입고 알림 발송
+```
+
+셀러 미팅에서는 상단 설명 → 상품 상세 → 톡톡하기 → 관리창 재고 변경 순서로 시연하면 됩니다.
+
 ## 사용 흐름
 
 1. GitHub Pages에서 가상 스마트스토어 접속
@@ -111,7 +136,7 @@ ZIP 내용물을 GitHub 저장소 루트에 덮어쓴 뒤:
 
 ```bash
 git add .
-git commit -m "Update smartstore navigation and mock users"
+git commit -m "Polish seller demo landing section"
 git push origin main
 ```
 
@@ -128,7 +153,7 @@ data/mock-store.js                  상품/옵션/재고/테스트 고객 mock D
 lib/flow.js                         톡톡 대화 흐름
 lib/naverTalkParser.js              open/send 이벤트에서 productNo와 intent 파싱
 lib/restock.js                      재고 0 → 1 이상 변경 시 대기자 알림 발송
-lib/mockSenders.js                  톡톡/카카오 mock 또는 실제 발송 payload 생성
+lib/mockSenders.js                  톡톡/Profile API/SMS mock 또는 실제 발송 payload 생성
 ```
 
 ## 이미지 관련
@@ -149,3 +174,66 @@ _site/data/mock-store.js
 ```
 
 이미 이전 버전이 배포되어 있다면 `pages.yml` 변경 사항을 push한 뒤 Actions가 다시 성공할 때까지 기다리세요.
+
+## 이번 버전 업데이트: 이전으로 돌아가기 버튼
+
+모든 톡톡 응답 quickReply에 `이전으로 돌아가기` 버튼을 추가했습니다.
+
+동작 기준:
+
+```text
+SMS Profile API 동의 대기 단계 → 수신 채널 선택 단계로 복귀
+수신 채널 선택 단계 → 품절 옵션 선택 단계로 복귀
+옵션 선택/기타 문의/신청 완료 단계 → 상품 첫 안내 메시지로 복귀
+상품 context 없음 → 상품 선택 안내 유지
+```
+
+관련 파일:
+
+```text
+lib/naverTalkMessages.js
+lib/naverTalkParser.js
+lib/flow.js
+```
+
+## 이번 버전 업데이트: 고객 식별 + SMS 구조
+
+이번 버전은 고객을 닉네임/전화번호가 아니라 네이버 톡톡 Webhook의 `user` 값으로 구분합니다.
+
+```text
+open/send webhook body.user
+→ talk_user_id로 저장
+→ customer session과 waitlist의 기본 고객 키로 사용
+→ 재입고 시 waitlist.talk_user_id로 톡톡 보내기 API 발송
+```
+
+수신 채널은 일단 이메일을 제외하고 아래 2개만 사용합니다.
+
+```text
+NAVER_TALK_ONLY      톡톡만 받기
+NAVER_TALK_AND_SMS   톡톡 + SMS로 받기
+```
+
+`톡톡 + SMS로 받기`를 선택하면 서버는 네이버 톡톡 Profile API로 `cellphone` 제공을 요청합니다. 실제 네이버 톡톡에서는 사용자가 개인정보 제3자 제공 동의창에 동의해야 휴대전화번호가 `profile` webhook으로 다시 들어옵니다.
+
+```text
+고객이 톡톡 + SMS 선택
+→ /chatbot/v1/event 로 event: profile, options.field: cellphone 요청
+→ 네이버 톡톡 동의 UI
+→ event: profile, options.result: SUCCESS, options.cellphone 수신
+→ waitlist.phone_number 저장
+→ 재입고 시 톡톡 + SMS 발송
+```
+
+Vercel 환경변수는 아래를 사용합니다.
+
+```env
+NAVER_TALK_AUTHORIZATION=ct_xxxxxxxxxxxxxxxxx
+NCP_SENS_SERVICE_ID=ncp:sms:kr:000000000000:your_service
+NCP_ACCESS_KEY=your_access_key
+NCP_SECRET_KEY=your_secret_key
+NCP_SENS_SMS_FROM=01012345678
+```
+
+환경변수가 없으면 실제 외부 발송 없이 mock 발송 로그만 남습니다.
+

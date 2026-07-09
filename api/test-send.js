@@ -20,7 +20,7 @@ export default {
 
     return json({
       request: mockSendEvent,
-      response: handleEvent(mockSendEvent, request)
+      response: await handleEvent(mockSendEvent, request)
     });
   }
 };

@@ -21,15 +21,15 @@ export default {
   async fetch(request) {
     if (isPreflight(request)) return empty();
 
-    const results = db().products.map((product, index) => {
+    const results = await Promise.all(db().products.map(async (product, index) => {
       const requestBody = buildMockOpenEvent(product, index);
       return {
         product_no: product.product_no,
         product_name: product.product_name,
         request: requestBody,
-        response: handleEvent(requestBody)
+        response: await handleEvent(requestBody)
       };
-    });
+    }));
 
     return json({ count: results.length, results });
   }

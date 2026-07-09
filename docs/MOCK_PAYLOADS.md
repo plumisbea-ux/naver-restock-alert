@@ -130,3 +130,48 @@
 - `waitlists`에 전화번호와 카카오 동의 여부 저장
 - `consent_logs`에 동의 기록 저장
 - 관리창에서 재고가 채워지면 네이버 톡톡/카카오 알림톡 mock payload 저장
+
+---
+
+## 최신 SMS 수신 채널 예시
+
+이메일 수신은 현재 제외합니다. 고객 키는 `user` 값입니다.
+
+### 톡톡 + SMS 선택
+
+```json
+{
+  "event": "send",
+  "user": "mock_user_001",
+  "textContent": {
+    "text": "톡톡 + SMS로 받기",
+    "code": "CHANNEL:SMS:prod_knit_collar_001:opt_knit_black_004"
+  }
+}
+```
+
+### 네이버 Profile API 성공 webhook mock
+
+```json
+{
+  "event": "profile",
+  "user": "mock_user_001",
+  "options": {
+    "result": "SUCCESS",
+    "cellphone": "01011110001"
+  }
+}
+```
+
+### 네이버 Profile API 철회 webhook mock
+
+```json
+{
+  "event": "profile",
+  "user": "mock_user_001",
+  "options": {
+    "result": "WITHDRAW",
+    "withdrawals": ["cellphone"]
+  }
+}
+```
