@@ -38,6 +38,7 @@
     <header>
       <h1>네이버 톡톡 재입고 알림 MVP</h1>
       <p>실제 API 호출 없이 네이버 톡톡 payload와 카카오 알림톡 payload를 mock 로그로 검증하는 1차 모델</p>
+      <p style="margin-top:8px;font-size:13px;opacity:.7">GitHub Pages에서는 브라우저 내부 mock 모드로 동작하고, Vercel에서는 /api 백엔드 mock으로 동작합니다.</p>
     </header>
     <main>
       <section>
@@ -67,6 +68,192 @@
     </main>
 
     <script>
+
+      const IS_STATIC_PAGES = location.hostname.endsWith("github.io") || location.search.includes("static=1");
+      const nativeFetch = window.fetch.bind(window);
+
+      function clone(value) { return JSON.parse(JSON.stringify(value)); }
+      function nowIso() { return new Date().toISOString(); }
+      function makeId(prefix) { return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`; }
+
+      const STATIC_SEED = {
+        sellers: [{ id: "seller_001", store_name: "테스트 스마트스토어", talk_account_id: "wc_testtalk", kakao_channel_id: "@테스트스토어", plan: "FREE_TEST", status: "ACTIVE" }],
+        products: [
+          { id: "prod_hoodie_001", seller_id: "seller_001", product_no: "100000001", product_name: "베이직 오버핏 후드티", product_url: "https://smartstore.naver.com/mock-store/products/100000001", status: "PARTIAL_OUT_OF_STOCK", is_active: true, low_stock_threshold: 3, has_options: true },
+          { id: "prod_belt_001", seller_id: "seller_001", product_no: "100000002", product_name: "프린터 전사벨트", product_url: "https://smartstore.naver.com/mock-store/products/100000002", status: "FULL_OUT_OF_STOCK", is_active: true, low_stock_threshold: 3, has_options: true }
+        ],
+        product_options: [
+          { id: "opt_hoodie_s", product_id: "prod_hoodie_001", option_id: "S", original_option_name: "S", current_option_name: "S", stock_quantity: 5, previous_stock_quantity: 5, stock_status: "NORMAL", notice_text: null },
+          { id: "opt_hoodie_m", product_id: "prod_hoodie_001", option_id: "M", original_option_name: "M", current_option_name: "M [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "PARTIAL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" },
+          { id: "opt_hoodie_l", product_id: "prod_hoodie_001", option_id: "L", original_option_name: "L", current_option_name: "L", stock_quantity: 2, previous_stock_quantity: 2, stock_status: "LOW_STOCK", notice_text: null },
+          { id: "opt_hoodie_xl", product_id: "prod_hoodie_001", option_id: "XL", original_option_name: "XL", current_option_name: "XL [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "PARTIAL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" },
+          { id: "opt_hoodie_xxl", product_id: "prod_hoodie_001", option_id: "XXL", original_option_name: "XXL", current_option_name: "XXL", stock_quantity: 7, previous_stock_quantity: 7, stock_status: "NORMAL", notice_text: null },
+          { id: "opt_belt_basic", product_id: "prod_belt_001", option_id: "basic", original_option_name: "기본형", current_option_name: "기본형 [품절]", stock_quantity: 0, previous_stock_quantity: 0, stock_status: "FULL_OUT_OF_STOCK", notice_text: "재입고 알림 가능" }
+        ],
+        stock_events: [], waitlists: [], notification_queue: [], message_logs: [], consent_logs: [], sessions: {},
+        mock_users: { "al-2eGuGr5WQOnco1_V-FQ": { mock_phone_number: "010-1234-5678" } }
+      };
+
+      let staticDb = clone(STATIC_SEED);
+
+      function staticGetProductById(id) { return staticDb.products.find((p) => p.id === id); }
+      function staticGetProductOptions(productId) { return staticDb.product_options.filter((o) => o.product_id === productId); }
+      function staticGetOptionById(id) { return staticDb.product_options.find((o) => o.id === id); }
+      function staticGetOutOfStockOptions(productId) { return staticGetProductOptions(productId).filter((o) => Number(o.stock_quantity) <= 0); }
+      function staticGetSession(userId) {
+        if (!staticDb.sessions[userId]) staticDb.sessions[userId] = { stage: "EMPTY", product_id: null, option_id: null, awaiting_phone: false };
+        return staticDb.sessions[userId];
+      }
+      function staticUpdateSession(userId, patch) { Object.assign(staticGetSession(userId), patch, { updated_at: nowIso() }); }
+      function staticButton(title, code = null) { return { type: "TEXT", data: { title, ...(code ? { code } : {}) } }; }
+      function staticText(text, buttons = []) {
+        const message = { event: "send", textContent: { text } };
+        if (buttons.length) message.textContent.quickReply = { buttonList: buttons };
+        return message;
+      }
+      function staticWaitCount(productId, optionId) { return staticDb.waitlists.filter((w) => w.product_id === productId && w.option_id === optionId && w.status !== "CANCELLED").length; }
+      function staticAdminState() {
+        const productCount = staticDb.products.length;
+        const partialOutOptions = staticDb.product_options.filter((o) => o.stock_quantity <= 0).length;
+        const fullOutProducts = staticDb.products.filter((p) => staticGetProductOptions(p.id).every((o) => o.stock_quantity <= 0)).length;
+        return {
+          ok: true,
+          metrics: {
+            productCount,
+            partialOutOptions,
+            fullOutProducts,
+            waitingCount: staticDb.waitlists.filter((w) => w.status === "WAITING").length,
+            notifiedCount: staticDb.waitlists.filter((w) => w.status === "NOTIFIED").length,
+            kakaoOptInCount: staticDb.waitlists.filter((w) => w.kakao_opt_in).length,
+            messageLogCount: staticDb.message_logs.length
+          },
+          sellers: staticDb.sellers,
+          products: staticDb.products.map((p) => ({ ...p, options: staticGetProductOptions(p.id) })),
+          waitlists: staticDb.waitlists.map((w) => ({ ...w, product_name: staticGetProductById(w.product_id)?.product_name || "-", option_name: staticGetOptionById(w.option_id)?.original_option_name || "-" })),
+          message_logs: staticDb.message_logs.slice(0, 50),
+          consent_logs: staticDb.consent_logs.slice(0, 50),
+          stock_events: staticDb.stock_events.slice(-50).reverse(),
+          sessions: staticDb.sessions
+        };
+      }
+      function staticExtractProduct(eventBody) {
+        const productNo = eventBody?.options?.from || String(eventBody?.options?.referer || "").match(/\/products\/(\d+)/)?.[1];
+        return staticDb.products.find((p) => String(p.product_no) === String(productNo));
+      }
+      function staticOptionPrompt(product, options) {
+        return staticText(`어떤 옵션에 대한 재입고 알림을 원하시나요?\n상품명: ${product.product_name}`, options.map((o) => staticButton(o.original_option_name, `SELECT_OPTION:${product.id}:${o.id}`)));
+      }
+      function staticChannelPrompt(product, option) {
+        return staticText(`선택 옵션: ${option.original_option_name}\n재입고 알림을 어디로 받아보시겠어요?`, [
+          staticButton("톡톡으로 받기", `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}`),
+          staticButton("카카오톡도", `CHANNEL:KAKAO:${product.id}:${option.id}`)
+        ]);
+      }
+      function staticComplete({ userId, productId, optionId, kakaoOptIn = false, phoneNumber = null, channelPreference = "NAVER_TALK_ONLY" }) {
+        let waitlist = staticDb.waitlists.find((w) => w.product_id === productId && w.option_id === optionId && w.talk_user_id === userId && w.status !== "CANCELLED");
+        if (!waitlist) {
+          waitlist = { id: makeId("waitlist"), seller_id: "seller_001", product_id: productId, option_id: optionId, talk_user_id: userId, phone_number: null, kakao_opt_in: false, channel_preference: "NAVER_TALK_ONLY", status: "WAITING", requested_at: nowIso(), restocked_at: null, notified_at: null };
+          staticDb.waitlists.push(waitlist);
+        }
+        waitlist.phone_number = phoneNumber || waitlist.phone_number;
+        waitlist.kakao_opt_in = Boolean(kakaoOptIn || waitlist.kakao_opt_in);
+        waitlist.channel_preference = channelPreference;
+        if (kakaoOptIn && phoneNumber) {
+          staticDb.consent_logs.unshift({ id: makeId("consent"), waitlist_id: waitlist.id, talk_user_id: userId, phone_number: phoneNumber, consent_type: "KAKAO_RESTOCK_ALERT", consented_at: nowIso() });
+        }
+        staticUpdateSession(userId, { stage: "COMPLETED", product_id: productId, option_id: optionId });
+        setTimeout(() => staticProcessRestock(waitlist.id), 10000);
+        const product = staticGetProductById(productId);
+        const option = staticGetOptionById(optionId);
+        const channelText = waitlist.kakao_opt_in ? "톡톡과 카카오톡" : "톡톡";
+        return staticText(`재입고 알림 신청이 완료되었습니다.\n상품명: ${product.product_name}\n옵션: ${option.original_option_name}\n수신 채널: ${channelText}\n현재 대기인원: ${staticWaitCount(productId, optionId)}명\nGitHub Pages mock 모드에서는 약 10초 후 브라우저 안에서 발송 로그가 생성됩니다.`);
+      }
+      function staticBuildRestockText(product, option, waitCount) {
+        return `[재입고 안내]\n${product.product_name} ${option.original_option_name} 옵션이 재입고되었습니다.\n대기인원 ${waitCount}명\n재고는 조기 소진될 수 있습니다.\n상품 확인: ${product.product_url}`;
+      }
+      function staticProcessRestock(waitlistId) {
+        const waitlist = staticDb.waitlists.find((w) => w.id === waitlistId);
+        if (!waitlist || waitlist.status === "NOTIFIED") return;
+        const product = staticGetProductById(waitlist.product_id);
+        const option = staticGetOptionById(waitlist.option_id);
+        const beforeStock = option.stock_quantity;
+        option.previous_stock_quantity = beforeStock;
+        option.stock_quantity = Math.max(3, beforeStock + 3);
+        option.stock_status = "RESTOCKED";
+        option.current_option_name = option.original_option_name;
+        product.status = "RESTOCKED";
+        const waitCount = staticWaitCount(waitlist.product_id, waitlist.option_id);
+        const text = staticBuildRestockText(product, option, waitCount);
+        staticDb.stock_events.unshift({ id: makeId("stock_event"), product_id: product.id, option_id: option.id, event_type: "RESTOCKED", previous_stock: beforeStock, current_stock: option.stock_quantity, created_at: nowIso() });
+        staticDb.message_logs.unshift({ id: makeId("msg"), waitlist_id: waitlist.id, product_id: product.id, option_id: option.id, channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", send_status: "SENT", sent_at: nowIso(), created_at: nowIso(), payload: { requestUrl: "MOCK https://gw.talk.naver.com/chatbot/v1/event", body: { event: "send", user: waitlist.talk_user_id, textContent: { text } } } });
+        if (waitlist.kakao_opt_in && waitlist.phone_number) {
+          staticDb.message_logs.unshift({ id: makeId("msg"), waitlist_id: waitlist.id, product_id: product.id, option_id: option.id, channel: "KAKAO_ALIMTALK", message_type: "RESTOCK_ALERT", send_status: "SENT", sent_at: nowIso(), created_at: nowIso(), payload: { requestUrl: "MOCK Kakao Alimtalk Provider API", body: { phoneNumber: waitlist.phone_number, message: text } } });
+        }
+        waitlist.status = "NOTIFIED";
+        waitlist.restocked_at = nowIso();
+        waitlist.notified_at = nowIso();
+        refreshAdmin();
+      }
+      function staticHandleWebhook(body) {
+        const userId = body.user || USER_ID;
+        if (body.event === "open") {
+          const product = staticExtractProduct(body);
+          if (!product) {
+            staticUpdateSession(userId, { stage: "PRODUCT_SELECT" });
+            return staticText("상품 정보를 자동으로 확인하지 못했습니다.\n재입고 알림을 원하시는 상품을 선택해 주세요.", staticDb.products.map((p) => staticButton(p.product_name.slice(0, 10), `APPLY_RESTOCK:${p.id}`)));
+          }
+          const out = staticGetOutOfStockOptions(product.id);
+          staticUpdateSession(userId, { stage: "OPENED_PRODUCT", product_id: product.id, option_id: null });
+          if (!out.length) return staticText(`현재 ${product.product_name} 상품에는 품절 옵션이 없습니다.`);
+          return staticText(`현재 보고 계신 상품은 ${product.product_name}입니다.\n품절 옵션: ${out.map((o) => o.original_option_name).join(", ")}\n원하시는 옵션이 재입고되면 톡톡으로 알려드릴 수 있습니다.\n재입고 알림을 신청하시겠어요?`, [staticButton("재입고 신청", `APPLY_RESTOCK:${product.id}`)]);
+        }
+        const session = staticGetSession(userId);
+        const text = body?.textContent?.text?.trim() || "";
+        const code = body?.textContent?.code?.trim() || "";
+        const source = code || text;
+        if (source.startsWith("APPLY_RESTOCK") || text.includes("재입고") || text.includes("알림")) {
+          const productId = source.split(":")[1] || session.product_id || staticDb.products[0].id;
+          const product = staticGetProductById(productId);
+          const out = staticGetOutOfStockOptions(product.id);
+          staticUpdateSession(userId, { stage: "OPTION_SELECT", product_id: product.id, option_id: null });
+          return staticOptionPrompt(product, out);
+        }
+        if (source.startsWith("SELECT_OPTION")) {
+          const [, productId, optionId] = source.split(":");
+          const product = staticGetProductById(productId || session.product_id);
+          const option = staticGetOptionById(optionId);
+          staticUpdateSession(userId, { stage: "CHANNEL_SELECT", product_id: product.id, option_id: option.id });
+          return staticChannelPrompt(product, option);
+        }
+        if (source.startsWith("CHANNEL:NAVER_TALK_ONLY")) {
+          const parts = source.split(":");
+          return staticComplete({ userId, productId: parts[2] || session.product_id, optionId: parts[3] || session.option_id });
+        }
+        if (source.startsWith("CHANNEL:KAKAO")) {
+          const parts = source.split(":");
+          staticUpdateSession(userId, { stage: "KAKAO_CONSENT", product_id: parts[2] || session.product_id, option_id: parts[3] || session.option_id });
+          return staticText("카카오톡으로도 재입고 알림을 받으려면 휴대전화번호 수집 동의가 필요합니다.\n\n수집 항목: 휴대전화번호\n수집 목적: 신청하신 상품의 재입고 알림 발송\n보관 기간: 알림 발송 후 30일 또는 신청 취소 시 즉시 삭제\n동의하지 않아도 톡톡 알림은 이용할 수 있습니다.", [staticButton("동의하고 계속", "CONSENT:KAKAO_RESTOCK_ALERT"), staticButton("톡톡만 받기", "CHANNEL:NAVER_TALK_ONLY")]);
+        }
+        if (source.startsWith("CONSENT:KAKAO_RESTOCK_ALERT") || text.includes("동의")) {
+          const phone = staticDb.mock_users[userId]?.mock_phone_number || "010-1234-5678";
+          return staticComplete({ userId, productId: session.product_id, optionId: session.option_id, kakaoOptIn: true, phoneNumber: phone, channelPreference: "NAVER_TALK_AND_KAKAO" });
+        }
+        return staticText("재입고 알림 신청을 도와드릴게요. 아래 버튼을 눌러 신청을 시작해 주세요.", [staticButton("재입고 신청", "APPLY_RESTOCK")]);
+      }
+      async function staticFetch(url, options = {}) {
+        const path = String(url).replace(location.origin, "");
+        let body = {};
+        if (options.body) body = JSON.parse(options.body);
+        if (path.startsWith("/api/naver-talk-webhook")) return new Response(JSON.stringify(staticHandleWebhook(body)), { headers: { "Content-Type": "application/json" } });
+        if (path.startsWith("/api/admin-state")) return new Response(JSON.stringify(staticAdminState()), { headers: { "Content-Type": "application/json" } });
+        if (path.startsWith("/api/reset-mock")) { staticDb = clone(STATIC_SEED); return new Response(JSON.stringify({ ok: true }), { headers: { "Content-Type": "application/json" } }); }
+        return nativeFetch(url, options);
+      }
+      async function apiFetch(url, options = {}) {
+        if (IS_STATIC_PAGES && String(url).startsWith("/api/")) return staticFetch(url, options);
+        return nativeFetch(url, options);
+      }
+
       const USER_ID = "al-2eGuGr5WQOnco1_V-FQ";
       const chat = document.querySelector("#chat");
       const lastResponse = document.querySelector("#lastResponse");
@@ -95,7 +282,7 @@
       }
 
       async function postWebhook(payload) {
-        const res = await fetch("/api/naver-talk-webhook", {
+        const res = await apiFetch("/api/naver-talk-webhook", {
           method: "POST",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           body: JSON.stringify(payload)
@@ -161,7 +348,7 @@
       }
 
       async function resetMock() {
-        await fetch("/api/reset-mock", { method: "POST" });
+        await apiFetch("/api/reset-mock", { method: "POST" });
         chat.innerHTML = "";
         lastResponse.textContent = "Mock DB reset completed.";
         await refreshAdmin();
@@ -172,7 +359,7 @@
       }
 
       async function refreshAdmin() {
-        const res = await fetch("/api/admin-state");
+        const res = await apiFetch("/api/admin-state");
         const data = await res.json();
         const m = data.metrics;
         document.querySelector("#metrics").innerHTML = [

@@ -157,3 +157,20 @@ curl -X POST \
 현재 mock DB는 메모리 기반입니다. Vercel 서버리스 인스턴스가 재시작되면 데이터가 초기화될 수 있습니다. 1차 검증용으로만 사용하고, 베타 운영 전에는 DB를 붙이세요.
 
 카카오 알림톡 문구는 정보성 문구만 넣는 전제로 작성했습니다. 실제 운영 시 템플릿 승인과 개인정보 수집/이용 동의 절차를 반드시 확인하세요.
+
+## GitHub Pages로 화면만 열기
+
+이 프로젝트는 Vercel에서는 `/api` 백엔드 mock까지 동작하고, GitHub Pages에서는 `index.html`의 브라우저 내부 mock 모드로 화면 시뮬레이터만 동작합니다.
+
+1. `.github/workflows/pages.yml` 파일이 포함되어 있는지 확인합니다.
+2. GitHub 저장소에 push합니다.
+3. GitHub 저장소에서 `Settings` → `Pages`로 이동합니다.
+4. `Build and deployment`의 `Source`를 `GitHub Actions`로 선택합니다.
+5. `Actions` 탭에서 `Deploy static dashboard to GitHub Pages`가 성공할 때까지 기다립니다.
+6. 배포 주소는 보통 아래 형식입니다.
+
+```text
+https://YOUR_GITHUB_ID.github.io/YOUR_REPOSITORY_NAME/
+```
+
+주의: GitHub Pages는 정적 호스팅이므로 네이버 톡톡 Webhook URL로는 사용할 수 없습니다. 실제 Webhook 테스트 주소는 계속 Vercel의 `/api/naver-talk-webhook`을 사용하세요.
