@@ -191,6 +191,116 @@
     .log strong { display: block; color: #111; font-size: 13px; margin-bottom: 4px; }
     .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: #111827; color: #fff; border-radius: 999px; padding: 11px 18px; font-size: 13px; opacity: 0; pointer-events: none; transition: .2s ease; z-index: 80; max-width: min(92vw, 820px); text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Intro cinematic overlay */
+    body.intro-active { overflow: hidden; }
+    .intro-overlay { position: fixed; inset: 0; z-index: 200; color: #fff; background:
+      radial-gradient(circle at 78% 22%, rgba(34, 237, 134, .24), transparent 20%),
+      radial-gradient(circle at 16% 80%, rgba(255,255,255,.08), transparent 28%),
+      linear-gradient(120deg, #06110d 0%, #071812 45%, #020706 100%); overflow: hidden; }
+    .intro-overlay[hidden] { display: none !important; }
+    .intro-overlay.is-ending { animation: introFadeOut .9s ease forwards; }
+    .intro-grid-wrap { position: absolute; inset: 0; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 20px; padding: 6vh 6vw; }
+    .intro-grid-wrap::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: 34px 34px; opacity: .4; pointer-events: none; }
+    .intro-copy-stage { position: relative; z-index: 2; max-width: 720px; }
+    .intro-kicker { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.12); font-size: 12px; font-weight: 900; letter-spacing: .08em; color: rgba(255,255,255,.88); margin-bottom: 18px; backdrop-filter: blur(10px); }
+    .intro-line { position: absolute; left: 0; top: 0; max-width: 800px; font-size: clamp(34px, 4.8vw, 72px); font-weight: 900; line-height: 1.14; letter-spacing: -0.04em; opacity: 0; transform: translateY(28px); }
+    .intro-line strong { color: #8cffbf; font-weight: 900; }
+    .intro-copy-stage .line1 { animation: introLine1 10s ease both; }
+    .intro-copy-stage .line2 { animation: introLine2 10s ease both; }
+    .intro-copy-stage .line3 { animation: introLine3 10s ease both; }
+    .intro-note { position: absolute; left: 0; top: clamp(190px, 36vh, 320px); max-width: 520px; color: rgba(255,255,255,.68); font-size: 15px; line-height: 1.7; opacity: 0; animation: introNote 10s ease both; }
+    .intro-controls { position: absolute; left: 6vw; right: 6vw; bottom: 5vh; display: flex; align-items: center; justify-content: space-between; gap: 16px; z-index: 3; }
+    .intro-progress { flex: 1; max-width: 380px; }
+    .intro-progress span { display: block; font-size: 12px; color: rgba(255,255,255,.62); margin-bottom: 8px; }
+    .intro-progress .bar { height: 4px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+    .intro-progress .bar::after { content: ""; display: block; height: 100%; width: 100%; transform-origin: left center; background: linear-gradient(90deg, #03c75a, #a1ffd0); animation: introProgress 10s linear both; }
+    .intro-skip { border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.08); color: #fff; border-radius: 999px; padding: 13px 18px; font-weight: 900; backdrop-filter: blur(8px); opacity: .42; pointer-events: none; transform: translateY(10px); transition: .28s ease; }
+    .intro-skip.ready { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .intro-skip small { opacity: .78; font-weight: 600; margin-left: 6px; }
+    .intro-scene { position: relative; min-height: min(74vh, 680px); z-index: 2; }
+    .scene-floor { position: absolute; left: 5%; right: 5%; bottom: 10%; height: 18%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(113,255,177,.22) 0%, rgba(113,255,177,.06) 42%, transparent 72%); filter: blur(12px); }
+    .scene-glow { position: absolute; inset: 20% 12% 14%; border-radius: 34px; background: radial-gradient(circle at 70% 28%, rgba(3,199,90,.18), transparent 24%), linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01)); border: 1px solid rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.02); }
+    .product-stage { position: absolute; left: 7%; top: 20%; width: min(26vw, 320px); height: min(52vh, 440px); transform-style: preserve-3d; perspective: 1200px; animation: productStage 10s ease both; }
+    .product-card3d { position: absolute; inset: 0; border-radius: 34px; background: linear-gradient(180deg, #f9fafb, #eef2f4); box-shadow: 0 34px 60px rgba(0,0,0,.26); transform: rotateY(-18deg) rotateX(8deg); overflow: hidden; }
+    .product-card3d::before { content: ""; position: absolute; inset: 18px; border-radius: 24px; background: linear-gradient(180deg, #f5eee4 0%, #f7f7f5 58%, #ebf7ef 100%); }
+    .product-card3d::after { content: "PLUMIS\A KNIT SHIRT"; white-space: pre; position: absolute; left: 28px; top: 28px; color: #0f172a; font-size: 18px; line-height: 1.15; font-weight: 900; letter-spacing: -.03em; }
+    .product-shirt { position: absolute; left: 18%; right: 18%; top: 20%; height: 48%; border-radius: 28px 28px 36px 36px; background: linear-gradient(180deg, #0f172a, #263548); box-shadow: inset 0 -12px 18px rgba(255,255,255,.08); }
+    .product-shirt::before, .product-shirt::after { content: ""; position: absolute; top: 22%; width: 32%; height: 18%; background: inherit; border-radius: 24px; }
+    .product-shirt::before { left: -13%; transform: rotate(28deg); }
+    .product-shirt::after { right: -13%; transform: rotate(-28deg); }
+    .product-shirt .collar { position: absolute; left: 50%; top: -2%; width: 28%; height: 18%; transform: translateX(-50%); background: linear-gradient(180deg, #d5e0e9, #ffffff); clip-path: polygon(0 0, 100% 0, 72% 100%, 50% 68%, 28% 100%); }
+    .product-pills { position: absolute; left: 28px; right: 28px; bottom: 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .product-pills span { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.88); border: 1px solid #e5e7eb; color: #111827; font-size: 12px; font-weight: 800; }
+    .product-pills .sold { color: #d92d20; }
+    .soldout-tag { position: absolute; left: -4%; top: 10%; transform: rotate(-12deg) scale(.7); padding: 10px 18px; border-radius: 999px; background: rgba(255,92,92,.96); color: #fff; font-size: 14px; font-weight: 900; letter-spacing: .08em; box-shadow: 0 12px 22px rgba(255,92,92,.3); opacity: 0; animation: soldTag 10s ease both; }
+    .minus-badge { position: absolute; right: 3%; top: 7%; width: 100px; height: 100px; border-radius: 50%; display: grid; place-items: center; color: rgba(255,255,255,.22); font-size: 54px; font-weight: 900; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); backdrop-filter: blur(8px); opacity: 0; animation: minusBadge 10s ease both; }
+    .alert-core3d { position: absolute; right: 9%; top: 28%; width: 170px; height: 170px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, rgba(255,255,255,.94) 0%, rgba(160,255,203,.78) 24%, rgba(3,199,90,.35) 48%, rgba(3,199,90,0) 74%); box-shadow: 0 0 90px rgba(3,199,90,.5); opacity: 0; transform: scale(.42); animation: alertCore 10s ease both; }
+    .alert-core3d .bell { position: relative; width: 68px; height: 68px; border-radius: 22px 22px 28px 28px; background: linear-gradient(180deg, #062c17, #0e6e3b); }
+    .alert-core3d .bell::before { content: ""; position: absolute; left: 50%; top: 14%; width: 54px; height: 38px; transform: translateX(-50%); border-radius: 28px 28px 14px 14px; background: linear-gradient(180deg, #22d56a, #14914a); }
+    .alert-core3d .bell::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 22px; height: 12px; transform: translateX(-50%); border-radius: 999px; background: #ffd466; }
+    .pulse-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(175,255,207,.42); opacity: 0; }
+    .pulse-ring.r1 { animation: pulseRing 2.2s ease-out 6.2s infinite; }
+    .pulse-ring.r2 { animation: pulseRing 2.2s ease-out 6.9s infinite; }
+    .scene-line { position: absolute; height: 2px; left: 46%; top: 54%; width: 0; background: linear-gradient(90deg, rgba(120,255,182,0), rgba(120,255,182,.96), rgba(120,255,182,.04)); transform-origin: left center; opacity: 0; }
+    .scene-line.l1 { transform: rotate(-12deg); animation: connectLeft 10s ease both; }
+    .scene-line.l2 { transform: rotate(16deg); animation: connectRight 10s ease both; }
+    .avatar { position: absolute; width: 150px; height: 290px; bottom: 15%; transform-origin: center bottom; }
+    .avatar .shadow { position: absolute; left: 18px; right: 18px; bottom: 0; height: 24px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0,0,0,.28), transparent 72%); }
+    .avatar .leg { position: absolute; width: 24px; height: 88px; bottom: 18px; background: linear-gradient(180deg, #111827, #2d3748); border-radius: 18px; }
+    .avatar .leg.left { left: 50px; }
+    .avatar .leg.right { left: 78px; }
+    .avatar .shoe { position: absolute; width: 34px; height: 14px; bottom: 10px; background: #0f172a; border-radius: 14px 10px 12px 10px; }
+    .avatar .shoe.left { left: 42px; }
+    .avatar .shoe.right { left: 76px; }
+    .avatar .torso { position: absolute; left: 30px; top: 104px; width: 88px; height: 110px; border-radius: 36px 36px 26px 26px; background: linear-gradient(180deg, #243444, #111827); box-shadow: inset 0 -12px 18px rgba(255,255,255,.05); }
+    .avatar .torso::before, .avatar .torso::after { content: ""; position: absolute; top: 10px; width: 24px; height: 74px; border-radius: 18px; background: inherit; }
+    .avatar .torso::before { left: -12px; transform: rotate(20deg); }
+    .avatar .torso::after { right: -12px; transform: rotate(-20deg); }
+    .avatar .neck { position: absolute; left: 62px; top: 88px; width: 22px; height: 26px; background: #efcfcf; border-radius: 12px; }
+    .avatar .head { position: absolute; left: 34px; top: 18px; width: 78px; height: 90px; background: linear-gradient(180deg, #ffe6e5, #efcccc); border-radius: 34px; box-shadow: inset -8px -10px 12px rgba(0,0,0,.04); }
+    .avatar .ear { position: absolute; top: 44px; width: 14px; height: 22px; background: #f3d3d3; border-radius: 999px; }
+    .avatar .ear.left { left: 28px; }
+    .avatar .ear.right { right: 28px; }
+    .avatar .hair { position: absolute; left: 34px; top: 14px; width: 80px; height: 48px; background: linear-gradient(180deg, #20252f, #111827); border-radius: 38px 42px 18px 22px; transform: skewX(-8deg); }
+    .avatar .hair::before { content: ""; position: absolute; left: 26px; top: 0; width: 38px; height: 48px; background: inherit; border-radius: 18px 36px 10px 28px; transform: rotate(12deg); }
+    .avatar .eye { position: absolute; top: 52px; width: 8px; height: 8px; border-radius: 50%; background: #1f2937; }
+    .avatar .eye.left { left: 56px; }
+    .avatar .eye.right { left: 82px; }
+    .avatar .mouth { position: absolute; left: 63px; top: 72px; width: 22px; height: 10px; border-bottom: 3px solid #cc8391; border-radius: 0 0 18px 18px; }
+    .avatar .cheek { position: absolute; top: 68px; width: 12px; height: 8px; border-radius: 50%; background: rgba(232,168,176,.45); filter: blur(2px); }
+    .avatar .cheek.left { left: 46px; }
+    .avatar .cheek.right { left: 90px; }
+    .avatar.leave { left: 18%; animation: avatarLeave 10s ease both; }
+    .avatar.return { left: 66%; opacity: 0; transform: scale(.82) translateX(40px); animation: avatarReturn 10s ease both; }
+    .status-bubble { position: absolute; left: 36%; top: 22%; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; border: 1px solid rgba(255,255,255,.8); box-shadow: 0 18px 36px rgba(0,0,0,.18); font-size: 13px; line-height: 1.45; max-width: 220px; opacity: 0; }
+    .status-bubble strong { display: block; margin-bottom: 3px; font-size: 14px; }
+    .status-bubble.sold { animation: bubbleSold 10s ease both; }
+    .status-bubble.return { left: auto; right: 9%; top: 16%; max-width: 240px; animation: bubbleReturn 10s ease both; }
+    .spark { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(172,255,208,.85); box-shadow: 0 0 18px rgba(172,255,208,.5); opacity: 0; }
+    .spark.s1 { left: 60%; top: 18%; animation: sparkFloat 6s ease-in-out 1.2s infinite; }
+    .spark.s2 { left: 80%; top: 36%; animation: sparkFloat 6.4s ease-in-out 2.1s infinite; }
+    .spark.s3 { left: 70%; top: 70%; animation: sparkFloat 5.8s ease-in-out 2.8s infinite; }
+    .spark.s4 { left: 34%; top: 26%; animation: sparkFloat 5.6s ease-in-out 1.8s infinite; }
+    @keyframes sparkFloat { 0%,100% { opacity: 0; transform: translateY(12px) scale(.2); } 20%,80% { opacity: .85; transform: translateY(0) scale(1); } 50% { transform: translateY(-16px) scale(1.25); } }
+    @keyframes introProgress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes introLine1 { 0%,6% { opacity: 0; transform: translateY(28px); } 12%,35% { opacity: 1; transform: translateY(0); } 41%,100% { opacity: 0; transform: translateY(-22px); } }
+    @keyframes introLine2 { 0%,38% { opacity: 0; transform: translateY(28px); } 46%,67% { opacity: 1; transform: translateY(0); } 74%,100% { opacity: 0; transform: translateY(-18px); } }
+    @keyframes introLine3 { 0%,70% { opacity: 0; transform: translateY(24px); } 78%,98% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-12px); } }
+    @keyframes introNote { 0%,42% { opacity: 0; } 50%,92% { opacity: 1; } 100% { opacity: 0; } }
+    @keyframes productStage { 0% { opacity: 0; transform: translateX(50px) rotateY(-10deg); } 14%,100% { opacity: 1; transform: translateX(0) rotateY(0); } }
+    @keyframes soldTag { 0%,21% { opacity: 0; transform: rotate(-12deg) scale(.7); } 28%,56% { opacity: 1; transform: rotate(-12deg) scale(1); } 63%,100% { opacity: 0; transform: rotate(-12deg) scale(.88); } }
+    @keyframes minusBadge { 0%,36% { opacity: 0; transform: scale(.7); } 44%,64% { opacity: 1; transform: scale(1); } 72%,100% { opacity: 0; transform: scale(1.08); } }
+    @keyframes alertCore { 0%,54% { opacity: 0; transform: scale(.42); } 62%,100% { opacity: 1; transform: scale(1); } }
+    @keyframes connectLeft { 0%,58% { opacity: 0; width: 0; } 66%,100% { opacity: 1; width: 24%; } }
+    @keyframes connectRight { 0%,60% { opacity: 0; width: 0; } 68%,100% { opacity: 1; width: 20%; } }
+    @keyframes pulseRing { 0% { opacity: .55; transform: scale(.5); } 100% { opacity: 0; transform: scale(1.45); } }
+    @keyframes avatarLeave { 0%,10% { opacity: 0; transform: translateX(20px) scale(.86); } 18%,36% { opacity: 1; transform: translateX(0) scale(1); } 46% { transform: translateX(36px) scale(.98); opacity: .95; } 60%,100% { opacity: 0; transform: translateX(170px) scale(.84); } }
+    @keyframes avatarReturn { 0%,60% { opacity: 0; transform: scale(.82) translateX(40px); } 72% { opacity: 1; transform: scale(.98) translateX(-10px); } 84%,100% { opacity: 1; transform: scale(1.06) translateX(-86px); } }
+    @keyframes bubbleSold { 0%,22% { opacity: 0; transform: translateY(10px) scale(.94); } 30%,56% { opacity: 1; transform: translateY(0) scale(1); } 64%,100% { opacity: 0; transform: translateY(-6px) scale(.98); } }
+    @keyframes bubbleReturn { 0%,68% { opacity: 0; transform: translateY(10px) scale(.94); } 76%,100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes introFadeOut { to { opacity: 0; transform: scale(1.03); filter: blur(10px); } }
+
     @media (max-width: 980px) {
       .header { grid-template-columns: 1fr; text-align: center; }
       .store-tools, .search { justify-self: center; }
@@ -203,10 +313,93 @@
       .hero-card { display: none; }
       .hero-metrics, .service-intro, .intro-grid, .demo-guide, .guide-steps, .seller-proof, .report-cards, .funnel-line, .insight-row, .beta-cta { grid-template-columns: 1fr; }
       .demo-guide { align-items: start; }
+      .intro-grid-wrap { grid-template-columns: 1fr; padding: 36px 18px 26px; }
+      .intro-copy-stage { min-height: 230px; }
+      .intro-line { position: absolute; font-size: clamp(28px, 8vw, 42px); }
+      .intro-note { top: 154px; font-size: 13px; }
+      .intro-scene { min-height: 52vh; }
+      .product-stage { left: 4%; width: 44vw; height: 40vh; }
+      .alert-core3d { right: 4%; top: 35%; width: 120px; height: 120px; }
+      .status-bubble.return { right: 2%; }
+      .avatar { width: 118px; height: 240px; }
+      .avatar .torso { left: 24px; width: 72px; height: 94px; }
+      .avatar .neck { left: 48px; top: 84px; }
+      .avatar .head, .avatar .hair { left: 26px; }
+      .avatar.leave { left: 6%; }
+      .avatar.return { left: 60%; }
+      .scene-line.l1 { left: 44%; }
+      .intro-controls { left: 18px; right: 18px; flex-direction: column; align-items: stretch; }
+      .intro-progress { max-width: none; width: 100%; }
     }
   </style>
 </head>
 <body>
+
+  <div id="introOverlay" class="intro-overlay" hidden>
+    <div class="intro-grid-wrap">
+      <div class="intro-copy-stage">
+        <div class="intro-kicker">PLUMIS RESTOCK DEMO · SELLER INTRO</div>
+        <div class="intro-line line1">품절은 단순히 재고가 없는 <strong>0의 상태</strong>가 아니라,</div>
+        <div class="intro-line line2">구매 의도가 있는 고객을 놓치는 <strong>(-)의 시간</strong>입니다.</div>
+        <div class="intro-line line3">저희는 재입고 알림으로<br/><strong>품절 기간 동안에도 매출을 만듭니다.</strong></div>
+        <div class="intro-note">고객이 품절 상품을 보고 떠나는 순간을, 알림 신청과 재입고 재방문으로 바꾸는 흐름을 먼저 보여드립니다.</div>
+      </div>
+      <div class="intro-scene" aria-hidden="true">
+        <div class="scene-glow"></div>
+        <div class="scene-floor"></div>
+        <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>
+        <div class="product-stage">
+          <div class="soldout-tag">SOLD OUT</div>
+          <div class="product-card3d">
+            <div class="product-shirt"><div class="collar"></div></div>
+            <div class="product-pills"><span>오프화이트 / M</span><span class="sold">네이비 / L 품절</span></div>
+          </div>
+        </div>
+        <div class="minus-badge">−</div>
+        <div class="status-bubble sold"><strong>고객 이탈</strong>원하던 옵션이 품절이라 구매를 미룹니다.</div>
+        <div class="avatar leave">
+          <div class="shadow"></div>
+          <div class="leg left"></div><div class="leg right"></div>
+          <div class="shoe left"></div><div class="shoe right"></div>
+          <div class="torso"></div>
+          <div class="neck"></div>
+          <div class="ear left"></div><div class="ear right"></div>
+          <div class="head"></div>
+          <div class="hair"></div>
+          <div class="eye left"></div><div class="eye right"></div>
+          <div class="mouth"></div>
+          <div class="cheek left"></div><div class="cheek right"></div>
+        </div>
+        <div class="alert-core3d">
+          <div class="pulse-ring r1"></div><div class="pulse-ring r2"></div>
+          <div class="bell"></div>
+        </div>
+        <div class="scene-line l1"></div><div class="scene-line l2"></div>
+        <div class="status-bubble return"><strong>재입고 알림 발송</strong>고객이 다시 상품 페이지로 돌아옵니다.</div>
+        <div class="avatar return">
+          <div class="shadow"></div>
+          <div class="leg left"></div><div class="leg right"></div>
+          <div class="shoe left"></div><div class="shoe right"></div>
+          <div class="torso"></div>
+          <div class="neck"></div>
+          <div class="ear left"></div><div class="ear right"></div>
+          <div class="head"></div>
+          <div class="hair"></div>
+          <div class="eye left"></div><div class="eye right"></div>
+          <div class="mouth"></div>
+          <div class="cheek left"></div><div class="cheek right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="intro-controls">
+      <div class="intro-progress">
+        <span>10초 후 자동으로 시뮬레이터로 이동합니다 · 5초 후에는 아무 곳이나 클릭해 바로 넘어갈 수 있습니다.</span>
+        <div class="bar"></div>
+      </div>
+      <button id="introSkip" class="intro-skip">서비스 시연으로 이동 <small>5초 후 활성화</small></button>
+    </div>
+  </div>
+
   <div class="topbar"><span>품절 고객 회수 데모</span><span>톡톡 재입고 알림</span><span>상품 3개 무료 베타 세팅</span></div>
   <header class="header">
     <div class="store-tools"><button class="talk-badge" id="headerTalkBtn">💬 톡톡하기</button><span>문의 · 재입고 알림</span></div>
@@ -626,6 +819,54 @@ document.getElementById("mockUserSelect").onchange = (e) => { selectedMockUser =
 document.getElementById("adminToggle").onclick = () => document.getElementById("adminPanel").classList.add("open");
 document.getElementById("adminClose").onclick = () => document.getElementById("adminPanel").classList.remove("open");
 document.getElementById("saveApi").onclick = () => { apiBase = document.getElementById("apiBase").value.trim() || DEFAULT_API_BASE; localStorage.setItem("RESTOCK_API_BASE", apiBase); loadState(); };
+const INTRO_KEY = "RESTOCK_INTRO_HIDE_UNTIL";
+let introSkippable = false;
+let introFinished = false;
+function showIntroIfNeeded() {
+  const overlay = document.getElementById("introOverlay");
+  if (!overlay) return;
+  const hiddenUntil = Number(localStorage.getItem(INTRO_KEY) || 0);
+  if (Date.now() < hiddenUntil) {
+    overlay.hidden = true;
+    document.body.classList.remove("intro-active");
+    return;
+  }
+  overlay.hidden = false;
+  document.body.classList.add("intro-active");
+  const skipBtn = document.getElementById("introSkip");
+  setTimeout(() => {
+    introSkippable = true;
+    skipBtn.classList.add("ready");
+    skipBtn.innerHTML = '서비스 시연으로 이동 <small>클릭해서 바로 보기</small>';
+  }, 5000);
+  setTimeout(() => finishIntro(), 10000);
+  overlay.addEventListener("click", (e) => {
+    if (!introSkippable) return;
+    if (e.target.closest("#introSkip") || e.target === overlay || e.target.closest('.intro-grid-wrap') || e.target.closest('.intro-controls')) {
+      finishIntro();
+    }
+  });
+  skipBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (introSkippable) finishIntro();
+  });
+}
+function finishIntro() {
+  if (introFinished) return;
+  introFinished = true;
+  const overlay = document.getElementById("introOverlay");
+  if (!overlay) return;
+  localStorage.setItem(INTRO_KEY, String(Date.now() + 10 * 60 * 1000));
+  overlay.classList.add("is-ending");
+  document.body.classList.remove("intro-active");
+  setTimeout(() => {
+    overlay.hidden = true;
+    const target = document.getElementById("listView") || document.querySelector("main");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 850);
+}
+
+showIntroIfNeeded();
 document.getElementById("reloadState").onclick = () => loadState();
 document.getElementById("resetState").onclick = async () => { if (remoteOk) { try { const r = await api("/api/naver-talk-webhook", { method: "POST", body: JSON.stringify({ event: "admin.reset" }) }); state = normalizeRemote(r.state); renderAll(); toast("원격 mock DB 초기화 완료"); return; } catch (e) {} } state = clone(seedData); renderAll(); toast("브라우저 mock 초기화 완료"); };
 document.getElementById("adminProductSelect").onchange = (e) => { selectedProductNo = e.target.value; renderDetail(); };
