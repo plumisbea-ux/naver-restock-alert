@@ -134,3 +134,18 @@ lib/mockSenders.js                  톡톡/카카오 mock 또는 실제 발송 p
 ## 이미지 관련
 
 상품 이미지는 네이버 상품 이미지를 복사하지 않고, 외부 공개 의류 사진 URL을 mock 상품 이미지로 연결했습니다. 실제 서비스에서는 판매자 상품 이미지 URL을 네이버 커머스 API 또는 직접 등록 DB에서 받아오면 됩니다.
+
+
+## GitHub Pages 화면이 비어 보일 때
+
+이번 버전부터 GitHub Pages 배포 워크플로가 `index.html`뿐 아니라 `data/mock-store.js`도 함께 배포합니다.
+이 파일이 Pages artifact에 없으면 `index.html`의 `import { seedData } from "./data/mock-store.js";`가 실패해서 메뉴, 상품 카드, 상세 화면 버튼이 모두 작동하지 않습니다.
+
+적용 후 GitHub Actions의 `Deploy static dashboard to GitHub Pages` 로그에서 아래 파일이 보여야 정상입니다.
+
+```text
+_site/index.html
+_site/data/mock-store.js
+```
+
+이미 이전 버전이 배포되어 있다면 `pages.yml` 변경 사항을 push한 뒤 Actions가 다시 성공할 때까지 기다리세요.

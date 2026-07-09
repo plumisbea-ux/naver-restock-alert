@@ -26,10 +26,14 @@ jobs:
 
       - name: Prepare static files
         run: |
+          rm -rf _site
           mkdir -p _site
           cp index.html _site/index.html
+          cp -R data _site/data
           cp -R docs _site/docs || true
           touch _site/.nojekyll
+          echo "GitHub Pages artifact contents:"
+          find _site -maxdepth 3 -type f | sort
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
