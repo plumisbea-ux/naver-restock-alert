@@ -127,6 +127,46 @@
     .action-row .buy { border-color: var(--naver); background: var(--naver); color: #fff; font-size: 16px; }
     .talk-inline { margin-top: 10px; width: 100%; height: 54px; border: 0; background: var(--green-dark); color: #fff; font-weight: 900; border-radius: 2px; }
     .mock-box { margin-top: 12px; padding: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; font-size: 13px; color: #475569; }
+
+    .seller-proof { margin: -8px 0 34px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .proof-card { border: 1px solid #e8ecef; border-radius: 22px; padding: 22px; background: #fff; box-shadow: 0 14px 34px rgba(16, 24, 40, .06); }
+    .proof-card.dark { background: #111827; color: #fff; border-color: #111827; }
+    .proof-card small { display: inline-flex; margin-bottom: 10px; font-weight: 900; color: var(--naver); }
+    .proof-card.dark small { color: #b6ffd7; }
+    .proof-card b { display: block; font-size: 20px; line-height: 1.35; letter-spacing: -.35px; margin-bottom: 10px; }
+    .proof-card span { display: block; color: #667085; font-size: 14px; line-height: 1.65; }
+    .proof-card.dark span { color: rgba(255,255,255,.76); }
+    .report-preview { margin: 0 0 36px; border: 1px solid #e6eaf0; border-radius: 28px; background: linear-gradient(180deg, #ffffff 0%, #f7fbf9 100%); overflow: hidden; box-shadow: 0 20px 50px rgba(16, 24, 40, .08); }
+    .report-head { padding: 24px 26px 10px; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+    .report-head h2 { margin: 0; font-size: 28px; letter-spacing: -.8px; line-height: 1.25; }
+    .report-head p { margin: 8px 0 0; color: #667085; line-height: 1.6; }
+    .report-badge { flex: none; border-radius: 999px; background: #eafff2; color: #08733a; font-size: 13px; font-weight: 900; padding: 10px 13px; }
+    .report-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 18px 26px; }
+    .report-card { border: 1px solid #e8ecef; border-radius: 18px; background: #fff; padding: 18px; }
+    .report-card b { display: block; font-size: 26px; letter-spacing: -.8px; margin-bottom: 4px; }
+    .report-card span { display: block; color: #667085; font-size: 13px; line-height: 1.45; }
+    .report-funnel { margin: 0 26px 24px; border: 1px solid #e8ecef; background: #fff; border-radius: 20px; padding: 16px; }
+    .funnel-line { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; align-items: stretch; }
+    .funnel-step { position: relative; border-radius: 16px; background: #f7f8fa; padding: 14px; min-height: 94px; }
+    .funnel-step:not(:last-child)::after { content: '→'; position: absolute; right: -8px; top: 50%; transform: translateY(-50%); color: #9aa3ad; font-weight: 900; z-index: 1; }
+    .funnel-step strong { display: block; font-size: 18px; margin-bottom: 4px; }
+    .funnel-step span { font-size: 12px; color: #667085; line-height: 1.45; }
+    .insight-row { display: grid; grid-template-columns: 1.1fr .9fr; gap: 14px; padding: 0 26px 26px; }
+    .insight-box { border: 1px solid #e8ecef; border-radius: 20px; background: #fff; padding: 18px; }
+    .insight-box h3 { margin: 0 0 12px; font-size: 17px; }
+    .insight-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+    .insight-list li { color: #4c5563; line-height: 1.55; font-size: 14px; }
+    .insight-list li::before { content: '✓'; color: var(--naver); font-weight: 900; margin-right: 7px; }
+    .beta-cta { margin: 0 0 42px; border-radius: 28px; background: #07130d; color: #fff; padding: 28px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 18px; align-items: center; box-shadow: 0 24px 60px rgba(7,19,13,.20); }
+    .beta-cta h2 { margin: 0 0 10px; font-size: 30px; letter-spacing: -.7px; }
+    .beta-cta p { margin: 0; color: rgba(255,255,255,.78); line-height: 1.65; }
+    .beta-list { display: grid; gap: 9px; margin-top: 16px; color: rgba(255,255,255,.88); font-size: 14px; }
+    .beta-actions { display: grid; gap: 10px; }
+    .beta-actions button, .beta-actions a { text-align: center; text-decoration: none; border: 0; border-radius: 14px; padding: 14px 16px; font-weight: 900; }
+    .beta-actions .primary { background: var(--naver); color: #fff; }
+    .beta-actions .secondary { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.18); }
+    .beta-actions small { color: rgba(255,255,255,.58); line-height: 1.45; }
+
     .admin-toggle { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50; border: 0; border-radius: 999px; background: var(--panel); color: #fff; padding: 12px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.24); writing-mode: vertical-rl; letter-spacing: 2px; font-weight: 900; }
     .admin { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; z-index: 60; background: #fff; border-left: 1px solid var(--line); box-shadow: -20px 0 50px rgba(0,0,0,.12); transform: translateX(100%); transition: .22s ease; display: flex; flex-direction: column; }
     .admin.open { transform: translateX(0); }
@@ -161,13 +201,13 @@
       .admin { width: min(100vw, 420px); }
       .hero { grid-template-columns: 1fr; height: auto; padding: 26px; border-radius: 22px; }
       .hero-card { display: none; }
-      .hero-metrics, .service-intro, .intro-grid, .demo-guide, .guide-steps { grid-template-columns: 1fr; }
+      .hero-metrics, .service-intro, .intro-grid, .demo-guide, .guide-steps, .seller-proof, .report-cards, .funnel-line, .insight-row, .beta-cta { grid-template-columns: 1fr; }
       .demo-guide { align-items: start; }
     }
   </style>
 </head>
 <body>
-  <div class="topbar"><span>셀러 홍보용 데모 페이지</span><span>가상 스마트스토어 + 톡톡 챗봇 흐름</span><span>옵션별 재입고 수요 저장 시뮬레이터</span></div>
+  <div class="topbar"><span>품절 고객 회수 데모</span><span>톡톡 재입고 알림</span><span>상품 3개 무료 베타 세팅</span></div>
   <header class="header">
     <div class="store-tools"><button class="talk-badge" id="headerTalkBtn">💬 톡톡하기</button><span>문의 · 재입고 알림</span></div>
     <button class="brand" id="brandBtn">PLUMIS<span>WEAR</span></button>
@@ -180,65 +220,103 @@
         <select id="mockUserSelect"></select>
         <span id="mockUserInfo"></span>
       </div>
-      <div>실제 톡톡 탭에서는 네이버가 보낸 <b>실제 user</b>가 우선입니다. 여기의 User 1/2/3은 서버 mock 이벤트용입니다.</div>
+      <div>데모용 고객을 바꿔가며 대기자 저장과 재입고 알림 발송을 테스트할 수 있습니다.</div>
     </div>
   </section>
   <nav class="nav"><div class="nav-inner" id="nav"></div></nav>
-  <div class="notice-strip">🎁 로그인 10% 쿠폰 · 일부 품절 옵션은 톡톡에서 재입고 알림을 신청할 수 있습니다.</div>
+  <div class="notice-strip">품절 옵션을 그냥 놓치지 마세요. 톡톡에서 재입고 알림 신청을 받을 수 있습니다.</div>
 
   <main class="layout">
     <section id="listView">
       <div class="hero">
         <div class="hero-copy">
           <div class="eyebrow-row">
-            <span class="eyebrow green">SELLER DEMO</span>
-            <span class="eyebrow">SMARTSTORE RESTOCK ALERT</span>
-            <span class="eyebrow">톡톡 기반 수요 회수</span>
+            <span class="eyebrow green">무료 베타 모집</span>
+            <span class="eyebrow">스마트스토어 전용</span>
+            <span class="eyebrow">톡톡 재입고 알림</span>
           </div>
-          <h1>품절된 옵션도<br/><span class="accent">구매 의도</span>로 저장합니다</h1>
-          <p>고객이 품절 옵션을 보고 그냥 나가기 전에, 톡톡 챗봇으로 재입고 알림 대기자를 만들고 재입고 순간 다시 불러오는 과정을 보여주는 셀러 설명용 데모입니다.</p>
+          <h1>품절 고객,<br/><span class="accent">그냥 보내지 마세요</span></h1>
+          <p>품절 옵션을 본 고객을 톡톡 대기자로 저장하고, 재입고 순간 다시 상품 페이지로 데려옵니다. 고객은 알림을 받고, 셀러는 어떤 옵션을 더 입고해야 할지 숫자로 봅니다.</p>
           <div class="hero-actions">
-            <button class="primary" onclick="navigateCategory('best')">상품 데모 보기</button>
+            <button class="primary" onclick="navigateCategory('best')">상품에서 직접 보기</button>
+            <button class="secondary" onclick="document.getElementById('betaOffer').scrollIntoView({behavior:'smooth'})">무료 베타 안내</button>
             <button class="secondary" onclick="document.getElementById('adminPanel').classList.add('open')">관리창 열기</button>
           </div>
           <div class="hero-metrics">
-            <div class="hero-metric"><b>옵션별</b><span>색상/사이즈 조합마다 재고와 품절 상태를 분리 관리</span></div>
-            <div class="hero-metric"><b>고객별</b><span>톡톡 user와 상품 context를 저장해 대기자 DB 구성</span></div>
-            <div class="hero-metric"><b>재입고 시</b><span>재고가 0에서 1 이상으로 바뀌면 알림 발송 흐름 실행</span></div>
+            <div class="hero-metric"><b>대기자 저장</b><span>품절 옵션을 선택한 고객을 상품/옵션별로 저장</span></div>
+            <div class="hero-metric"><b>자동 알림</b><span>재입고되면 톡톡으로 다시 안내</span></div>
+            <div class="hero-metric"><b>성과 리포트</b><span>신청, 클릭, 추정 구매를 숫자로 확인</span></div>
           </div>
         </div>
         <div class="hero-card">
           <div class="demo-phone">
             <div class="demo-phone-head"><span>💬 톡톡 재입고 챗봇</span><span style="color:#03c75a">LIVE MOCK</span></div>
             <div class="demo-flow">
-              <div class="demo-bubble">“케이블 니트 카라 반팔 셔츠에 대해 문의를 해주셨군요!”</div>
-              <div class="demo-bubble naver"><b>품절 옵션 감지</b><br/>블랙 / M, 그레이블루 / L</div>
-              <div class="demo-bubble">고객이 원하는 옵션을 선택하면 대기자로 저장됩니다.</div>
-              <div class="demo-chip-row"><span class="demo-chip">재입고 알림받기</span><span class="demo-chip">톡톡 + SMS</span></div>
+              <div class="demo-bubble">“이 상품의 품절 옵션을 알려드릴게요.”</div>
+              <div class="demo-bubble naver"><b>고객 선택</b><br/>그레이 블루 / L 재입고 알림 신청</div>
+              <div class="demo-bubble">재입고되면 톡톡으로 바로 안내됩니다.</div>
+              <div class="demo-chip-row"><span class="demo-chip">톡톡으로 받기</span><span class="demo-chip">카카오도 받기</span></div>
             </div>
           </div>
         </div>
       </div>
       <section class="service-intro">
         <div class="intro-copy">
-          <small>이 데모로 설명할 수 있는 것</small>
-          <h2>품절 때문에 사라지는 고객을<br/>재입고 대기자로 전환합니다</h2>
-          <p>스마트스토어 상품 상세에서 고객이 톡톡하기를 누른 상황을 가정하고, 어떤 상품에서 들어왔는지 인식한 뒤 품절 옵션만 골라 재입고 알림 신청 버튼을 제공합니다. 셀러는 오른쪽 관리창에서 재고를 바꿔 재입고 알림 발송까지 직접 시연할 수 있습니다.</p>
+          <small>데모 목적</small>
+          <h2>“품절인데 언제 들어와요?”를<br/>자동 대기자로 바꿉니다</h2>
+          <p>고객은 품절 옵션을 고르고 알림만 신청합니다. 셀러는 대기자가 쌓인 옵션을 보고 재입고 우선순위를 판단합니다. 복잡한 기술 설명보다, 고객이 돌아오는 흐름을 바로 보여주는 데 집중했습니다.</p>
         </div>
         <div class="intro-grid">
-          <div class="intro-card"><div class="icon">🧭</div><b>상품 context 인식</b><span>고객이 어떤 상품에서 톡톡을 열었는지 open webhook payload로 가정합니다.</span></div>
-          <div class="intro-card"><div class="icon">📦</div><b>품절 옵션만 추출</b><span>색상/사이즈 조합별 mock DB에서 재고 0인 옵션만 버튼으로 보여줍니다.</span></div>
-          <div class="intro-card"><div class="icon">🔔</div><b>재입고 알림 발송</b><span>관리창에서 재고를 1 이상으로 바꾸면 해당 대기자에게 알림 payload를 생성합니다.</span></div>
+          <div class="intro-card"><div class="icon">🧍</div><b>고객은 쉽게 신청</b><span>품절 옵션을 보고 톡톡에서 원하는 옵션만 누릅니다.</span></div>
+          <div class="intro-card"><div class="icon">📊</div><b>셀러는 수요 확인</b><span>상품별·옵션별로 몇 명이 기다리는지 바로 봅니다.</span></div>
+          <div class="intro-card"><div class="icon">🔔</div><b>재입고 때 다시 호출</b><span>재고가 들어오면 대기 고객에게 톡톡 알림을 보냅니다.</span></div>
         </div>
       </section>
       <section class="demo-guide">
-        <b>시연 순서</b>
+        <b>1분 시연 흐름</b>
         <div class="guide-steps">
-          <div class="guide-step"><strong>1. 상품 선택</strong>옷 상품 상세에서 색상/사이즈 재고를 확인합니다.</div>
-          <div class="guide-step"><strong>2. 톡톡하기</strong>상품번호를 담은 mock open 이벤트를 서버로 보냅니다.</div>
-          <div class="guide-step"><strong>3. 알림 신청</strong>실제 톡톡 챗봇에서 품절 옵션 재입고 알림을 신청합니다.</div>
-          <div class="guide-step"><strong>4. 재고 변경</strong>관리창에서 재고를 채워 재입고 알림 발송을 시연합니다.</div>
+          <div class="guide-step"><strong>1. 품절 옵션 확인</strong>상품 상세에서 품절 색상/사이즈를 봅니다.</div>
+          <div class="guide-step"><strong>2. 톡톡 신청</strong>고객이 원하는 옵션의 알림을 신청합니다.</div>
+          <div class="guide-step"><strong>3. 재고 입고</strong>관리창에서 재고를 0에서 1 이상으로 바꿉니다.</div>
+          <div class="guide-step"><strong>4. 다시 방문</strong>알림을 받은 고객이 상품 확인 링크를 누릅니다.</div>
         </div>
+      </section>
+
+      <section class="seller-proof">
+        <div class="proof-card dark"><small>문제</small><b>품절 고객은 그냥 사라집니다.</b><span>옵션을 고르고도 품절을 보면, 대부분은 문의하지 않고 나갑니다.</span></div>
+        <div class="proof-card"><small>해결</small><b>톡톡에서 대기자로 저장합니다.</b><span>고객이 원하는 상품과 옵션을 남기면 재입고 순간 다시 안내할 수 있습니다.</span></div>
+        <div class="proof-card"><small>성과</small><b>셀러는 숫자로 판단합니다.</b><span>어떤 옵션에 수요가 쌓였는지, 알림 후 몇 명이 돌아왔는지 리포트로 봅니다.</span></div>
+      </section>
+
+      <section class="report-preview" id="reportPreview">
+        <div class="report-head">
+          <div><h2>베타 리포트는 이렇게 보여줍니다</h2><p>단순히 “알림을 보냈다”가 아니라, 품절 중 놓칠 뻔한 수요가 얼마나 저장되고 다시 반응했는지 보여줍니다.</p></div>
+          <span class="report-badge">예시 데이터</span>
+        </div>
+        <div class="report-cards">
+          <div class="report-card"><b>13명</b><span>품절 옵션 대기자로 저장된 고객</span></div>
+          <div class="report-card"><b>31%</b><span>톡톡 진입 대비 알림 신청률</span></div>
+          <div class="report-card"><b>5명</b><span>재입고 알림 후 상품 확인 클릭</span></div>
+          <div class="report-card"><b>2건</b><span>동일 옵션 기준 추정 주문</span></div>
+        </div>
+        <div class="report-funnel">
+          <div class="funnel-line">
+            <div class="funnel-step"><strong>42</strong><span>톡톡 진입</span></div>
+            <div class="funnel-step"><strong>13</strong><span>재입고 알림 신청</span></div>
+            <div class="funnel-step"><strong>9</strong><span>재입고 알림 발송</span></div>
+            <div class="funnel-step"><strong>5</strong><span>상품 확인 클릭</span></div>
+            <div class="funnel-step"><strong>2</strong><span>추정 구매</span></div>
+          </div>
+        </div>
+        <div class="insight-row">
+          <div class="insight-box"><h3>셀러가 바로 알 수 있는 것</h3><ul class="insight-list"><li>어떤 상품과 옵션에 대기자가 쌓였는지</li><li>재입고 알림을 받은 고객이 다시 클릭했는지</li><li>반복 품절 상품의 다음 입고 우선순위</li></ul></div>
+          <div class="insight-box"><h3>과장 없이 표시</h3><ul class="insight-list"><li>클릭은 정확히 기록</li><li>구매는 동일 상품/옵션 기준 추정</li><li>전화번호 동의 고객은 확인 매칭 가능</li></ul></div>
+        </div>
+      </section>
+
+      <section class="beta-cta" id="betaOffer">
+        <div><h2>이번 주, 상품 3개만 먼저 테스트하세요</h2><p>품절 옵션이 자주 생기는 상품 URL 1~3개를 보내주면, 재입고 알림 신청 흐름과 결과 리포트를 무료로 세팅합니다.</p><div class="beta-list"><span>✓ 상품 3개 무료 세팅</span><span>✓ 14일 테스트</span><span>✓ 상품별·옵션별 대기자 리포트 제공</span></div></div>
+        <div class="beta-actions"><button class="primary" onclick="toast('베타 신청 폼 링크를 연결하면 이 버튼에서 바로 신청을 받을 수 있습니다.')">무료 베타 신청하기</button><button class="secondary" onclick="navigateCategory('best')">상품 데모 먼저 보기</button><small>CTA 링크는 Google Form 또는 Tally 폼 주소로 교체하면 됩니다.</small></div>
       </section>
       <div class="breadcrumb" id="breadcrumb">PLUMIS WEAR &gt; 베스트</div>
       <div class="section-title"><span id="sectionTitle">BEST</span><small id="sectionSubtitle">실시간 인기 상품</small></div>
@@ -256,7 +334,7 @@
       <div class="setting-row"><input id="apiBase" placeholder="https://naver-restock-alert.vercel.app" /><button id="saveApi">연결</button></div>
       <div class="setting-row"><select id="adminProductSelect"></select><button id="reloadState">새로고침</button></div>
       <div class="setting-row"><button class="admin-action" id="resetState">mock DB 초기화</button><button class="admin-action" id="mockWaitlistBtn">선택 유저 대기자 생성</button></div>
-      <div class="setting-row"><button class="admin-action" id="mockSmsWaitlistBtn">선택 유저 SMS 대기자 생성</button></div>
+      <div class="setting-row"><button class="admin-action" id="mockSmsWaitlistBtn">선택 유저 카카오 대기자 생성</button></div>
       <h3>요약</h3><div class="metrics" id="metrics"></div>
       <h3>옵션 재고 수정</h3><div id="stockEditor"></div>
       <h3>대기자</h3><div id="waitlists"></div>
@@ -426,10 +504,10 @@ function renderDetail() {
     <div class="price-box"><div class="list-price">${money(p.list_price || Math.round(p.price * 1.12))}</div><div class="detail-price">${money(p.price)}</div><div style="color:#777;font-size:13px;margin-top:4px">무료배송 · N페이 구매 가능 mock</div></div>
     <div class="benefits"><div><b style="color:#03c75a">N+</b> 최대 적립 포인트 ${Math.round(p.price * 0.08).toLocaleString("ko-KR")}원</div><div>평균 2일 이내 도착 확률 91%</div><div>옵션 조합별 재고를 mock DB로 관리 중</div></div>
     <div class="option-label">옵션 선택 (필수) <span style="color:#e60023">*</span></div>${colorDropdown(colors)}${sizeDropdown(sizes)}
-    <div class="selected-box ${option ? "active" : ""}">${option ? `<b>${escapeHtml(option.original_option_name)}</b><div style="font-size:13px;color:${soldOut ? "#e5484d" : "#6b7280"};margin-top:4px">${soldOut ? "품절 · 톡톡 재입고 알림 신청 가능" : "재고 " + option.stock_quantity + "개"}</div><div class="total"><span>총 1개</span><b>${money(p.price)}</b></div>` : "색상과 사이즈를 선택하세요."}</div>
+    <div class="selected-box ${option ? "active" : ""}">${option ? `<b>${escapeHtml(option.original_option_name)}</b><div style="font-size:13px;color:${soldOut ? "#e5484d" : "#6b7280"};margin-top:4px">${soldOut ? "품절 · 재입고 알림 신청 가능" : "재고 " + option.stock_quantity + "개"}</div><div class="total"><span>총 1개</span><b>${money(p.price)}</b></div>` : "색상과 사이즈를 선택하세요."}</div>
     <div class="action-row"><button>🎁 선물하기</button><button class="buy" onclick="buyNow()">N 구매하기</button><button class="gray" onclick="wish()">♡ 찜하기</button><button class="gray">🛍 장바구니</button></div>
-    <button class="talk-inline" onclick="openTalkForCurrent()">💬 톡톡하기 · 이 상품 문의/재입고 알림</button>
-    <div class="mock-box"><b>현재 테스트 고객:</b> ${escapeHtml(getSelectedUser().label || selectedMockUser)} / ${selectedMockUser}<br/>톡톡하기를 누르면 실제 톡톡 탭이 열리고, 동시에 Vercel에는 이 고객의 mock open 이벤트를 보내 context를 저장합니다.</div>
+    <button class="talk-inline" onclick="openTalkForCurrent()">💬 품절 옵션 재입고 알림 신청하기</button>
+    <div class="mock-box"><b>데모 포인트:</b> 톡톡하기를 누르면 이 상품 context가 저장되고, 고객은 품절 옵션의 재입고 알림을 신청할 수 있습니다.<br/><b>현재 테스트 고객:</b> ${escapeHtml(getSelectedUser().label || selectedMockUser)} / ${selectedMockUser}</div>
     </div>`;
   renderAdmin();
 }
@@ -458,7 +536,7 @@ function renderAdmin() {
     const waiting = (state.waitlists || []).filter(w => w.option_id === o.id && w.status === "WAITING").length;
     return `<div class="stock-row"><div><div class="name">${escapeHtml(o.original_option_name)}</div><div class="state">현재 ${o.stock_quantity}개 · 대기 ${waiting}명 ${Number(o.stock_quantity) <= 0 ? "· 품절" : ""}</div></div><input type="number" min="0" value="${o.stock_quantity}" id="stock_${o.id}"/><button onclick="updateStock('${o.id}')">적용</button></div>`;
   }).join("");
-  document.getElementById("waitlists").innerHTML = (state.waitlists || []).length ? state.waitlists.slice(0, 12).map(w => `<div class="log"><strong>${escapeHtml(w.product_name || w.product_id)}</strong>${escapeHtml(w.option_name || w.option_id)}\n고객: ${escapeHtml(w.talk_user_id)} · ${w.channel_preference || ""} · ${w.status}\n${w.phone_number ? "SMS: " + escapeHtml(w.phone_number) : "톡톡만 또는 SMS 동의 대기"}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나, “선택 유저 대기자 생성”으로 서버 mock 대기자를 만드세요.</div>`;
+  document.getElementById("waitlists").innerHTML = (state.waitlists || []).length ? state.waitlists.slice(0, 12).map(w => `<div class="log"><strong>${escapeHtml(w.product_name || w.product_id)}</strong>${escapeHtml(w.option_name || w.option_id)}\n고객: ${escapeHtml(w.talk_user_id)} · ${w.channel_preference || ""} · ${w.status}\n${w.phone_number ? "카카오 알림톡: " + escapeHtml(w.phone_number) : "톡톡만 또는 카카오 동의 대기"}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나, “선택 유저 대기자 생성”으로 서버 mock 대기자를 만드세요.</div>`;
   document.getElementById("logs").innerHTML = (state.message_logs || []).length ? state.message_logs.slice(0, 12).map(l => `<div class="log"><strong>${escapeHtml(l.channel)} · ${escapeHtml(l.message_type)}</strong>${escapeHtml(typeof l.payload === "string" ? l.payload : JSON.stringify(l.payload || {}, null, 2).slice(0, 1000))}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
 }
 
@@ -487,7 +565,7 @@ function updateStockLocal(optionId, val) {
   state.stock_events.unshift({ event_type: before <= 0 && val > 0 ? "RESTOCKED" : "STOCK_UPDATED", option_id: optionId, previous_stock: before, current_stock: val, created_at: new Date().toISOString() });
   if (before <= 0 && val > 0) {
     const waiting = (state.waitlists || []).filter(w => w.option_id === optionId && w.status === "WAITING");
-    waiting.forEach(w => { const p = state.products.find(p => p.id === w.product_id); w.status = "NOTIFIED"; w.notified_at = new Date().toISOString(); state.message_logs.unshift({ channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", payload: { body: { event: "send", user: w.talk_user_id, textContent: { text: `[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명` } } } }); if ((w.sms_opt_in || w.channel_preference === "NAVER_TALK_AND_SMS") && w.phone_number) state.message_logs.unshift({ channel: "SMS", message_type: "RESTOCK_ALERT", payload: { phoneNumber: w.phone_number, message: `[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고` } }); });
+    waiting.forEach(w => { const p = state.products.find(p => p.id === w.product_id); w.status = "NOTIFIED"; w.notified_at = new Date().toISOString(); state.message_logs.unshift({ channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", payload: { body: { event: "send", user: w.talk_user_id, textContent: { text: `[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명` } } } }); if ((w.sms_opt_in || w.channel_preference === "NAVER_TALK_AND_SMS") && w.phone_number) state.message_logs.unshift({ channel: "KAKAO_ALIMTALK", message_type: "RESTOCK_ALERT", payload: { phoneNumber: w.phone_number, message: `[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고` } }); });
     toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`);
   }
 }
