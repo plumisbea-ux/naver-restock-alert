@@ -55,6 +55,8 @@ export const seedData = {
       list_price: 167300,
       discount_rate: 12,
       image_theme: "cream",
+      image_url: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=900&q=80",
+      scopes: ["best", "men", "new"],
       created_at: ts,
       updated_at: ts
     },
@@ -77,6 +79,8 @@ export const seedData = {
       list_price: 99000,
       discount_rate: 12,
       image_theme: "navy",
+      image_url: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
+      scopes: ["best", "men", "outlet"],
       created_at: ts,
       updated_at: ts
     },
@@ -99,6 +103,8 @@ export const seedData = {
       list_price: 129000,
       discount_rate: 19,
       image_theme: "sky",
+      image_url: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80",
+      scopes: ["best", "women", "new"],
       created_at: ts,
       updated_at: ts
     },
@@ -121,6 +127,8 @@ export const seedData = {
       list_price: 159000,
       discount_rate: 11,
       image_theme: "olive",
+      image_url: "https://images.unsplash.com/photo-1506629905607-d9c297d9ba30?auto=format&fit=crop&w=900&q=80",
+      scopes: ["men", "outlet"],
       created_at: ts,
       updated_at: ts
     },
@@ -143,6 +151,8 @@ export const seedData = {
       list_price: 69000,
       discount_rate: 10,
       image_theme: "brown",
+      image_url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80",
+      scopes: ["best", "kids", "new"],
       created_at: ts,
       updated_at: ts
     },
@@ -165,6 +175,8 @@ export const seedData = {
       list_price: 139000,
       discount_rate: 16,
       image_theme: "pink",
+      image_url: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80",
+      scopes: ["women", "new"],
       created_at: ts,
       updated_at: ts
     },
@@ -187,6 +199,8 @@ export const seedData = {
       list_price: 89000,
       discount_rate: 14,
       image_theme: "gray",
+      image_url: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
+      scopes: ["men", "kids", "outlet"],
       created_at: ts,
       updated_at: ts
     },
@@ -209,6 +223,8 @@ export const seedData = {
       list_price: 219000,
       discount_rate: 13,
       image_theme: "linen",
+      image_url: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80",
+      scopes: ["best", "women"],
       created_at: ts,
       updated_at: ts
     }
@@ -277,14 +293,40 @@ export const seedData = {
   consent_logs: [],
   message_logs: [],
   sessions: {},
-  customer_contexts: {},
   mock_users: {
+    "mock_user_001": {
+      talk_user_id: "mock_user_001",
+      label: "User 1",
+      mock_phone_number: "010-1111-0001"
+    },
+    "mock_user_002": {
+      talk_user_id: "mock_user_002",
+      label: "User 2",
+      mock_phone_number: "010-1111-0002"
+    },
+    "mock_user_003": {
+      talk_user_id: "mock_user_003",
+      label: "User 3",
+      mock_phone_number: "010-1111-0003"
+    },
+    "mock_user_004": {
+      talk_user_id: "mock_user_004",
+      label: "User 4",
+      mock_phone_number: "010-1111-0004"
+    },
+    "mock_user_005": {
+      talk_user_id: "mock_user_005",
+      label: "User 5",
+      mock_phone_number: "010-1111-0005"
+    },
     "al-2eGuGr5WQOnco1_V-FQ": {
       talk_user_id: "al-2eGuGr5WQOnco1_V-FQ",
+      label: "실제 톡톡 예시 유저",
       mock_phone_number: "010-1234-5678"
     },
     "mock_page_user": {
       talk_user_id: "mock_page_user",
+      label: "기본 페이지 테스트 유저",
       mock_phone_number: "010-9876-5432"
     }
   }

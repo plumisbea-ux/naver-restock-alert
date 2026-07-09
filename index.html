@@ -3,282 +3,465 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PLUMIS WEAR | Mock SmartStore Restock Alert</title>
+  <title>PLUMIS WEAR | SmartStore Mock</title>
   <style>
     :root {
       --naver: #03c75a;
+      --green-dark: #063d1e;
       --line: #e5e8eb;
       --text: #1f2328;
       --muted: #7b8494;
-      --soft: #f6f8fa;
+      --soft: #f7f8fa;
       --danger: #e5484d;
-      --blue: #4f7cff;
       --panel: #111827;
+      --beige: #f5f1e8;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: #fff; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; color: var(--text); background: #fff; }
     button, input, select { font: inherit; }
     button { cursor: pointer; }
-    .topbar { height: 24px; border-bottom: 1px solid #f1f3f5; color: #8a8f98; font-size: 12px; display: flex; align-items: center; justify-content: center; }
-    .header { max-width: 1180px; margin: 0 auto; padding: 28px 16px 18px; display: grid; grid-template-columns: 220px 1fr 260px; align-items: center; gap: 16px; }
-    .talk-badge { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 0; background: #073f1d; color: #fff; font-weight: 800; box-shadow: 0 8px 18px rgba(3,199,90,.15); }
-    .talk-badge small { font-weight: 500; opacity: .82; }
-    .brand { text-align: center; font-size: 32px; letter-spacing: 1px; font-family: Georgia, serif; font-weight: 700; }
+    .topbar { height: 30px; background: #fafafa; border-bottom: 1px solid #f1f3f5; color: #777; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 18px; }
+    .header { max-width: 1180px; margin: 0 auto; padding: 26px 16px 18px; display: grid; grid-template-columns: 260px 1fr 290px; align-items: center; gap: 16px; }
+    .brand { text-align: center; font-size: 34px; letter-spacing: 1px; font-family: Georgia, serif; font-weight: 800; color: #111; border: 0; background: none; }
     .brand span { color: var(--naver); font-family: inherit; margin-left: 8px; }
-    .search { justify-self: end; height: 42px; min-width: 250px; border: 1px solid var(--line); border-radius: 999px; padding: 0 16px; display: flex; align-items: center; gap: 10px; color: #9aa3ad; font-size: 13px; }
-    .nav { border-top: 1px solid #f0f2f4; border-bottom: 1px solid #f0f2f4; }
-    .nav-inner { max-width: 1180px; margin: 0 auto; padding: 0 16px; height: 52px; display: flex; align-items: center; justify-content: center; gap: 34px; font-size: 15px; }
-    .nav-inner b { color: #000; }
-    .notice-strip { background: #f4f0ff; height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #4b4b69; }
-    .layout { max-width: 1180px; margin: 0 auto; padding: 36px 16px 80px; }
+    .store-tools { display: flex; align-items: center; gap: 8px; color: #777; font-size: 13px; }
+    .talk-badge { display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 999px; border: 0; background: var(--green-dark); color: #fff; font-weight: 800; box-shadow: 0 8px 18px rgba(3,199,90,.16); }
+    .search { justify-self: end; height: 42px; width: 270px; border: 1px solid var(--line); border-radius: 999px; padding: 0 16px; display: flex; align-items: center; gap: 10px; color: #9aa3ad; font-size: 13px; }
+    .user-strip { border-top: 1px solid #f0f2f4; background: #fbfcfd; }
+    .user-inner { max-width: 1180px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: #667085; }
+    .user-picker { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .user-picker select, .user-picker input { height: 34px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; background: #fff; }
+    .nav { border-top: 1px solid #f0f2f4; border-bottom: 1px solid #f0f2f4; position: sticky; top: 0; z-index: 20; background: #fff; }
+    .nav-inner { max-width: 1180px; margin: 0 auto; padding: 0 16px; height: 54px; display: flex; align-items: center; justify-content: center; gap: 28px; }
+    .nav-btn { border: 0; background: none; color: #555; font-size: 15px; padding: 16px 4px; border-bottom: 3px solid transparent; }
+    .nav-btn.active { color: #000; font-weight: 800; border-bottom-color: #111; }
+    .notice-strip { background: #f4f0ff; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #4b4b69; padding: 8px 16px; text-align: center; }
+    .layout { max-width: 1180px; margin: 0 auto; padding: 34px 16px 88px; }
+    .hero { height: 210px; border-radius: 4px; overflow: hidden; background: linear-gradient(110deg, #111 0%, #27221d 52%, #efe5d5 52%, #f6efe5 100%); color: #fff; display: grid; grid-template-columns: 1.1fr .9fr; align-items: center; margin-bottom: 38px; }
+    .hero-copy { padding: 36px; }
+    .hero-copy small { display: block; opacity: .72; letter-spacing: 2px; margin-bottom: 12px; }
+    .hero-copy h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.2; }
+    .hero-copy p { margin: 0; opacity: .84; }
+    .hero-card { justify-self: center; width: 210px; height: 170px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.38); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: #111; font-weight: 900; box-shadow: 0 20px 50px rgba(0,0,0,.18); backdrop-filter: blur(4px); }
     .breadcrumb { font-size: 12px; color: #9aa3ad; text-align: right; margin-bottom: 8px; }
-    .section-title { font-size: 26px; font-weight: 800; border-bottom: 2px solid #2b2f36; padding-bottom: 18px; margin-bottom: 22px; }
+    .section-title { font-size: 26px; font-weight: 900; border-bottom: 2px solid #2b2f36; padding-bottom: 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .section-title small { font-size: 13px; color: #8a94a4; font-weight: 500; }
     .tabs { display: flex; gap: 18px; font-size: 14px; margin-bottom: 24px; color: #777; }
     .tabs b { color: #111; }
-    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 18px; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 18px; }
     .card { position: relative; border: 0; background: transparent; text-align: left; padding: 0; }
-    .rank { position: absolute; left: 0; top: 0; z-index: 2; width: 28px; height: 28px; background: #222; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
-    .img { height: 260px; border: 1px solid #f0f1f3; background: linear-gradient(145deg, #efefef, #fafafa); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .img::before { content: ""; width: 132px; height: 174px; border-radius: 54px 54px 18px 18px; background: var(--cloth, #d8dde3); box-shadow: inset 0 0 0 12px rgba(255,255,255,.25); }
-    .img::after { content: "PLUMIS"; position: absolute; right: 14px; top: 12px; font-family: Georgia, serif; font-weight: 700; font-size: 13px; color: #1d3d27; }
-    .swatches { position: absolute; right: 10px; top: 44px; display: grid; gap: 7px; }
-    .swatches i { width: 14px; height: 18px; border: 1px solid #d8dee4; background: var(--c); }
-    .card-title { margin: 10px 0 6px; font-size: 14px; line-height: 1.38; min-height: 39px; }
-    .discount { font-size: 13px; color: #fb2942; font-weight: 800; }
-    .price { font-size: 17px; font-weight: 900; margin-left: 4px; }
-    .meta { margin-top: 6px; color: #9aa3ad; font-size: 12px; }
-    .soldout-pill { display: inline-block; margin-top: 8px; border: 1px solid #ffd5d8; color: var(--danger); background: #fff7f7; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 700; }
-
-    .detail { display: none; grid-template-columns: 560px 1fr; gap: 58px; border-top: 1px solid #f0f2f4; padding-top: 42px; }
+    .rank { position: absolute; left: 0; top: 0; z-index: 2; width: 30px; height: 30px; background: #222; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
+    .thumb { height: 276px; border: 1px solid #f0f1f3; background: #f5f5f5; position: relative; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .2s ease; }
+    .card:hover .thumb img { transform: scale(1.035); }
+    .badge-line { position: absolute; left: 8px; bottom: 8px; display: flex; gap: 5px; flex-wrap: wrap; }
+    .badge-line span { background: rgba(255,255,255,.94); border: 1px solid #ececec; border-radius: 999px; font-size: 11px; padding: 4px 7px; color: #333; }
+    .card-title { font-size: 14px; line-height: 1.45; margin-top: 12px; min-height: 40px; }
+    .discount { color: #e60023; font-weight: 900; margin-right: 5px; }
+    .price { font-size: 17px; font-weight: 900; }
+    .meta { color: #8a8f98; font-size: 12px; margin-top: 6px; }
+    .soldout-pill { display: inline-flex; margin-top: 8px; color: #b51d28; background: #fff1f2; border-radius: 999px; padding: 4px 8px; font-size: 12px; font-weight: 800; }
+    .empty { padding: 60px 20px; text-align: center; color: #7b8494; background: #fafafa; border: 1px solid #eee; }
+    .detail { display: none; grid-template-columns: 560px minmax(0, 1fr); gap: 42px; }
     .detail.active { display: grid; }
-    .detail-img { height: 560px; border: 1px solid #f0f1f3; background: linear-gradient(145deg, #f1f1f1, #fff); display: flex; align-items: center; justify-content: center; position: relative; }
-    .detail-img::before { content: ""; width: 280px; height: 360px; border-radius: 116px 116px 24px 24px; background: var(--cloth, #d8dde3); box-shadow: inset 0 0 0 22px rgba(255,255,255,.22); }
-    .detail-img::after { content: "PLUMIS"; position: absolute; right: 28px; top: 28px; font-family: Georgia, serif; font-weight: 700; font-size: 22px; color: #1d3d27; }
-    .detail-title { font-size: 21px; line-height: 1.45; margin: 0 0 12px; }
-    .review { color: #777; font-size: 13px; margin-bottom: 16px; }
-    .price-box { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
-    .list-price { color: #777; text-decoration: line-through; font-size: 16px; }
-    .detail-price { font-size: 30px; font-weight: 900; margin-top: 4px; }
-    .benefits { border-bottom: 1px solid var(--line); padding-bottom: 22px; margin-bottom: 24px; display: grid; gap: 10px; color: #4b5563; font-size: 14px; }
-    .option-label { font-size: 15px; font-weight: 700; margin: 22px 0 10px; }
-    .dropdown { border: 1px solid #cad1d8; border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
-    .drop-head { height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #fff; }
-    .drop-list { border-top: 1px solid var(--line); max-height: 260px; overflow: auto; background: #fff; }
-    .drop-option { width: 100%; height: 48px; border: 0; border-bottom: 1px solid #edf0f2; background: #fff; text-align: left; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; }
+    .back { border: 1px solid var(--line); border-radius: 999px; background: #fff; padding: 9px 14px; margin-bottom: 16px; }
+    .detail-img { height: 660px; background: #f6f6f6; border: 1px solid #eee; overflow: hidden; }
+    .detail-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .detail-title { font-size: 24px; line-height: 1.35; margin: 0 0 10px; }
+    .review { color: #666; font-size: 13px; margin-bottom: 18px; }
+    .price-box { padding: 20px 0; border-top: 1px solid #111; border-bottom: 1px solid #f1f1f1; }
+    .list-price { color: #999; text-decoration: line-through; font-size: 13px; }
+    .detail-price { font-size: 30px; font-weight: 900; margin-top: 3px; }
+    .benefits { margin: 18px 0; padding: 16px; background: #f8fafb; border-radius: 8px; font-size: 13px; color: #4c5563; display: grid; gap: 8px; }
+    .option-label { margin: 24px 0 9px; font-size: 14px; font-weight: 900; }
+    .dropdown { position: relative; margin-bottom: 8px; }
+    .drop-head { min-height: 48px; border: 1px solid #d8dde4; padding: 13px 14px; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+    .drop-list { border: 1px solid #d8dde4; border-top: 0; max-height: 240px; overflow: auto; background: #fff; }
+    .drop-option { width: 100%; border: 0; background: #fff; border-bottom: 1px solid #f0f2f4; padding: 13px 14px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
     .drop-option:hover { background: #f8fafb; }
-    .drop-option.soldout { color: #a3aab5; background: #f3f5f7; }
-    .selected-box { border: 1px solid #d8dee4; border-radius: 8px; padding: 16px; margin: 16px 0; background: #fff; display: none; }
-    .selected-box.active { display: block; }
-    .total { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 18px; }
-    .total b { color: #e60023; font-size: 27px; }
-    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
-    .action-row button { height: 54px; border-radius: 8px; border: 1px solid var(--naver); background: #fff; font-weight: 800; font-size: 16px; }
-    .action-row .buy { background: var(--naver); color: #fff; }
-    .action-row .gray { border-color: #d8dee4; color: #333; }
-    .talk-inline { height: 54px; width: 100%; margin-top: 12px; border: 0; border-radius: 8px; background: #073f1d; color: #fff; font-weight: 900; font-size: 17px; }
-    .back { margin-bottom: 22px; border: 0; background: #f3f5f7; border-radius: 8px; padding: 10px 14px; }
-
-    .admin-toggle { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50; border: 0; border-radius: 999px; background: var(--panel); color: #fff; padding: 12px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.24); writing-mode: vertical-rl; letter-spacing: 2px; font-weight: 800; }
-    .admin { position: fixed; right: 0; top: 0; bottom: 0; width: 390px; z-index: 60; background: #fff; border-left: 1px solid var(--line); box-shadow: -20px 0 50px rgba(0,0,0,.12); transform: translateX(100%); transition: .22s ease; display: flex; flex-direction: column; }
+    .drop-option.soldout { color: #a0a6b0; text-decoration: line-through; }
+    .selected-box { min-height: 68px; border: 1px solid #e2e5e9; background: #fafafa; padding: 14px; margin: 14px 0 16px; color: #8a94a4; }
+    .selected-box.active { background: #fff; color: #111; }
+    .total { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f1f1; padding-top: 12px; margin-top: 12px; }
+    .action-row { display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .action-row button { height: 54px; border: 1px solid #d8dde4; background: #fff; font-weight: 800; }
+    .action-row .buy { border-color: var(--naver); background: var(--naver); color: #fff; font-size: 16px; }
+    .talk-inline { margin-top: 10px; width: 100%; height: 54px; border: 0; background: var(--green-dark); color: #fff; font-weight: 900; border-radius: 2px; }
+    .mock-box { margin-top: 12px; padding: 12px; border: 1px dashed #cbd5e1; background: #f8fafc; font-size: 13px; color: #475569; }
+    .admin-toggle { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 50; border: 0; border-radius: 999px; background: var(--panel); color: #fff; padding: 12px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.24); writing-mode: vertical-rl; letter-spacing: 2px; font-weight: 900; }
+    .admin { position: fixed; right: 0; top: 0; bottom: 0; width: 420px; z-index: 60; background: #fff; border-left: 1px solid var(--line); box-shadow: -20px 0 50px rgba(0,0,0,.12); transform: translateX(100%); transition: .22s ease; display: flex; flex-direction: column; }
     .admin.open { transform: translateX(0); }
     .admin-head { padding: 18px; background: var(--panel); color: #fff; display: flex; align-items: center; justify-content: space-between; }
     .admin-head button { border: 1px solid rgba(255,255,255,.28); background: transparent; color: #fff; border-radius: 8px; padding: 6px 10px; }
     .admin-body { padding: 16px; overflow: auto; }
     .admin h3 { margin: 18px 0 10px; font-size: 16px; }
-    .api-box { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: #fbfcfd; }
-    .api-box input { width: 100%; height: 38px; border: 1px solid #d8dee4; border-radius: 8px; padding: 0 10px; margin-top: 8px; font-size: 12px; }
-    .api-row { display: flex; gap: 8px; margin-top: 8px; }
-    .mini { height: 34px; border: 1px solid #d8dee4; background: #fff; border-radius: 8px; padding: 0 10px; }
-    .mini.primary { border-color: var(--naver); color: #007a3d; font-weight: 800; }
-    .stock-row { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: grid; grid-template-columns: 1fr 72px 54px; gap: 8px; align-items: center; }
-    .stock-row .name { font-size: 13px; font-weight: 700; }
-    .stock-row .state { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .stock-row input { height: 34px; border: 1px solid #d8dee4; border-radius: 8px; padding: 0 8px; }
-    .stock-row button { height: 34px; border: 0; border-radius: 8px; background: var(--naver); color: #fff; font-weight: 800; }
-    .metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .metric { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fbfcfd; }
-    .metric b { display: block; font-size: 20px; }
-    .metric span { color: var(--muted); font-size: 12px; }
-    .log { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 12px; white-space: pre-wrap; background: #fbfcfd; }
-    .log strong { display: block; margin-bottom: 4px; color: #111; }
-    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 100; background: rgba(17,24,39,.96); color: #fff; padding: 12px 16px; border-radius: 999px; box-shadow: 0 12px 30px rgba(0,0,0,.24); display: none; max-width: 760px; font-size: 14px; }
-    .toast.show { display: block; }
-    .dev-note { margin-top: 16px; padding: 14px; background: #fff8e6; border: 1px solid #ffe1a3; border-radius: 10px; font-size: 13px; line-height: 1.55; color: #5c4300; }
-    @media (max-width: 980px) { .header { grid-template-columns: 1fr; text-align: center; } .talk-badge, .search { justify-self: center; } .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .detail { grid-template-columns: 1fr; } .admin { width: min(100vw, 390px); } }
+    .mode { padding: 10px 12px; border-radius: 8px; background: #eef6ff; font-size: 12px; color: #38618f; line-height: 1.55; }
+    .setting-row { display: flex; gap: 8px; margin-top: 10px; }
+    .setting-row input, .setting-row select { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 9px; }
+    .setting-row button, .admin-action { border: 0; background: #111827; color: #fff; border-radius: 8px; padding: 9px 12px; }
+    .metrics { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .metric { border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+    .metric b { display: block; font-size: 22px; }
+    .metric span { color: #8a94a4; font-size: 12px; }
+    .stock-row { border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: grid; grid-template-columns: 1fr 70px 62px; gap: 8px; align-items: center; }
+    .stock-row .name { font-size: 13px; font-weight: 900; }
+    .stock-row .state { font-size: 12px; color: #8a94a4; margin-top: 2px; }
+    .stock-row input { width: 70px; border: 1px solid var(--line); border-radius: 7px; padding: 8px; }
+    .stock-row button { border: 0; background: var(--naver); color: #fff; border-radius: 7px; padding: 8px; font-weight: 900; }
+    .log { white-space: pre-wrap; word-break: break-word; border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 12px; color: #4c5563; margin-bottom: 8px; background: #fafafa; }
+    .log strong { display: block; color: #111; font-size: 13px; margin-bottom: 4px; }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: #111827; color: #fff; border-radius: 999px; padding: 11px 18px; font-size: 13px; opacity: 0; pointer-events: none; transition: .2s ease; z-index: 80; max-width: min(92vw, 820px); text-align: center; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width: 980px) {
+      .header { grid-template-columns: 1fr; text-align: center; }
+      .store-tools, .search { justify-self: center; }
+      .nav-inner { overflow-x: auto; justify-content: flex-start; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail { grid-template-columns: 1fr; }
+      .detail-img { height: 520px; }
+      .admin { width: min(100vw, 420px); }
+      .hero { grid-template-columns: 1fr; height: auto; }
+      .hero-card { display: none; }
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">NAVER ㅣ 스마트스토어 · mock storefront</div>
+  <div class="topbar"><span>네이버 스마트스토어 mock 화면</span><span>상품/옵션/재고 DB 가정</span><span>톡톡 챗봇 연동 테스트</span></div>
   <header class="header">
-    <button class="talk-badge" id="headerTalkBtn">💬 알림받기 <small>관심고객수 156,544</small></button>
-    <div class="brand">PLUMIS<span>WEAR</span></div>
-    <div class="search">검색어를 입력해주세요 🔍</div>
+    <div class="store-tools"><button class="talk-badge" id="headerTalkBtn">💬 톡톡하기</button><span>문의 · 재입고 알림</span></div>
+    <button class="brand" id="brandBtn">PLUMIS<span>WEAR</span></button>
+    <div class="search">🔍 상품명을 검색해보세요</div>
   </header>
-  <nav class="nav"><div class="nav-inner"><b>쇼핑LIVE</b><b>베스트</b><span>신상품</span><span>남성</span><span>여성</span><span>키즈</span><span>아울렛</span><span>FOR YOU</span><span>더보기</span></div></nav>
-  <div class="notice-strip">🟩 네이버 톡톡 기반 재입고 알림 MVP · 실제 API는 mock payload로 대체</div>
+  <section class="user-strip">
+    <div class="user-inner">
+      <div class="user-picker">
+        <b>테스트 고객</b>
+        <select id="mockUserSelect"></select>
+        <span id="mockUserInfo"></span>
+      </div>
+      <div>실제 톡톡 탭에서는 네이버가 보낸 <b>실제 user</b>가 우선입니다. 여기의 User 1/2/3은 서버 mock 이벤트용입니다.</div>
+    </div>
+  </section>
+  <nav class="nav"><div class="nav-inner" id="nav"></div></nav>
+  <div class="notice-strip">🎁 로그인 10% 쿠폰 · 일부 품절 옵션은 톡톡에서 재입고 알림을 신청할 수 있습니다.</div>
 
   <main class="layout">
     <section id="listView">
-      <div class="breadcrumb">홈 &gt; 베스트 mock 상품</div>
-      <h1 class="section-title">베스트</h1>
-      <div class="tabs"><b>✓ 실시간</b><span>일간</span><span>주간</span><span>월간</span></div>
+      <div class="hero">
+        <div class="hero-copy"><small>SUMMER RESTOCK SIGNAL</small><h1>품절된 옵션도<br/>고객 수요로 저장합니다</h1><p>가상 스마트스토어에서 상품을 보고 톡톡하기를 눌러 재입고 알림 흐름을 테스트하세요.</p></div>
+        <div class="hero-card">PLUMIS<br/>WEAR</div>
+      </div>
+      <div class="breadcrumb" id="breadcrumb">PLUMIS WEAR &gt; 베스트</div>
+      <div class="section-title"><span id="sectionTitle">BEST</span><small id="sectionSubtitle">실시간 인기 상품</small></div>
+      <div class="tabs"><b>인기순</b><span>리뷰 많은순</span><span>낮은가격순</span><span>신상품순</span></div>
       <div class="grid" id="productGrid"></div>
     </section>
-
-    <section id="detailView" class="detail"></section>
+    <section class="detail" id="detailView"></section>
   </main>
 
   <button class="admin-toggle" id="adminToggle">관리창</button>
   <aside class="admin" id="adminPanel">
     <div class="admin-head"><strong>재고/알림 관리</strong><button id="adminClose">닫기</button></div>
     <div class="admin-body">
-      <div class="api-box">
-        <b>연결 모드</b>
-        <p style="font-size:12px;color:#6b7280;line-height:1.5;margin:8px 0 0">GitHub Pages에서는 백엔드가 없으므로 Vercel API를 호출합니다. 실패하면 브라우저 내부 mock으로 동작합니다.</p>
-        <input id="apiBase" placeholder="https://naver-restock-alert.vercel.app" />
-        <div class="api-row"><button class="mini primary" id="saveApi">저장</button><button class="mini" id="reloadState">상태 새로고침</button><button class="mini" id="resetState">초기화</button></div>
-        <div id="modeText" style="font-size:12px;color:#6b7280;margin-top:8px"></div>
-      </div>
-
-      <h3>요약</h3>
-      <div class="metric-grid" id="metrics"></div>
-
-      <h3>현재 상품 옵션 재고</h3>
-      <div id="stockEditor"></div>
-
-      <h3>대기자</h3>
-      <div id="waitlists"></div>
-
-      <h3>발송 로그</h3>
-      <div id="logs"></div>
-
-      <div class="dev-note">
-        실제 톡톡 화면에서 챗봇 메시지가 뜨려면 네이버 톡톡 파트너센터의 Webhook URL이 Vercel의 <b>/api/naver-talk-webhook</b>으로 등록되어 있어야 합니다. 이 GitHub Pages 화면은 상품 유입/옵션/재고 관리 UI를 보여주는 mock 스마트스토어입니다.
-      </div>
+      <div class="mode" id="modeText">연결 확인 중...</div>
+      <div class="setting-row"><input id="apiBase" placeholder="https://naver-restock-alert.vercel.app" /><button id="saveApi">연결</button></div>
+      <div class="setting-row"><select id="adminProductSelect"></select><button id="reloadState">새로고침</button></div>
+      <div class="setting-row"><button class="admin-action" id="resetState">mock DB 초기화</button><button class="admin-action" id="mockWaitlistBtn">선택 유저 대기자 생성</button></div>
+      <h3>요약</h3><div class="metrics" id="metrics"></div>
+      <h3>옵션 재고 수정</h3><div id="stockEditor"></div>
+      <h3>대기자</h3><div id="waitlists"></div>
+      <h3>발송/이벤트 로그</h3><div id="logs"></div>
     </div>
   </aside>
-
   <div class="toast" id="toast"></div>
 
-<script>
-const TALK_URL = "https://talk.naver.com/ct/wocay2r";
+<script type="module">
+import { seedData } from "./data/mock-store.js";
+
 const DEFAULT_API_BASE = "https://naver-restock-alert.vercel.app";
-const WEBHOOK_PATH = "/api/naver-talk-webhook";
+const TALK_URL = "https://talk.naver.com/ct/wocay2r";
+const NAVS = [
+  { id: "best", label: "베스트", title: "BEST", subtitle: "실시간 인기 상품" },
+  { id: "new", label: "신상품", title: "NEW ARRIVALS", subtitle: "새로 업데이트된 상품" },
+  { id: "men", label: "남성", title: "MEN", subtitle: "남성 의류" },
+  { id: "women", label: "여성", title: "WOMEN", subtitle: "여성 의류" },
+  { id: "kids", label: "키즈", title: "KIDS", subtitle: "키즈/패밀리 라인" },
+  { id: "outlet", label: "아울렛", title: "OUTLET", subtitle: "아울렛 특가 상품" }
+];
+
 let apiBase = localStorage.getItem("RESTOCK_API_BASE") || DEFAULT_API_BASE;
 let remoteOk = false;
-let selectedProductNo = new URLSearchParams(location.search).get("productNo") || "200000001";
+let state = clone(seedData);
+let selectedProductNo = new URLSearchParams(location.search).get("productNo") || state.products[0]?.product_no;
+let currentCategory = location.hash?.replace("#", "") || "best";
 let selectedColor = null;
 let selectedOptionId = null;
 let openColor = false;
 let openSize = false;
+let selectedMockUser = localStorage.getItem("RESTOCK_MOCK_USER") || "mock_user_001";
 
-const fallbackState = {
-  products: [
-    { id:"prod_knit_collar_001", product_no:"200000001", product_name:"케이블 니트 카라 반팔 셔츠", price:147570, list_price:167300, discount_rate:12, category:"니트/셔츠", image_theme:"cream", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_rugby_002", product_no:"200000002", product_name:"스트라이프 럭비 카라 티셔츠", price:86700, list_price:99000, discount_rate:12, category:"티셔츠", image_theme:"navy", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_oxford_003", product_no:"200000003", product_name:"라이트 블루 옥스포드 셔츠", price:103470, list_price:129000, discount_rate:19, category:"셔츠", image_theme:"sky", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_pants_004", product_no:"200000004", product_name:"코튼 와이드 밴딩 팬츠", price:141270, list_price:159000, discount_rate:11, category:"팬츠", image_theme:"olive", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_logo_tee_005", product_no:"200000005", product_name:"미니멀 로고 베이직 티셔츠", price:62370, list_price:69000, discount_rate:10, category:"티셔츠", image_theme:"brown", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_cardigan_006", product_no:"200000006", product_name:"소프트 크롭 카디건", price:116070, list_price:139000, discount_rate:16, category:"카디건", image_theme:"pink", status:"FULL_OUT_OF_STOCK" },
-    { id:"prod_shorts_007", product_no:"200000007", product_name:"나일론 유틸리티 쇼츠", price:76070, list_price:89000, discount_rate:14, category:"쇼츠", image_theme:"gray", status:"PARTIAL_OUT_OF_STOCK" },
-    { id:"prod_jacket_008", product_no:"200000008", product_name:"린넨 블렌드 싱글 자켓", price:189000, list_price:219000, discount_rate:13, category:"아우터", image_theme:"linen", status:"PARTIAL_OUT_OF_STOCK" }
-  ],
-  product_options: [
-    opt("opt_knit_black_004","prod_knit_collar_001","블랙(031) / 004",0), opt("opt_knit_black_005","prod_knit_collar_001","블랙(031) / 005",0), opt("opt_knit_navy_004","prod_knit_collar_001","네이비(166) / 004",7), opt("opt_knit_oat_005","prod_knit_collar_001","오트밀(118) / 005",2), opt("opt_knit_blue_004","prod_knit_collar_001","그레이 블루(AEY) / 004",0),
-    opt("opt_rugby_navy_s","prod_rugby_002","네이비 / S",4), opt("opt_rugby_navy_m","prod_rugby_002","네이비 / M",0), opt("opt_rugby_green_l","prod_rugby_002","그린 / L",1), opt("opt_rugby_green_xl","prod_rugby_002","그린 / XL",0),
-    opt("opt_oxford_sky_004","prod_oxford_003","스카이블루 / 004",0), opt("opt_oxford_sky_005","prod_oxford_003","스카이블루 / 005",6), opt("opt_oxford_white_004","prod_oxford_003","화이트 / 004",0), opt("opt_oxford_white_005","prod_oxford_003","화이트 / 005",3),
-    opt("opt_pants_beige_004","prod_pants_004","베이지 / 004",5), opt("opt_pants_beige_005","prod_pants_004","베이지 / 005",0), opt("opt_pants_khaki_004","prod_pants_004","카키 / 004",0), opt("opt_pants_khaki_005","prod_pants_004","카키 / 005",2),
-    opt("opt_logo_brown_s","prod_logo_tee_005","브라운 / S",9), opt("opt_logo_brown_m","prod_logo_tee_005","브라운 / M",0), opt("opt_logo_black_l","prod_logo_tee_005","블랙 / L",0), opt("opt_logo_black_xl","prod_logo_tee_005","블랙 / XL",4),
-    opt("opt_cardigan_ivory_s","prod_cardigan_006","아이보리 / S",0), opt("opt_cardigan_ivory_m","prod_cardigan_006","아이보리 / M",0), opt("opt_cardigan_pink_s","prod_cardigan_006","핑크 / S",0), opt("opt_cardigan_pink_m","prod_cardigan_006","핑크 / M",0),
-    opt("opt_shorts_gray_s","prod_shorts_007","차콜 / S",6), opt("opt_shorts_gray_m","prod_shorts_007","차콜 / M",0), opt("opt_shorts_black_l","prod_shorts_007","블랙 / L",2), opt("opt_shorts_black_xl","prod_shorts_007","블랙 / XL",0),
-    opt("opt_jacket_linen_004","prod_jacket_008","내추럴 / 004",1), opt("opt_jacket_linen_005","prod_jacket_008","내추럴 / 005",0), opt("opt_jacket_navy_004","prod_jacket_008","네이비 / 004",4), opt("opt_jacket_navy_005","prod_jacket_008","네이비 / 005",0)
-  ], waitlists: [], message_logs: [], stock_events: [], consent_logs: []
-};
-let state = JSON.parse(localStorage.getItem("RESTOCK_LOCAL_STATE") || "null") || structuredClone(fallbackState);
-function opt(id, product_id, name, stock) { return { id, product_id, original_option_name:name, current_option_name: stock<=0 ? name+" [품절]" : name, stock_quantity:stock }; }
-function money(n){ return Number(n).toLocaleString("ko-KR")+"원"; }
-function theme(t){ return { cream:"#e7e1d3", navy:"#1f2a44", sky:"#b7d4e8", olive:"#8a8e73", brown:"#8c6d5a", pink:"#e8c3ce", gray:"#7b7f87", linen:"#d3c4a6" }[t] || "#ddd"; }
-function productOptions(productId){ return state.product_options || state.products.find(p=>p.id===productId)?.options || []; }
-function normalizeRemote(data){ if (!data) return state; const product_options = []; (data.products||[]).forEach(p => (p.options||[]).forEach(o => product_options.push(o))); return { ...data, product_options }; }
-function saveLocal(){ localStorage.setItem("RESTOCK_LOCAL_STATE", JSON.stringify(state)); }
-function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"), 4500); }
-async function api(path, opts={}){ const base=(apiBase||"").replace(/\/$/,""); const res=await fetch(base+path, { ...opts, headers: { "Content-Type":"application/json", ...(opts.headers||{}) }}); if(!res.ok) throw new Error(res.status+" "+res.statusText); return await res.json(); }
-async function loadState(){
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function money(n) { return Number(n || 0).toLocaleString("ko-KR") + "원"; }
+function toast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 5200); }
+function escapeHtml(str) { return String(str ?? "").replace(/[&<>"']/g, (m) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m])); }
+function productOptions(productId) { return state.product_options?.filter(o => o.product_id === productId) || state.products.find(p => p.id === productId)?.options || []; }
+function getProduct() { return state.products.find(p => String(p.product_no) === String(selectedProductNo)) || state.products[0]; }
+function splitOpt(name) { const [color, size] = String(name).replace(" [품절]", "").split(" / "); return { color: color || name, size: size || "단일" }; }
+function productMatchesCategory(p, cat) { return (p.scopes || ["best"]).includes(cat); }
+function getMockUsers() { return state.mock_users || seedData.mock_users || {}; }
+function getSelectedUser() { return getMockUsers()[selectedMockUser] || { talk_user_id: selectedMockUser, label: selectedMockUser, mock_phone_number: "" }; }
+
+async function api(path, opts = {}) {
+  const base = (apiBase || "").replace(/\/$/, "");
+  const res = await fetch(base + path, { ...opts, headers: { "Content-Type": "application/json", ...(opts.headers || {}) } });
+  if (!res.ok) throw new Error(res.status + " " + res.statusText);
+  return await res.json();
+}
+
+function normalizeRemote(data) {
+  if (!data) return clone(seedData);
+  const product_options = data.product_options?.length ? data.product_options : [];
+  if (!product_options.length && data.products) data.products.forEach(p => (p.options || []).forEach(o => product_options.push(o)));
+  return { ...clone(seedData), ...data, product_options };
+}
+
+async function loadState() {
   document.getElementById("apiBase").value = apiBase;
-  try { const data = await api(WEBHOOK_PATH + "?mode=admin-state"); state = normalizeRemote(data); remoteOk = true; document.getElementById("modeText").textContent = "원격 Vercel API 연결됨: " + apiBase; }
-  catch(e){ remoteOk = false; document.getElementById("modeText").textContent = "브라우저 내부 mock 모드: API 연결 실패 또는 미설정"; }
+  try {
+    const data = await api("/api/naver-talk-webhook?mode=admin-state");
+    state = normalizeRemote(data);
+    remoteOk = true;
+    document.getElementById("modeText").textContent = "원격 Vercel API 연결됨: " + apiBase + " · 단일 webhook 엔드포인트로 재고/대기자/발송 로그 처리";
+  } catch (e) {
+    state = clone(seedData);
+    remoteOk = false;
+    document.getElementById("modeText").textContent = "브라우저 내부 mock 모드: Vercel API 연결 실패 또는 미설정. 실제 톡톡 발송은 Vercel 연결 필요.";
+  }
   renderAll();
 }
-function calcMetrics(){ const opts=state.product_options||[]; return { productCount: state.products.length, partialOutOptions: opts.filter(o=>Number(o.stock_quantity)<=0).length, waitingCount:(state.waitlists||[]).filter(w=>w.status==="WAITING").length, notifiedCount:(state.waitlists||[]).filter(w=>w.status==="NOTIFIED").length, messageLogCount:(state.message_logs||[]).length }; }
-function renderGrid(){
-  const grid=document.getElementById("productGrid");
-  grid.innerHTML = state.products.map((p,i)=>{
-    const opts=productOptions(p.id); const out=opts.filter(o=>Number(o.stock_quantity)<=0).length;
-    return `<button class="card" onclick="openDetail('${p.product_no}')" style="--cloth:${theme(p.image_theme)}"><span class="rank">${i+1}</span><div class="img"><div class="swatches"><i style="--c:#efe8dd"></i><i style="--c:#101725"></i><i style="--c:#c7ccd3"></i></div></div><div class="card-title">[로그인 10% 쿠폰] ${p.product_name}</div><span class="discount">${p.discount_rate||10}%</span><span class="price">${money(p.price)}</span><div class="meta">★ 4.${(i+7)%10} · 리뷰 ${3+i*7}</div>${out?`<span class="soldout-pill">품절 옵션 ${out}개 · 톡톡알림 가능</span>`:""}</button>`;
+
+function renderNav() {
+  document.getElementById("nav").innerHTML = NAVS.map(n => `<button class="nav-btn ${n.id === currentCategory ? "active" : ""}" data-cat="${n.id}">${n.label}</button>`).join("");
+  document.querySelectorAll(".nav-btn").forEach(btn => btn.addEventListener("click", () => navigateCategory(btn.dataset.cat)));
+}
+function navigateCategory(cat) {
+  currentCategory = cat || "best";
+  history.replaceState(null, "", location.pathname + "#" + currentCategory);
+  document.getElementById("listView").style.display = "block";
+  document.getElementById("detailView").classList.remove("active");
+  renderAll();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderUsers() {
+  const users = getMockUsers();
+  const select = document.getElementById("mockUserSelect");
+  const ids = Object.keys(users).filter(id => id.startsWith("mock_user_"));
+  if (!ids.includes(selectedMockUser)) selectedMockUser = ids[0] || Object.keys(users)[0] || "mock_user_001";
+  select.innerHTML = ids.map(id => `<option value="${id}" ${id === selectedMockUser ? "selected" : ""}>${escapeHtml(users[id].label || id)} (${id})</option>`).join("");
+  const user = getSelectedUser();
+  document.getElementById("mockUserInfo").textContent = `전화번호 mock: ${user.mock_phone_number || "미설정"}`;
+}
+
+function renderGrid() {
+  const nav = NAVS.find(n => n.id === currentCategory) || NAVS[0];
+  document.getElementById("breadcrumb").textContent = `PLUMIS WEAR > ${nav.label}`;
+  document.getElementById("sectionTitle").textContent = nav.title;
+  document.getElementById("sectionSubtitle").textContent = nav.subtitle;
+  const products = state.products.filter(p => productMatchesCategory(p, currentCategory));
+  const grid = document.getElementById("productGrid");
+  if (!products.length) { grid.innerHTML = `<div class="empty">이 카테고리에 표시할 상품이 없습니다.</div>`; return; }
+  grid.innerHTML = products.map((p, i) => {
+    const opts = productOptions(p.id);
+    const out = opts.filter(o => Number(o.stock_quantity) <= 0).length;
+    return `<button class="card" onclick="openDetail('${p.product_no}')">
+      <span class="rank">${i + 1}</span>
+      <div class="thumb"><img src="${p.image_url}" alt="${escapeHtml(p.product_name)}" loading="lazy"/><div class="badge-line"><span>무료배송</span>${out ? `<span>품절옵션 ${out}</span>` : `<span>재고있음</span>`}</div></div>
+      <div class="card-title">[로그인 10% 쿠폰] ${escapeHtml(p.product_name)}</div>
+      <span class="discount">${p.discount_rate || 10}%</span><span class="price">${money(p.price)}</span>
+      <div class="meta">★ 4.${(i + 7) % 10 + 1} · 리뷰 ${12 + i * 9} · ${escapeHtml(p.category || "의류")}</div>
+      ${out ? `<span class="soldout-pill">품절 옵션 ${out}개 · 톡톡알림 가능</span>` : ""}
+    </button>`;
   }).join("");
 }
-window.openDetail = function(productNo){ selectedProductNo=String(productNo); history.replaceState(null,"","?productNo="+productNo); selectedColor=null; selectedOptionId=null; openColor=false; openSize=false; renderDetail(); window.scrollTo({top:0,behavior:"smooth"}); };
-function splitOpt(name){ const [color, size] = String(name).replace(" [품절]","").split(" / "); return { color: color || name, size: size || "단일" }; }
-function getProduct(){ return state.products.find(p=>String(p.product_no)===String(selectedProductNo)) || state.products[0]; }
-function groupedOptions(p){ const opts=productOptions(p.id); const colors=[...new Set(opts.map(o=>splitOpt(o.original_option_name).color))]; const sizes=selectedColor ? opts.filter(o=>splitOpt(o.original_option_name).color===selectedColor) : []; return { opts, colors, sizes }; }
-function renderDetail(){
-  const p=getProduct(); const {opts,colors,sizes}=groupedOptions(p); const option=opts.find(o=>o.id===selectedOptionId); const soldOut=option && Number(option.stock_quantity)<=0;
-  document.getElementById("listView").style.display="none"; const d=document.getElementById("detailView"); d.classList.add("active");
-  d.innerHTML = `<div><button class="back" onclick="backToList()">← 목록으로</button><div class="detail-img" style="--cloth:${theme(p.image_theme)}"></div></div><div><h2 class="detail-title">[로그인 10% 쿠폰] ${p.product_name}</h2><div class="review">★ 4.92 · 최근 6개월 4.94 · 리뷰 ${Math.floor(12+Math.random()*50)}</div><div class="price-box"><div class="list-price">${money(p.list_price||Math.round(p.price*1.12))}</div><div class="detail-price">${money(p.price)}</div><div style="color:#777;font-size:13px;margin-top:4px">무료배송</div></div><div class="benefits"><div><b style="color:#03c75a">N+</b> 최대 적립 포인트 17,855원</div><div>평균 2일 이내 도착 확률 91%</div><div>옵션 조합별 재고를 mock DB로 관리 중</div></div><div class="option-label">옵션 선택 (필수) <span style="color:#e60023">*</span></div>${colorDropdown(colors)}${sizeDropdown(sizes)}<div class="selected-box ${option?"active":""}">${option?`<b>${option.original_option_name}</b><div style="font-size:13px;color:${soldOut?'#e5484d':'#6b7280'};margin-top:4px">${soldOut?'품절 · 톡톡 재입고 알림 신청 가능':'재고 '+option.stock_quantity+'개'}</div><div class="total"><span>총 1개</span><b>${money(p.price)}</b></div>`:""}</div><div class="action-row"><button>🎁 선물하기</button><button class="buy" onclick="buyNow()">N 구매하기</button><button class="gray">♡ 찜하기</button><button class="gray">🛍 장바구니</button></div><button class="talk-inline" onclick="openTalkForCurrent()">💬 톡톡하기 · 품절 옵션 재입고 알림</button></div>`;
+
+window.openDetail = function(productNo) {
+  selectedProductNo = String(productNo);
+  selectedColor = null;
+  selectedOptionId = null;
+  openColor = false;
+  openSize = false;
+  history.replaceState(null, "", `?productNo=${encodeURIComponent(productNo)}#${currentCategory}`);
+  renderDetail();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+window.backToList = function() {
+  document.getElementById("listView").style.display = "block";
+  document.getElementById("detailView").classList.remove("active");
+  history.replaceState(null, "", location.pathname + "#" + currentCategory);
+  renderAdmin();
+};
+
+function groupedOptions(p) {
+  const opts = productOptions(p.id);
+  const colors = [...new Set(opts.map(o => splitOpt(o.original_option_name).color))];
+  const sizes = selectedColor ? opts.filter(o => splitOpt(o.original_option_name).color === selectedColor) : [];
+  return { opts, colors, sizes };
+}
+function colorDropdown(colors) {
+  return `<div class="dropdown"><div class="drop-head" onclick="toggleColor()"><span>${selectedColor ? "색상 / " + escapeHtml(selectedColor) : "색상"}</span><span>${openColor ? "⌃" : "⌄"}</span></div>${openColor ? `<div class="drop-list">${colors.map(c => `<button class="drop-option" onclick="selectColor('${c.replace(/'/g,"\\'")}')"><span>${escapeHtml(c)}</span><span>›</span></button>`).join("")}</div>` : ""}</div>`;
+}
+function sizeDropdown(sizes) {
+  return `<div class="dropdown"><div class="drop-head" onclick="toggleSize()"><span>${selectedOptionId ? escapeHtml(sizes.find(o => o.id === selectedOptionId)?.original_option_name || "사이즈") : "사이즈"}</span><span>${openSize ? "⌃" : "⌄"}</span></div>${openSize ? `<div class="drop-list">${sizes.map(o => { const sp = splitOpt(o.original_option_name); const sold = Number(o.stock_quantity) <= 0; return `<button class="drop-option ${sold ? "soldout" : ""}" onclick="selectOption('${o.id}')"><span>${escapeHtml(sp.size)}</span><span>${sold ? "품절 · 알림 가능" : "재고 " + o.stock_quantity}</span></button>`; }).join("")}</div>` : ""}</div>`;
+}
+window.toggleColor = function() { openColor = !openColor; renderDetail(); };
+window.toggleSize = function() { if (!selectedColor) return toast("색상을 먼저 선택하세요."); openSize = !openSize; renderDetail(); };
+window.selectColor = function(c) { selectedColor = c; selectedOptionId = null; openColor = false; openSize = true; renderDetail(); };
+window.selectOption = function(id) { selectedOptionId = id; openSize = false; renderDetail(); };
+window.buyNow = function() { const o = state.product_options.find(x => x.id === selectedOptionId); if (!o) return toast("옵션을 선택하세요."); if (Number(o.stock_quantity) <= 0) return toast("품절 옵션입니다. 톡톡하기로 재입고 알림을 신청하세요."); toast("mock 구매: 실제 결제는 구현하지 않았습니다."); };
+window.wish = function() { toast("찜하기 mock 처리: 찜은 관심상품 저장이고, 옵션별 재입고 대기자는 톡톡 신청으로 따로 저장합니다."); };
+
+function renderDetail() {
+  const p = getProduct();
+  const { opts, colors, sizes } = groupedOptions(p);
+  const option = opts.find(o => o.id === selectedOptionId);
+  const soldOut = option && Number(option.stock_quantity) <= 0;
+  document.getElementById("listView").style.display = "none";
+  const d = document.getElementById("detailView");
+  d.classList.add("active");
+  d.innerHTML = `<div><button class="back" onclick="backToList()">← 목록으로</button><div class="detail-img"><img src="${p.image_url}" alt="${escapeHtml(p.product_name)}"/></div></div>
+    <div><h2 class="detail-title">[로그인 10% 쿠폰] ${escapeHtml(p.product_name)}</h2>
+    <div class="review">★ 4.92 · 최근 6개월 4.94 · 리뷰 ${Math.floor(12 + Number(p.product_no.slice(-1)) * 13)}</div>
+    <div class="price-box"><div class="list-price">${money(p.list_price || Math.round(p.price * 1.12))}</div><div class="detail-price">${money(p.price)}</div><div style="color:#777;font-size:13px;margin-top:4px">무료배송 · N페이 구매 가능 mock</div></div>
+    <div class="benefits"><div><b style="color:#03c75a">N+</b> 최대 적립 포인트 ${Math.round(p.price * 0.08).toLocaleString("ko-KR")}원</div><div>평균 2일 이내 도착 확률 91%</div><div>옵션 조합별 재고를 mock DB로 관리 중</div></div>
+    <div class="option-label">옵션 선택 (필수) <span style="color:#e60023">*</span></div>${colorDropdown(colors)}${sizeDropdown(sizes)}
+    <div class="selected-box ${option ? "active" : ""}">${option ? `<b>${escapeHtml(option.original_option_name)}</b><div style="font-size:13px;color:${soldOut ? "#e5484d" : "#6b7280"};margin-top:4px">${soldOut ? "품절 · 톡톡 재입고 알림 신청 가능" : "재고 " + option.stock_quantity + "개"}</div><div class="total"><span>총 1개</span><b>${money(p.price)}</b></div>` : "색상과 사이즈를 선택하세요."}</div>
+    <div class="action-row"><button>🎁 선물하기</button><button class="buy" onclick="buyNow()">N 구매하기</button><button class="gray" onclick="wish()">♡ 찜하기</button><button class="gray">🛍 장바구니</button></div>
+    <button class="talk-inline" onclick="openTalkForCurrent()">💬 톡톡하기 · 이 상품 문의/재입고 알림</button>
+    <div class="mock-box"><b>현재 테스트 고객:</b> ${escapeHtml(getSelectedUser().label || selectedMockUser)} / ${selectedMockUser}<br/>톡톡하기를 누르면 실제 톡톡 탭이 열리고, 동시에 Vercel에는 이 고객의 mock open 이벤트를 보내 context를 저장합니다.</div>
+    </div>`;
   renderAdmin();
 }
-window.backToList = function(){ document.getElementById("listView").style.display="block"; document.getElementById("detailView").classList.remove("active"); history.replaceState(null,"",location.pathname); };
-function colorDropdown(colors){ return `<div class="dropdown"><div class="drop-head" onclick="openColor=!openColor;renderDetail()"><span>${selectedColor?"색상 / "+selectedColor:"색상"}</span><span>${openColor?'⌃':'⌄'}</span></div>${openColor?`<div class="drop-list">${colors.map(c=>`<button class="drop-option" onclick="selectColor('${c.replace(/'/g,"\\'")}')"><span>${c}</span><span>›</span></button>`).join("")}</div>`:""}</div>`; }
-function sizeDropdown(sizes){ return `<div class="dropdown"><div class="drop-head" onclick="if(!selectedColor) return toast('색상을 먼저 선택하세요'); openSize=!openSize;renderDetail()"><span>${selectedOptionId ? (sizes.find(o=>o.id===selectedOptionId)?.original_option_name || '사이즈') : '사이즈'}</span><span>${openSize?'⌃':'⌄'}</span></div>${openSize?`<div class="drop-list">${sizes.map(o=>{const sp=splitOpt(o.original_option_name); const sold=Number(o.stock_quantity)<=0; return `<button class="drop-option ${sold?'soldout':''}" onclick="selectOption('${o.id}')"><span>${sp.size}</span><span>${sold?'품절 · 알림 가능':'재고 '+o.stock_quantity}</span></button>`}).join("")}</div>`:""}</div>`; }
-window.selectColor = function(c){ selectedColor=c; selectedOptionId=null; openColor=false; openSize=true; renderDetail(); };
-window.selectOption = function(id){ selectedOptionId=id; openSize=false; renderDetail(); };
-window.buyNow = function(){ const o=(state.product_options||[]).find(x=>x.id===selectedOptionId); if(!o) return toast('옵션을 선택하세요.'); if(Number(o.stock_quantity)<=0) return toast('품절 옵션입니다. 톡톡하기로 재입고 알림을 신청하세요.'); toast('mock 구매: 실제 결제는 구현하지 않았습니다.'); };
-function renderAdmin(){
-  const m=calcMetrics(); document.getElementById("metrics").innerHTML = `<div class="metric"><b>${m.productCount}</b><span>상품 수</span></div><div class="metric"><b>${m.partialOutOptions}</b><span>품절 옵션</span></div><div class="metric"><b>${m.waitingCount}</b><span>대기자</span></div><div class="metric"><b>${m.notifiedCount}</b><span>알림 완료</span></div>`;
-  const p=getProduct(); const opts=productOptions(p.id);
-  document.getElementById("stockEditor").innerHTML = opts.map(o=>{const waiting=(state.waitlists||[]).filter(w=>w.option_id===o.id&&w.status==="WAITING").length; return `<div class="stock-row"><div><div class="name">${o.original_option_name}</div><div class="state">현재 ${o.stock_quantity}개 · 대기 ${waiting}명 ${Number(o.stock_quantity)<=0?'· 품절':''}</div></div><input type="number" min="0" value="${o.stock_quantity}" id="stock_${o.id}"/><button onclick="updateStock('${o.id}')">적용</button></div>`; }).join("");
-  document.getElementById("waitlists").innerHTML = (state.waitlists||[]).length ? state.waitlists.slice(0,10).map(w=>`<div class="log"><strong>${w.product_name||w.product_id}</strong>${w.option_name||w.option_id}\n${w.channel_preference||''} · ${w.status} · ${w.phone_number||'톡톡만'}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나 API 테스트를 진행하세요.</div>`;
-  document.getElementById("logs").innerHTML = (state.message_logs||[]).length ? state.message_logs.slice(0,10).map(l=>`<div class="log"><strong>${l.channel} · ${l.message_type}</strong>${typeof l.payload==='string'?l.payload:JSON.stringify(l.payload||{},null,2).slice(0,900)}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
+
+function calcMetrics() {
+  const opts = state.product_options || [];
+  return {
+    productCount: state.products.length,
+    partialOutOptions: opts.filter(o => Number(o.stock_quantity) <= 0).length,
+    waitingCount: (state.waitlists || []).filter(w => w.status === "WAITING").length,
+    notifiedCount: (state.waitlists || []).filter(w => w.status === "NOTIFIED").length,
+    messageLogCount: (state.message_logs || []).length
+  };
 }
-function renderAll(){ renderGrid(); if (new URLSearchParams(location.search).get("productNo")) renderDetail(); else renderAdmin(); }
-window.updateStock = async function(optionId){ const val=Number(document.getElementById("stock_"+optionId).value||0); if(remoteOk){ try{ const r=await api(WEBHOOK_PATH, { method:"POST", body:JSON.stringify({ event:"admin.update_stock", option_id: optionId, stock_quantity: val }) }); toast(`재고 반영 완료 · 발송 ${r.result?.notified_count||0}건`); await loadState(); return; }catch(e){ toast('원격 API 실패: 브라우저 mock으로 처리합니다.'); remoteOk=false; } } updateStockLocal(optionId,val); renderAll(); };
-function updateStockLocal(optionId,val){ const o=state.product_options.find(x=>x.id===optionId); if(!o) return; const before=Number(o.stock_quantity); o.stock_quantity=val; o.current_option_name=val<=0?o.original_option_name+' [품절]':o.original_option_name; state.stock_events.unshift({event_type: before<=0&&val>0?'RESTOCKED':'STOCK_UPDATED', option_id:optionId, previous_stock:before, current_stock:val, created_at:new Date().toISOString()}); if(before<=0&&val>0){ const waiting=(state.waitlists||[]).filter(w=>w.option_id===optionId&&w.status==='WAITING'); waiting.forEach(w=>{ const p=state.products.find(p=>p.id===w.product_id); w.status='NOTIFIED'; w.notified_at=new Date().toISOString(); state.message_logs.unshift({channel:'NAVER_TALK', message_type:'RESTOCK_ALERT', payload:{body:{event:'send', user:w.talk_user_id, textContent:{text:`[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명`}}}}); if(w.kakao_opt_in) state.message_logs.unshift({channel:'KAKAO_ALIMTALK', message_type:'RESTOCK_ALERT', payload:{phoneNumber:w.phone_number, message:`[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고`}}); }); toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`); } saveLocal(); }
-window.openTalkForCurrent = async function(){ await openTalk(getProduct()); };
-document.getElementById("headerTalkBtn").onclick=()=>openTalk(getProduct());
-function getMockTalkUserId(){
-  let id = localStorage.getItem('RESTOCK_MOCK_TALK_USER_ID');
-  if(!id){
-    id = 'mock_page_user_' + Math.random().toString(36).slice(2,8);
-    localStorage.setItem('RESTOCK_MOCK_TALK_USER_ID', id);
+function renderAdminProductSelect() {
+  const select = document.getElementById("adminProductSelect");
+  select.innerHTML = state.products.map(p => `<option value="${p.product_no}" ${String(p.product_no) === String(selectedProductNo) ? "selected" : ""}>${escapeHtml(p.product_name)}</option>`).join("");
+}
+function renderAdmin() {
+  const m = calcMetrics();
+  document.getElementById("metrics").innerHTML = `<div class="metric"><b>${m.productCount}</b><span>상품 수</span></div><div class="metric"><b>${m.partialOutOptions}</b><span>품절 옵션</span></div><div class="metric"><b>${m.waitingCount}</b><span>대기자</span></div><div class="metric"><b>${m.notifiedCount}</b><span>알림 완료</span></div>`;
+  renderAdminProductSelect();
+  const p = getProduct();
+  const opts = productOptions(p.id);
+  document.getElementById("stockEditor").innerHTML = opts.map(o => {
+    const waiting = (state.waitlists || []).filter(w => w.option_id === o.id && w.status === "WAITING").length;
+    return `<div class="stock-row"><div><div class="name">${escapeHtml(o.original_option_name)}</div><div class="state">현재 ${o.stock_quantity}개 · 대기 ${waiting}명 ${Number(o.stock_quantity) <= 0 ? "· 품절" : ""}</div></div><input type="number" min="0" value="${o.stock_quantity}" id="stock_${o.id}"/><button onclick="updateStock('${o.id}')">적용</button></div>`;
+  }).join("");
+  document.getElementById("waitlists").innerHTML = (state.waitlists || []).length ? state.waitlists.slice(0, 12).map(w => `<div class="log"><strong>${escapeHtml(w.product_name || w.product_id)}</strong>${escapeHtml(w.option_name || w.option_id)}\n고객: ${escapeHtml(w.talk_user_id)} · ${w.channel_preference || ""} · ${w.status}\n${w.phone_number || "톡톡만"}</div>`).join("") : `<div class="log">아직 대기자가 없습니다. 실제 톡톡에서 신청하거나, “선택 유저 대기자 생성”으로 서버 mock 대기자를 만드세요.</div>`;
+  document.getElementById("logs").innerHTML = (state.message_logs || []).length ? state.message_logs.slice(0, 12).map(l => `<div class="log"><strong>${escapeHtml(l.channel)} · ${escapeHtml(l.message_type)}</strong>${escapeHtml(typeof l.payload === "string" ? l.payload : JSON.stringify(l.payload || {}, null, 2).slice(0, 1000))}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
+}
+
+async function updateRemoteState() {
+  if (!remoteOk) return;
+  const data = await api("/api/naver-talk-webhook?mode=admin-state");
+  state = normalizeRemote(data);
+}
+window.updateStock = async function(optionId) {
+  const val = Number(document.getElementById("stock_" + optionId).value || 0);
+  if (remoteOk) {
+    try {
+      const r = await api("/api/naver-talk-webhook", { method: "POST", body: JSON.stringify({ event: "admin.update_stock", option_id: optionId, stock_quantity: val }) });
+      state = normalizeRemote(r.state || (await api("/api/naver-talk-webhook?mode=admin-state")));
+      toast(`재고 반영 완료 · 발송 ${r.result?.notified_count || 0}건`);
+      renderAll();
+      return;
+    } catch (e) { toast("원격 API 실패: 브라우저 mock으로 처리합니다."); remoteOk = false; }
   }
-  return id;
+  updateStockLocal(optionId, val); renderAll();
+};
+function updateStockLocal(optionId, val) {
+  const o = state.product_options.find(x => x.id === optionId); if (!o) return;
+  const before = Number(o.stock_quantity); o.stock_quantity = val; o.current_option_name = val <= 0 ? o.original_option_name + " [품절]" : o.original_option_name;
+  state.stock_events = state.stock_events || []; state.message_logs = state.message_logs || [];
+  state.stock_events.unshift({ event_type: before <= 0 && val > 0 ? "RESTOCKED" : "STOCK_UPDATED", option_id: optionId, previous_stock: before, current_stock: val, created_at: new Date().toISOString() });
+  if (before <= 0 && val > 0) {
+    const waiting = (state.waitlists || []).filter(w => w.option_id === optionId && w.status === "WAITING");
+    waiting.forEach(w => { const p = state.products.find(p => p.id === w.product_id); w.status = "NOTIFIED"; w.notified_at = new Date().toISOString(); state.message_logs.unshift({ channel: "NAVER_TALK", message_type: "RESTOCK_ALERT", payload: { body: { event: "send", user: w.talk_user_id, textContent: { text: `[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명` } } } }); if (w.kakao_opt_in) state.message_logs.unshift({ channel: "KAKAO_ALIMTALK", message_type: "RESTOCK_ALERT", payload: { phoneNumber: w.phone_number, message: `[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고` } }); });
+    toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`);
+  }
 }
-async function openTalk(product){
+
+async function postTalkEvent(eventBody) { return await api("/api/naver-talk-webhook", { method: "POST", body: JSON.stringify(eventBody) }); }
+function makeOpenPayload(product, userId = selectedMockUser) {
   const productNo = String(product.product_no);
-  const mockTalkUserId = getMockTalkUserId();
   const referer = `https://plumisbea-ux.github.io/naver-restock-alert/?productNo=${encodeURIComponent(productNo)}`;
-  const payload={event:'open', user:mockTalkUserId, options:{inflow:'button', referer, from:productNo, friend:false, under14:false, under19:false}};
-  const talkUrl = new URL(TALK_URL);
-  talkUrl.searchParams.set('from', productNo);
-  talkUrl.searchParams.set('productNo', productNo);
-
-  if(remoteOk){
-    try{
-      const r=await api(WEBHOOK_PATH,{method:'POST',body:JSON.stringify(payload)});
-      state.message_logs = state.message_logs || [];
-      state.message_logs.unshift({channel:'MOCK_OPEN',message_type:'OPEN_RESPONSE',payload:r});
-      renderAdmin();
-    }catch(e){
-      console.warn('mock open failed', e);
-    }
-  }
-
-  window.open(talkUrl.toString(), '_blank', 'noopener');
-  toast(`실제 톡톡 탭을 열었습니다. mock open user=${mockTalkUserId}, from=${productNo}`);
+  return { event: "open", user: userId, options: { inflow: "button", referer, from: productNo, friend: false, under14: false, under19: false } };
 }
-document.getElementById("adminToggle").onclick=()=>document.getElementById("adminPanel").classList.add("open"); document.getElementById("adminClose").onclick=()=>document.getElementById("adminPanel").classList.remove("open");
-document.getElementById("saveApi").onclick=()=>{ apiBase=document.getElementById("apiBase").value.trim()||DEFAULT_API_BASE; localStorage.setItem("RESTOCK_API_BASE",apiBase); loadState(); };
-document.getElementById("reloadState").onclick=()=>loadState(); document.getElementById("resetState").onclick=async()=>{ if(remoteOk){ try{ await api(WEBHOOK_PATH,{method:'POST',body:JSON.stringify({event:'admin.reset'})}); await loadState(); toast('원격 mock DB 초기화 완료'); return; }catch(e){} } state=structuredClone(fallbackState); saveLocal(); renderAll(); toast('브라우저 mock 초기화 완료'); };
+async function sendMockOpen(product) {
+  if (!remoteOk) return null;
+  const payload = makeOpenPayload(product);
+  const res = await postTalkEvent(payload);
+  state.message_logs = state.message_logs || [];
+  state.message_logs.unshift({ channel: "MOCK_OPEN", message_type: "OPEN_RESPONSE", payload: res });
+  await updateRemoteState();
+  renderAdmin();
+  return res;
+}
+window.openTalkForCurrent = async function() { await openTalk(getProduct()); };
+async function openTalk(product) {
+  const productNo = String(product.product_no);
+  try { await sendMockOpen(product); } catch (e) { console.warn("mock open failed", e); }
+  const talkUrl = new URL(TALK_URL);
+  talkUrl.searchParams.set("from", productNo);
+  talkUrl.searchParams.set("productNo", productNo);
+  talkUrl.searchParams.set("mockUser", selectedMockUser);
+  window.open(talkUrl.toString(), "_blank", "noopener");
+  toast(`실제 톡톡 탭을 열었습니다. 상품 context: from=${productNo}. 테스트 고객 ${selectedMockUser}는 mock open에만 적용됩니다.`);
+}
+
+async function createMockWaitlist() {
+  const product = getProduct();
+  const option = state.product_options.find(o => o.id === selectedOptionId) || productOptions(product.id).find(o => Number(o.stock_quantity) <= 0);
+  if (!option) return toast("품절 옵션이 없습니다.");
+  if (!remoteOk) return toast("Vercel API 연결 후 서버 mock 대기자를 생성할 수 있습니다.");
+  try {
+    await postTalkEvent(makeOpenPayload(product));
+    await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `APPLY_RESTOCK:${product.id}`, code: `APPLY_RESTOCK:${product.id}` } });
+    await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `SELECT_OPTION:${product.id}:${option.id}`, code: `SELECT_OPTION:${product.id}:${option.id}` } });
+    await postTalkEvent({ event: "send", user: selectedMockUser, textContent: { text: `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}`, code: `CHANNEL:NAVER_TALK_ONLY:${product.id}:${option.id}` } });
+    await updateRemoteState();
+    renderAll();
+    toast(`${selectedMockUser} 대기자 생성 완료: ${product.product_name} / ${option.original_option_name}`);
+  } catch (e) { toast("mock 대기자 생성 실패: " + e.message); }
+}
+
+function renderAll() {
+  renderUsers(); renderNav(); renderGrid();
+  if (new URLSearchParams(location.search).get("productNo")) renderDetail(); else renderAdmin();
+}
+
+document.getElementById("brandBtn").onclick = () => navigateCategory("best");
+document.getElementById("headerTalkBtn").onclick = () => openTalk(getProduct());
+document.getElementById("mockUserSelect").onchange = (e) => { selectedMockUser = e.target.value; localStorage.setItem("RESTOCK_MOCK_USER", selectedMockUser); renderUsers(); renderDetail(); };
+document.getElementById("adminToggle").onclick = () => document.getElementById("adminPanel").classList.add("open");
+document.getElementById("adminClose").onclick = () => document.getElementById("adminPanel").classList.remove("open");
+document.getElementById("saveApi").onclick = () => { apiBase = document.getElementById("apiBase").value.trim() || DEFAULT_API_BASE; localStorage.setItem("RESTOCK_API_BASE", apiBase); loadState(); };
+document.getElementById("reloadState").onclick = () => loadState();
+document.getElementById("resetState").onclick = async () => { if (remoteOk) { try { const r = await api("/api/naver-talk-webhook", { method: "POST", body: JSON.stringify({ event: "admin.reset" }) }); state = normalizeRemote(r.state); renderAll(); toast("원격 mock DB 초기화 완료"); return; } catch (e) {} } state = clone(seedData); renderAll(); toast("브라우저 mock 초기화 완료"); };
+document.getElementById("adminProductSelect").onchange = (e) => { selectedProductNo = e.target.value; renderDetail(); };
+document.getElementById("mockWaitlistBtn").onclick = createMockWaitlist;
+window.addEventListener("hashchange", () => { currentCategory = location.hash.replace("#", "") || "best"; renderAll(); });
+
 loadState();
 </script>
 </body>
