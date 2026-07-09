@@ -225,3 +225,156 @@ api/update-stock.js
 [재입고 알림받기]
 [기타 문의하기]
 ```
+
+## 상품별 open webhook 처리
+
+`open` 이벤트 처리는 특정 상품번호에 하드코딩되어 있지 않습니다.
+
+네이버 톡톡에서 아래처럼 상품번호가 들어오면:
+
+```json
+{
+  "event": "open",
+  "user": "USER_ID",
+  "options": {
+    "inflow": "button",
+    "referer": "https://plumisbea-ux.github.io/naver-restock-alert/?productNo=200000003",
+    "from": "200000003"
+  }
+}
+```
+
+서버는 `options.from` 또는 `options.referer`의 `productNo`를 읽고, mock DB의 해당 상품을 찾아서 동일한 흐름으로 첫 메시지를 반환합니다.
+
+```text
+[로그인 10% 쿠폰] 해당 상품명 에 대해 문의를 해주셨군요!
+[재입고 알림받기]
+[기타 문의하기]
+```
+
+테스트 URL:
+
+```text
+/api/test-open?productNo=200000001
+/api/test-open?productNo=200000002
+/api/test-open?productNo=200000003
+/api/test-open-all
+```
+
+GitHub Pages의 상품 상세에서 `톡톡하기`를 누를 때도 현재 보고 있는 상품의 `product_no`로 mock open payload를 생성합니다.
+
+
+## 이번 디버그 수정
+
+### 1. 상품 context 인식 실패 수정
+
+기존 GitHub Pages의 `톡톡하기` 버튼은 실제 톡톡 URL을 아래처럼 열고 있었습니다.
+
+```text
+https://talk.naver.com/ct/wocay2r
+```
+
+이러면 실제 네이버 `open` webhook에 상품번호가 안 들어올 수 있습니다. 그래서 챗봇이 어떤 상품에서 들어왔는지 모르고 `상품 정보를 자동으로 확인하지 못했습니다`를 반환합니다.
+
+수정 후에는 실제 톡톡 URL을 아래처럼 엽니다.
+
+```text
+https://talk.naver.com/ct/wocay2r?from=200000001&productNo=200000001
+```
+
+서버는 `options.from`, `options.referer`, `productNo`, `/products/{상품번호}`를 모두 후보로 보고 mock DB에 존재하는 상품번호를 찾아 첫 메시지를 반환합니다.
+
+### 2. 재입고 알림 실제 발송 조건
+
+`/api/update-stock`에서 재고가 `0 → 1 이상`으로 바뀌면 대기자에게 알림을 보냅니다. 다만 실제 톡톡 화면으로 푸시하려면 Vercel 환경변수에 아래 값을 넣어야 합니다.
+
+```text
+NAVER_TALK_AUTHORIZATION=ct_...
+```
+
+이 값이 없으면 실제 네이버 보내기 API를 호출하지 않고 `message_logs`에 mock payload만 저장합니다.
+
+Vercel 설정 위치:
+
+```text
+Vercel Project → Settings → Environment Variables → NAVER_TALK_AUTHORIZATION 추가 → Redeploy
+```
+
+
+## 고객별 context 저장 방식
+
+이번 버전부터 `open` / `send` 이벤트의 `user` 값을 기준으로 고객별 상태를 저장합니다.
+
+저장되는 항목:
+
+```text
+sessions[USER_ID]
+- 현재 단계
+- 현재 상품
+- 선택 옵션
+- 카카오 동의/전화번호 입력 상태
+
+customer_contexts[USER_ID]
+- 마지막 open 상품번호
+- 마지막 open 상품 ID
+- 마지막 open payload
+- open 횟수
+```
+
+따라서 고객 A가 200000001 상품에서 톡톡을 열고, 고객 B가 200000004 상품에서 톡톡을 열면 각 고객에게 서로 다른 상품 기준으로 메시지가 이어집니다.
+
+재입고 알림 발송 시에는 `waitlists.talk_user_id`에 저장된 고객 식별값으로 보내기 API payload를 만듭니다.
+
+```json
+{
+  "event": "send",
+  "user": "USER_ID",
+  "textContent": {
+    "text": "[재입고 안내] ..."
+  }
+}
+```
+
+## 단일 Webhook API에서 관리자 기능까지 처리
+
+Vercel 메모리 mock DB는 함수별로 분리될 수 있으므로, GitHub Pages 관리창은 이제 아래 단일 엔드포인트만 사용합니다.
+
+```text
+/api/naver-talk-webhook
+```
+
+관리자 상태 조회:
+
+```text
+GET /api/naver-talk-webhook?mode=admin-state
+```
+
+재고 수정:
+
+```json
+{
+  "event": "admin.update_stock",
+  "option_id": "opt_knit_black_004",
+  "stock_quantity": 5
+}
+```
+
+초기화:
+
+```json
+{
+  "event": "admin.reset"
+}
+```
+
+이렇게 하면 실제 톡톡 Webhook으로 저장된 고객 대기자와 관리창에서 변경한 재고가 같은 mock DB 흐름을 타게 됩니다.
+
+## 실제 톡톡 보내기 API Authorization
+
+Vercel 환경변수에 아래 값을 추가해야 실제 재입고 알림이 톡톡으로 발송됩니다.
+
+```text
+NAVER_TALK_AUTHORIZATION=네이버_톡톡_보내기_API_Authorization
+```
+
+환경변수 추가 후에는 Vercel에서 Redeploy 하세요. 환경변수가 없으면 실제 발송 대신 mock 발송 로그만 생성됩니다.

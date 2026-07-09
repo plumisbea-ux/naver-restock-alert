@@ -163,6 +163,7 @@
 <script>
 const TALK_URL = "https://talk.naver.com/ct/wocay2r";
 const DEFAULT_API_BASE = "https://naver-restock-alert.vercel.app";
+const WEBHOOK_PATH = "/api/naver-talk-webhook";
 let apiBase = localStorage.getItem("RESTOCK_API_BASE") || DEFAULT_API_BASE;
 let remoteOk = false;
 let selectedProductNo = new URLSearchParams(location.search).get("productNo") || "200000001";
@@ -204,7 +205,7 @@ function toast(msg){ const el=document.getElementById("toast"); el.textContent=m
 async function api(path, opts={}){ const base=(apiBase||"").replace(/\/$/,""); const res=await fetch(base+path, { ...opts, headers: { "Content-Type":"application/json", ...(opts.headers||{}) }}); if(!res.ok) throw new Error(res.status+" "+res.statusText); return await res.json(); }
 async function loadState(){
   document.getElementById("apiBase").value = apiBase;
-  try { const data = await api("/api/admin-state"); state = normalizeRemote(data); remoteOk = true; document.getElementById("modeText").textContent = "원격 Vercel API 연결됨: " + apiBase; }
+  try { const data = await api(WEBHOOK_PATH + "?mode=admin-state"); state = normalizeRemote(data); remoteOk = true; document.getElementById("modeText").textContent = "원격 Vercel API 연결됨: " + apiBase; }
   catch(e){ remoteOk = false; document.getElementById("modeText").textContent = "브라우저 내부 mock 모드: API 연결 실패 또는 미설정"; }
   renderAll();
 }
@@ -240,14 +241,44 @@ function renderAdmin(){
   document.getElementById("logs").innerHTML = (state.message_logs||[]).length ? state.message_logs.slice(0,10).map(l=>`<div class="log"><strong>${l.channel} · ${l.message_type}</strong>${typeof l.payload==='string'?l.payload:JSON.stringify(l.payload||{},null,2).slice(0,900)}</div>`).join("") : `<div class="log">발송 로그 없음</div>`;
 }
 function renderAll(){ renderGrid(); if (new URLSearchParams(location.search).get("productNo")) renderDetail(); else renderAdmin(); }
-window.updateStock = async function(optionId){ const val=Number(document.getElementById("stock_"+optionId).value||0); if(remoteOk){ try{ const r=await api("/api/update-stock", { method:"POST", body:JSON.stringify({ option_id: optionId, stock_quantity: val }) }); toast(`재고 반영 완료 · 발송 ${r.result?.notified_count||0}건`); await loadState(); return; }catch(e){ toast('원격 API 실패: 브라우저 mock으로 처리합니다.'); remoteOk=false; } } updateStockLocal(optionId,val); renderAll(); };
+window.updateStock = async function(optionId){ const val=Number(document.getElementById("stock_"+optionId).value||0); if(remoteOk){ try{ const r=await api(WEBHOOK_PATH, { method:"POST", body:JSON.stringify({ event:"admin.update_stock", option_id: optionId, stock_quantity: val }) }); toast(`재고 반영 완료 · 발송 ${r.result?.notified_count||0}건`); await loadState(); return; }catch(e){ toast('원격 API 실패: 브라우저 mock으로 처리합니다.'); remoteOk=false; } } updateStockLocal(optionId,val); renderAll(); };
 function updateStockLocal(optionId,val){ const o=state.product_options.find(x=>x.id===optionId); if(!o) return; const before=Number(o.stock_quantity); o.stock_quantity=val; o.current_option_name=val<=0?o.original_option_name+' [품절]':o.original_option_name; state.stock_events.unshift({event_type: before<=0&&val>0?'RESTOCKED':'STOCK_UPDATED', option_id:optionId, previous_stock:before, current_stock:val, created_at:new Date().toISOString()}); if(before<=0&&val>0){ const waiting=(state.waitlists||[]).filter(w=>w.option_id===optionId&&w.status==='WAITING'); waiting.forEach(w=>{ const p=state.products.find(p=>p.id===w.product_id); w.status='NOTIFIED'; w.notified_at=new Date().toISOString(); state.message_logs.unshift({channel:'NAVER_TALK', message_type:'RESTOCK_ALERT', payload:{body:{event:'send', user:w.talk_user_id, textContent:{text:`[재입고 안내]\n[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 옵션이 재입고되었습니다 : 대기인원 ${waiting.length}명`}}}}); if(w.kakao_opt_in) state.message_logs.unshift({channel:'KAKAO_ALIMTALK', message_type:'RESTOCK_ALERT', payload:{phoneNumber:w.phone_number, message:`[로그인 10% 쿠폰] ${p?.product_name} ${o.original_option_name} 재입고`}}); }); toast(`브라우저 mock 재고 반영 · 발송 ${waiting.length}건`); } saveLocal(); }
 window.openTalkForCurrent = async function(){ await openTalk(getProduct()); };
 document.getElementById("headerTalkBtn").onclick=()=>openTalk(getProduct());
-async function openTalk(product){ const payload={event:'open', user:'mock_page_user', options:{inflow:'button', referer:`https://plumisbea-ux.github.io/naver-restock-alert/?productNo=${product.product_no}`, from:String(product.product_no), friend:false, under14:false, under19:false}}; if(remoteOk){ try{ const r=await api('/api/naver-talk-webhook',{method:'POST',body:JSON.stringify(payload)}); state.message_logs = state.message_logs || []; state.message_logs.unshift({channel:'MOCK_OPEN',message_type:'OPEN_RESPONSE',payload:r}); renderAdmin(); }catch(e){} } window.open(TALK_URL, '_blank', 'noopener'); toast('실제 톡톡 탭을 열었습니다. 톡톡 안의 챗봇 응답은 파트너센터 Webhook 연결 후 표시됩니다.'); }
+function getMockTalkUserId(){
+  let id = localStorage.getItem('RESTOCK_MOCK_TALK_USER_ID');
+  if(!id){
+    id = 'mock_page_user_' + Math.random().toString(36).slice(2,8);
+    localStorage.setItem('RESTOCK_MOCK_TALK_USER_ID', id);
+  }
+  return id;
+}
+async function openTalk(product){
+  const productNo = String(product.product_no);
+  const mockTalkUserId = getMockTalkUserId();
+  const referer = `https://plumisbea-ux.github.io/naver-restock-alert/?productNo=${encodeURIComponent(productNo)}`;
+  const payload={event:'open', user:mockTalkUserId, options:{inflow:'button', referer, from:productNo, friend:false, under14:false, under19:false}};
+  const talkUrl = new URL(TALK_URL);
+  talkUrl.searchParams.set('from', productNo);
+  talkUrl.searchParams.set('productNo', productNo);
+
+  if(remoteOk){
+    try{
+      const r=await api(WEBHOOK_PATH,{method:'POST',body:JSON.stringify(payload)});
+      state.message_logs = state.message_logs || [];
+      state.message_logs.unshift({channel:'MOCK_OPEN',message_type:'OPEN_RESPONSE',payload:r});
+      renderAdmin();
+    }catch(e){
+      console.warn('mock open failed', e);
+    }
+  }
+
+  window.open(talkUrl.toString(), '_blank', 'noopener');
+  toast(`실제 톡톡 탭을 열었습니다. mock open user=${mockTalkUserId}, from=${productNo}`);
+}
 document.getElementById("adminToggle").onclick=()=>document.getElementById("adminPanel").classList.add("open"); document.getElementById("adminClose").onclick=()=>document.getElementById("adminPanel").classList.remove("open");
 document.getElementById("saveApi").onclick=()=>{ apiBase=document.getElementById("apiBase").value.trim()||DEFAULT_API_BASE; localStorage.setItem("RESTOCK_API_BASE",apiBase); loadState(); };
-document.getElementById("reloadState").onclick=()=>loadState(); document.getElementById("resetState").onclick=async()=>{ if(remoteOk){ try{ await api('/api/reset-mock',{method:'POST'}); await loadState(); toast('원격 mock DB 초기화 완료'); return; }catch(e){} } state=structuredClone(fallbackState); saveLocal(); renderAll(); toast('브라우저 mock 초기화 완료'); };
+document.getElementById("reloadState").onclick=()=>loadState(); document.getElementById("resetState").onclick=async()=>{ if(remoteOk){ try{ await api(WEBHOOK_PATH,{method:'POST',body:JSON.stringify({event:'admin.reset'})}); await loadState(); toast('원격 mock DB 초기화 완료'); return; }catch(e){} } state=structuredClone(fallbackState); saveLocal(); renderAll(); toast('브라우저 mock 초기화 완료'); };
 loadState();
 </script>
 </body>

@@ -277,6 +277,7 @@ export const seedData = {
   consent_logs: [],
   message_logs: [],
   sessions: {},
+  customer_contexts: {},
   mock_users: {
     "al-2eGuGr5WQOnco1_V-FQ": {
       talk_user_id: "al-2eGuGr5WQOnco1_V-FQ",
