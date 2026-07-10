@@ -5,295 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>재입고 알림 데모 페이지</title>
   <style>
-    :root{
-      --green:#03c75a;
-      --green-dark:#02b350;
-      --red:#e5484d;
-      --text:#121212;
-      --sub:#666;
-      --muted:#8a8f98;
-      --line:#e5e8eb;
-      --soft:#f7f8fa;
-      --black:#202124;
-      --blue:#3b6cff;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif;color:var(--text);background:#fff}
-    button{font:inherit;cursor:pointer}
-    .top{height:54px;background:#242424;color:#fff}
-    .top-inner{max-width:1180px;height:100%;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:13px}
-    .store-mini{display:flex;align-items:center;gap:10px;min-width:0}
-    .logo-dot{width:34px;height:34px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-weight:900;font-size:10px;flex:none}
-    .store-mini b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}
-    .top-search{width:260px;height:32px;border:0;border-radius:999px;background:#fff;color:#777;padding:0 14px;display:flex;align-items:center;justify-content:space-between;flex:none}
-    .store-head{border-bottom:1px solid #eceff2}
-    .store-head-inner{max-width:1180px;margin:0 auto;padding:24px 18px 18px;position:relative;text-align:center}
-    .store-title-img{border:0;background:transparent;padding:0;line-height:0}
-    .store-title-img img{width:168px;height:auto;display:inline-block}
-    .notice-btn{position:absolute;left:18px;top:27px;border:0;background:#202124;color:#fff;height:36px;padding:0 18px;border-radius:0;font-weight:800;font-size:13px}
-    .store-count{position:absolute;right:18px;top:24px;text-align:right;color:#8a8f98;font-size:12px;line-height:1.7}
-    .nav{border-bottom:1px solid #eceff2}
-    .nav-inner{max-width:1180px;margin:0 auto;height:52px;padding:0 18px;display:flex;align-items:center;justify-content:center;gap:34px;white-space:nowrap;overflow-x:auto;font-size:14px}
-    .nav button{border:0;background:none;padding:16px 0;color:#222}
-    .nav button.active{font-weight:900;color:var(--green)}
-    .promo{height:38px;background:#f1edff;display:flex;align-items:center;justify-content:center;font-size:13px;color:#4d4b64;gap:10px}
-    .wrap{max-width:1180px;margin:0 auto;padding:42px 18px 90px}
-    .crumb{font-size:12px;color:#9ca3af;text-align:right;margin:0 0 28px}
-    .section-title{font-size:28px;font-weight:900;margin:0 0 20px;letter-spacing:-.04em}
-    .subtabs{display:flex;gap:18px;font-size:13px;margin:0 0 20px;color:#777}.subtabs b{color:#111}
-    .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:34px 18px}
-    .card{border:0;background:none;padding:0;text-align:left;position:relative;min-width:0}
-    .rank{position:absolute;left:0;top:0;background:#202124;color:#fff;z-index:2;font-size:12px;font-weight:900;width:26px;height:26px;display:grid;place-items:center}
-    .thumb{height:230px;background:#f3f4f6;overflow:hidden;border:1px solid #f0f1f3;position:relative}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:.18s ease}
-    .card:hover .thumb img{transform:scale(1.035)}
-    .like{position:absolute;right:8px;bottom:8px;color:#bbb;font-size:20px}
-    .pname{font-size:14px;line-height:1.35;margin:11px 0 5px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}
-    .desc{font-size:12px;color:#8b8f97;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px}
-    .price-row{display:flex;align-items:baseline;gap:5px}.discount{color:#f04438;font-size:13px;font-weight:900}.price{font-weight:900}.ship{font-size:12px;color:#999;margin-left:2px}.review{font-size:12px;color:#777;margin-top:6px}.star{color:#ff3b30}
-    .detail{display:none;grid-template-columns:minmax(420px,1fr) 560px;gap:60px;align-items:start}.detail.on{display:grid}.list.off{display:none}
-    .photo-main{background:#f4f4f4;height:560px;position:relative;overflow:hidden;display:grid;place-items:center;border:1px solid #f0f1f3}.photo-main img{width:100%;height:100%;object-fit:cover}.photo-badge{position:absolute;left:16px;bottom:16px;background:rgba(0,0,0,.72);color:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}
-    .thumbs{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px}.mini{width:42px;height:42px;border:1px solid #ddd;border-radius:4px;overflow:hidden;background:#f4f4f4}.mini img{width:100%;height:100%;object-fit:cover}.arrow{border:0;background:#fff;font-size:24px;color:#777}
-    .info h1{font-size:22px;margin:0 0 10px;line-height:1.35;letter-spacing:-.02em}.rating{font-size:13px;color:#555;margin-bottom:8px}.rating .star{font-weight:900}.price-big{display:flex;align-items:baseline;gap:7px;margin:8px 0 12px}.price-big .discount{font-size:17px}.price-big .sale{font-size:28px;color:#f00;font-weight:900}.price-big del{font-size:14px;color:#999}.fee{font-size:13px;color:#555;margin-bottom:26px}
-    .boxline{border-top:1px solid #edf0f2;padding:20px 0}.row{display:grid;grid-template-columns:70px 1fr;gap:16px;font-size:13px;color:#555;line-height:1.65}.coupon{height:56px;background:#eee8ff;border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#5c32c9;font-weight:900}.coupon b{display:block;background:#6633ff;color:#fff;border-radius:4px;padding:8px 30px;font-size:13px}
-    .option-title{font-size:15px;margin:0 0 9px}.required{color:#ff3b30}.select{position:relative;margin-bottom:8px}.select-btn{width:100%;height:48px;border:1px solid #cfd6dd;border-radius:7px;background:#fff;text-align:left;padding:0 46px 0 16px;font-weight:800;color:#111;display:flex;align-items:center;justify-content:space-between}.select-btn:after{content:'⌄';font-size:24px;color:#333}.select-btn.disabled{color:#b7bec7;background:#fbfbfc}.select-btn.open:after{content:'⌃'}
-    .dropdown{display:none;border:1px solid #7d8790;border-top:0;border-radius:0 0 7px 7px;overflow:hidden;background:#f7f8fb;max-height:282px;overflow-y:auto}.dropdown.open{display:block}.option-row{height:54px;border-top:1px solid #edf0f2;display:flex;align-items:center;gap:10px;padding:0 16px;background:#f8f9fc;color:#111;font-size:14px}.option-row:hover{background:#f0f2f6}.check{width:20px;height:20px;border:2px solid #e1e6ec;background:#fff;border-radius:4px;display:grid;place-items:center;color:var(--green);font-size:14px}.option-row.selected .check:after{content:'✓'}.option-row.soldout{color:#777;background:#f4f5f8}.option-row.soldout .sold-label{color:#a0a6af}
-    .chosen{display:none;border:1px solid #cfd6dd;border-radius:8px;background:#f7f8fb;margin-top:20px;overflow:hidden}.chosen.on{display:block}.chosen-top{padding:16px;position:relative}.chosen-name{font-size:14px}.today{color:#386bff;font-weight:900;margin-right:6px}.close-x{position:absolute;right:16px;top:14px;border:0;background:none;font-size:22px}.qty{margin-top:12px;display:inline-flex;height:34px;border:1px solid #cfd6dd;background:#fff}.qty button{width:38px;border:0;background:#fff;font-size:22px}.qty span{width:42px;display:grid;place-items:center;border-left:1px solid #e5e8eb;border-right:1px solid #e5e8eb}.chosen-price{float:right;margin-top:14px;font-size:18px}.chosen-bottom{border-top:1px solid #dfe4e8;background:#fff;padding:14px 16px;display:flex;justify-content:space-between}.total-red{color:#f00;font-weight:900;font-size:21px}
-    .flow-note{display:none;margin-top:12px;border:1px solid #ffd6d6;background:#fff8f8;color:#b42318;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55}.flow-note.on{display:block}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:24px}.actions button{height:52px;border-radius:8px;font-weight:900;font-size:17px}.cart{background:#fff;border:1px solid var(--green)}.buy{background:#03db63;border:1px solid #03db63;color:#111}.lower{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.lower button{height:48px;border:1px solid #cfd6dd;background:#fff;border-radius:7px;font-weight:900}.lower .talk-btn{border-color:#03c75a;color:#02a64d;background:#f5fff9}
-    .review-strip{border-top:1px solid #edf0f2;margin-top:70px;padding-top:34px}.review-title{font-size:20px;font-weight:900}.review-title b{color:#f04438}
-    .modal-dim{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:90;display:none}.modal-dim.on{display:block}.alert{position:fixed;z-index:100;left:50%;top:26px;transform:translateX(-50%);width:min(470px,calc(100vw - 36px));background:#231b21;color:#fff;border-radius:8px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:none;padding:18px 18px 14px}.alert.on{display:block}.alert small{display:block;color:#bfb8bf;margin-bottom:12px}.alert p{margin:0 0 16px;font-size:14px;line-height:1.6}.alert button{float:right;background:#ff9cd8;border:0;border-radius:999px;padding:9px 18px;font-weight:900;color:#3a102d}
-    .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#202124;color:#fff;border-radius:999px;padding:12px 18px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:200}.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.detail{grid-template-columns:1fr}.top-search,.store-count,.notice-btn{display:none}.photo-main{height:420px}.nav-inner{justify-content:flex-start;gap:20px}}
+    :root{--green:#03c75a;--green-dark:#02b350;--red:#e5484d;--text:#121212;--sub:#666;--muted:#8a8f98;--line:#e5e8eb;--soft:#f7f8fa;--black:#202124;--blue:#3b6cff;--amber:#ffb020}
+    *{box-sizing:border-box}html,body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif;color:var(--text);background:#fff}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+    .top{height:54px;background:#242424;color:#fff}.top-inner{max-width:1180px;height:100%;margin:0 auto;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:13px}.store-mini{display:flex;align-items:center;gap:10px;min-width:0}.logo-dot{width:34px;height:34px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-weight:900;font-size:10px;flex:none}.store-mini b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.top-search{width:260px;height:32px;border:0;border-radius:999px;background:#fff;color:#777;padding:0 14px;display:flex;align-items:center;justify-content:space-between;flex:none}
+    .store-head{border-bottom:1px solid #eceff2}.store-head-inner{max-width:1180px;margin:0 auto;padding:24px 18px 18px;position:relative;text-align:center}.store-title-img{border:0;background:transparent;padding:0;line-height:0}.store-title-img img{width:168px;height:auto;display:inline-block}.notice-btn{position:absolute;left:18px;top:27px;border:0;background:#202124;color:#fff;height:36px;padding:0 18px;border-radius:0;font-weight:800;font-size:13px}.store-count{position:absolute;right:18px;top:24px;text-align:right;color:#8a8f98;font-size:12px;line-height:1.7}
+    .nav{border-bottom:1px solid #eceff2}.nav-inner{max-width:1180px;margin:0 auto;height:52px;padding:0 18px;display:flex;align-items:center;justify-content:center;gap:34px;white-space:nowrap;overflow-x:auto;font-size:14px}.nav button{border:0;background:none;padding:16px 0;color:#222}.nav button.active{font-weight:900;color:var(--green)}.promo{height:38px;background:#f1edff;display:flex;align-items:center;justify-content:center;font-size:13px;color:#4d4b64;gap:10px}
+    .wrap{max-width:1180px;margin:0 auto;padding:42px 18px 42px}.crumb{font-size:12px;color:#9ca3af;text-align:right;margin:0 0 28px}.section-title{font-size:28px;font-weight:900;margin:0 0 20px;letter-spacing:-.04em}.subtabs{display:flex;gap:18px;font-size:13px;margin:0 0 20px;color:#777}.subtabs b{color:#111}.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:34px 18px}.card{border:0;background:none;padding:0;text-align:left;position:relative;min-width:0}.rank{position:absolute;left:0;top:0;background:#202124;color:#fff;z-index:2;font-size:12px;font-weight:900;width:26px;height:26px;display:grid;place-items:center}.thumb{height:230px;background:#f3f4f6;overflow:hidden;border:1px solid #f0f1f3;position:relative}.thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:.18s ease}.card:hover .thumb img{transform:scale(1.035)}.like{position:absolute;right:8px;bottom:8px;color:#bbb;font-size:20px}.sold-badge{position:absolute;left:8px;bottom:8px;background:#fff;color:#e5484d;border:1px solid #ffd5d5;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:900}.pname{font-size:14px;line-height:1.35;margin:11px 0 5px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:38px}.desc{font-size:12px;color:#8b8f97;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px}.price-row{display:flex;align-items:baseline;gap:5px}.discount{color:#f04438;font-size:13px;font-weight:900}.price{font-weight:900}.ship{font-size:12px;color:#999;margin-left:2px}.review{font-size:12px;color:#777;margin-top:6px}.star{color:#ff3b30}
+    .detail{display:none;grid-template-columns:minmax(420px,1fr) 560px;gap:60px;align-items:start}.detail.on{display:grid}.list.off{display:none}.photo-main{background:#f4f4f4;height:560px;position:relative;overflow:hidden;display:grid;place-items:center;border:1px solid #f0f1f3}.photo-main img{width:100%;height:100%;object-fit:cover}.photo-badge{position:absolute;left:16px;bottom:16px;background:rgba(0,0,0,.72);color:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800}.thumbs{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px}.mini{width:42px;height:42px;border:1px solid #ddd;border-radius:4px;overflow:hidden;background:#f4f4f4}.mini img{width:100%;height:100%;object-fit:cover}.arrow{border:0;background:#fff;font-size:24px;color:#777}.info h1{font-size:22px;margin:0 0 10px;line-height:1.35;letter-spacing:-.02em}.rating{font-size:13px;color:#555;margin-bottom:8px}.rating .star{font-weight:900}.price-big{display:flex;align-items:baseline;gap:7px;margin:8px 0 12px}.price-big .discount{font-size:17px}.price-big .sale{font-size:28px;color:#f00;font-weight:900}.price-big del{font-size:14px;color:#999}.fee{font-size:13px;color:#555;margin-bottom:26px}.boxline{border-top:1px solid #edf0f2;padding:20px 0}.row{display:grid;grid-template-columns:70px 1fr;gap:16px;font-size:13px;color:#555;line-height:1.65}.coupon{height:56px;background:#eee8ff;border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#5c32c9;font-weight:900}.coupon b{display:block;background:#6633ff;color:#fff;border-radius:4px;padding:8px 30px;font-size:13px}.option-title{font-size:15px;margin:0 0 9px}.required{color:#ff3b30}.select{position:relative;margin-bottom:8px}.select-btn{width:100%;height:48px;border:1px solid #cfd6dd;border-radius:7px;background:#fff;text-align:left;padding:0 46px 0 16px;font-weight:800;color:#111;display:flex;align-items:center;justify-content:space-between}.select-btn:after{content:'⌄';font-size:24px;color:#333}.select-btn.disabled{color:#b7bec7;background:#fbfbfc}.select-btn.open:after{content:'⌃'}.dropdown{display:none;border:1px solid #7d8790;border-top:0;border-radius:0 0 7px 7px;overflow:hidden;background:#f7f8fb;max-height:282px;overflow-y:auto}.dropdown.open{display:block}.option-row{height:54px;border-top:1px solid #edf0f2;display:flex;align-items:center;gap:10px;padding:0 16px;background:#f8f9fc;color:#111;font-size:14px}.option-row:hover{background:#f0f2f6}.check{width:20px;height:20px;border:2px solid #e1e6ec;background:#fff;border-radius:4px;display:grid;place-items:center;color:var(--green);font-size:14px}.option-row.selected .check:after{content:'✓'}.option-row.soldout{color:#777;background:#f4f5f8}.option-row.soldout .sold-label{color:#777}.chosen{display:none;border:1px solid #cfd6dd;border-radius:8px;background:#f7f8fb;margin-top:20px;overflow:hidden}.chosen.on{display:block}.chosen-top{padding:16px;position:relative}.chosen-name{font-size:14px}.today{color:#386bff;font-weight:900;margin-right:6px}.close-x{position:absolute;right:16px;top:14px;border:0;background:none;font-size:22px}.qty{margin-top:12px;display:inline-flex;height:34px;border:1px solid #cfd6dd;background:#fff}.qty button{width:38px;border:0;background:#fff;font-size:22px}.qty span{width:42px;display:grid;place-items:center;border-left:1px solid #e5e8eb;border-right:1px solid #e5e8eb}.chosen-price{float:right;margin-top:14px;font-size:18px}.chosen-bottom{border-top:1px solid #dfe4e8;background:#fff;padding:14px 16px;display:flex;justify-content:space-between}.total-red{color:#f00;font-weight:900;font-size:21px}.flow-note{display:none;margin-top:12px;border:1px solid #ffd6d6;background:#fff8f8;color:#b42318;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55}.flow-note.on{display:block}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:24px}.actions button{height:52px;border-radius:8px;font-weight:900;font-size:17px}.cart{background:#fff;border:1px solid var(--green)}.buy{background:#03db63;border:1px solid #03db63;color:#111}.lower{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.lower button{height:48px;border:1px solid #cfd6dd;background:#fff;border-radius:7px;font-weight:900}.lower .talk-btn{border-color:#03c75a;color:#02a64d;background:#f5fff9}
+    .seller-doc{max-width:1180px;margin:28px auto 96px;padding:0 18px}.doc-card{border:1px solid var(--line);border-radius:18px;padding:26px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.04)}.doc-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.doc-head h2{font-size:26px;margin:0 0 8px;letter-spacing:-.04em}.doc-head p{margin:0;color:#616871;line-height:1.7}.doc-actions{display:flex;gap:8px;flex:none}.doc-actions button,.faq-modal button.primary{height:42px;border-radius:10px;border:1px solid var(--line);background:#fff;padding:0 14px;font-weight:900}.doc-actions .green,.faq-modal button.primary{background:var(--green);border-color:var(--green);color:#fff}.mini-info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.mini-info article,.tier,.faq-chip{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fbfcfd;transition:.18s ease}.mini-info b,.tier b{display:block;margin-bottom:8px}.mini-info span,.tier li{font-size:13px;color:#5f6670;line-height:1.6}.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.tier{background:#fff}.tier:hover,.mini-info article:hover{transform:translateY(-4px);box-shadow:0 18px 36px rgba(15,23,42,.08);border-color:#b8f0d0}.tier h3{margin:0 0 5px;font-size:16px}.tier .cost{font-size:22px;font-weight:900;margin-bottom:10px}.tier ul{list-style:none;margin:0;padding:0}.doc-note{margin-top:18px;background:#f6fff9;border:1px solid #c7f4d9;color:#145f35;border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.65}
+    .side-tab{position:fixed;right:0;top:42%;z-index:80;writing-mode:vertical-rl;transform:translateY(-50%);background:#202124;color:#fff;border:0;border-radius:12px 0 0 12px;padding:16px 10px;font-weight:900;box-shadow:0 12px 32px rgba(0,0,0,.22)}.stock-drawer{position:fixed;right:0;top:0;bottom:0;width:390px;max-width:calc(100vw - 24px);background:#fff;z-index:150;box-shadow:-24px 0 60px rgba(0,0,0,.18);transform:translateX(105%);transition:.24s ease;display:flex;flex-direction:column}.stock-drawer.open{transform:translateX(0)}.drawer-head{padding:18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.drawer-head b{font-size:18px}.drawer-head button{border:0;background:#f1f3f5;border-radius:8px;padding:8px 10px}.drawer-body{padding:18px;overflow:auto}.drawer-select{width:100%;height:42px;border:1px solid #cfd6dd;border-radius:9px;padding:0 10px;margin-bottom:14px}.stock-row{border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;background:#fbfcfd}.stock-row-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.stock-row b{font-size:14px}.stock-state{font-size:12px;color:#737b85;margin-top:3px}.stock-row.sold{border-color:#ffd6d6;background:#fff8f8}.stock-controls{display:flex;gap:8px;margin-top:12px}.stock-controls input{width:90px;height:36px;border:1px solid #cfd6dd;border-radius:8px;padding:0 8px}.stock-controls button{flex:1;border:0;background:#202124;color:#fff;border-radius:8px;font-weight:900}.drawer-log{background:#111827;color:#d1d5db;border-radius:14px;padding:12px;font-size:12px;line-height:1.55;white-space:pre-wrap;margin-top:14px}.drawer-help{font-size:12px;line-height:1.6;color:#69707a;background:#f7f8fa;border-radius:12px;padding:12px;margin-bottom:12px}.modal-dim{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:90;display:none}.modal-dim.on{display:block}.alert{position:fixed;z-index:100;left:50%;top:26px;transform:translateX(-50%);width:min(470px,calc(100vw - 36px));background:#231b21;color:#fff;border-radius:8px;box-shadow:0 20px 50px rgba(0,0,0,.25);display:none;padding:18px 18px 14px}.alert.on{display:block}.alert small{display:block;color:#bfb8bf;margin-bottom:12px}.alert p{margin:0 0 16px;font-size:14px;line-height:1.6}.alert button{float:right;background:#ff9cd8;border:0;border-radius:999px;padding:9px 18px;font-weight:900;color:#3a102d}.faq-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:180;width:min(720px,calc(100vw - 32px));max-height:82vh;overflow:auto;background:#fff;border-radius:20px;padding:24px;display:none;box-shadow:0 30px 90px rgba(0,0,0,.28)}.faq-modal.on{display:block}.faq-modal h2{margin:0 0 14px}.faq-item{border-top:1px solid var(--line);padding:16px 0}.faq-item b{display:block;margin-bottom:7px}.faq-item p{margin:0;color:#5f6670;line-height:1.65;font-size:14px}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#202124;color:#fff;border-radius:999px;padding:12px 18px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:220}.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.detail{grid-template-columns:1fr}.top-search,.store-count,.notice-btn{display:none}.photo-main{height:420px}.nav-inner{justify-content:flex-start;gap:20px}.doc-head{display:block}.doc-actions{margin-top:16px}.mini-info,.tier-grid{grid-template-columns:1fr}.stock-drawer{width:360px}}
   </style>
 </head>
 <body>
   <div class="top"><div class="top-inner"><div class="store-mini"><div class="logo-dot">AD</div><b>재입고 알림 데모 페이지</b></div><div class="top-search">검색어를 입력해주세요 🔍</div><div>로그인 · 메뉴</div></div></div>
-  <header class="store-head"><div class="store-head-inner">
-    <button class="notice-btn" onclick="goList()">↺ 알림받기</button>
-    <button class="store-title-img" onclick="goList()" aria-label="AnDre 홈으로 이동"><img src="assets/andre-logo.svg" alt="AnDre"></button>
-    <div class="store-count">스토어등급 빅파워 ⓘ<br/>오늘 145 · 전체 3,025,699</div>
-  </div></header>
-  <nav class="nav"><div class="nav-inner" id="nav"></div></nav>
-  <div class="promo"><b>N 스토어</b> 품절 옵션은 톡톡에서 재입고 알림을 신청할 수 있어요.</div>
+  <header class="store-head"><div class="store-head-inner"><button class="notice-btn" onclick="goList()">↺ 알림받기</button><button class="store-title-img" onclick="goList()" aria-label="AnDre 홈으로 이동"><img src="assets/andre-logo.svg" alt="AnDre"></button><div class="store-count">스토어등급 빅파워 ⓘ<br/>오늘 145 · 전체 3,025,699</div></div></header>
+  <nav class="nav"><div class="nav-inner" id="nav"></div></nav><div class="promo"><b>N 스토어</b> 품절 옵션은 톡톡에서 재입고 알림을 신청할 수 있어요.</div>
+  <main class="wrap"><section class="list" id="list"><div class="crumb">홈 &gt; 베스트</div><h2 class="section-title">베스트</h2><div class="subtabs"><b>✓ 실시간</b><span>일간</span><span>주간</span><span>월간</span></div><div class="grid" id="grid"></div></section>
+    <section class="detail" id="detail"><div><div class="photo-main"><img id="detailImg" src="" alt=""><div class="photo-badge">최근 3일간 판매 BEST 상품</div></div><div class="thumbs"><button class="arrow">‹</button><div class="mini"><img id="miniImg" src="" alt=""></div><button class="arrow">›</button></div></div><div class="info"><h1 id="detailName"></h1><div class="rating"><span class="star">★</span> 4.77 (최근 6개월 4,810) · 91,822건 리뷰</div><div class="price-big"><span class="discount" id="detailDiscount"></span><del id="detailListPrice"></del></div><div class="price-big"><span class="sale" id="detailPrice"></span></div><div class="fee">🚚 2,500원 (50,000원 이상 무료배송)</div><div class="boxline"><div class="row"><b>적립</b><div class="coupon">최대 적립 포인트 1,230원 <b>멤버십 시작하고 최대 적립 받기</b></div></div></div><div class="boxline"><div class="row"><b>배송</b><div><b style="color:#386bff">오늘출발</b> · 평균 2일 이내 도착 확률 100%<br/>내 결제 시 오늘 바로 발송</div></div></div><div class="boxline"><div class="option-title">옵션 선택 (필수) <span class="required">*</span></div><div class="select"><button class="select-btn" id="sizeBtn" onclick="toggleDropdown('size')">[1301반팔] 사이즈</button><div class="dropdown" id="sizeDrop"></div></div><div class="select"><button class="select-btn disabled" id="colorBtn" onclick="toggleDropdown('color')">색상</button><div class="dropdown" id="colorDrop"></div></div><div class="chosen" id="chosen"><div class="chosen-top"><button class="close-x" onclick="resetOption()">×</button><div class="chosen-name"><span class="today">오늘출발</span><span id="chosenText"></span></div><div class="qty"><button>−</button><span>1</span><button>＋</button></div><div class="chosen-price" id="chosenPrice"></div></div><div class="chosen-bottom"><b>총 1개</b><div>총 금액 ⓘ <span class="total-red" id="totalPrice"></span></div></div></div><div class="flow-note" id="flowNote">선택한 옵션은 현재 품절입니다. 기존 구매 흐름에서는 여기서 고객이 이탈합니다.<br/>재입고 알림은 아래 <b>톡톡문의</b> 버튼으로 신청할 수 있습니다.</div><div class="actions"><button class="cart" onclick="attemptBuy()">🛒 장바구니</button><button class="buy" onclick="attemptBuy()">N 바로구매</button></div><div class="lower"><button>♡ 찜하기</button><button class="talk-btn" onclick="openTalk()">💬 톡톡문의</button><button>🎁 선물하기</button></div></div></div></section></main>
 
-  <main class="wrap">
-    <section class="list" id="list">
-      <div class="crumb">홈 &gt; 베스트</div>
-      <h2 class="section-title">베스트</h2>
-      <div class="subtabs"><b>✓ 실시간</b><span>일간</span><span>주간</span><span>월간</span></div>
-      <div class="grid" id="grid"></div>
-    </section>
+  <section class="seller-doc" id="sellerDoc"><div class="doc-card"><div class="doc-head"><div><h2>품절 고객을 톡톡 대기자로 저장하세요</h2><p>고객이 품절 옵션을 확인한 순간, 구매 흐름은 끊깁니다. 이 데모는 그 지점에서 톡톡 재입고 알림으로 다시 연결하는 흐름을 보여줍니다.</p></div><div class="doc-actions"><button class="green" onclick="toast('데모 신청 폼 링크를 연결하세요.')">데모 신청하기</button><button onclick="openTalk()">문의하기</button><button onclick="openFaq()">FAQ 모아보기</button></div></div><div class="mini-info"><article><b>1. 고객 행동</b><span>품절 옵션을 보고 구매하지 못한 고객을 톡톡으로 유도합니다.</span></article><article><b>2. 대기자 저장</b><span>상품, 옵션, 톡톡 사용자 식별값을 기준으로 재입고 대기자를 만듭니다.</span></article><article><b>3. 재입고 알림</b><span>셀러가 재고를 채우면 대기 고객에게 재입고 알림을 발송합니다.</span></article></div><h3 style="margin:22px 0 0">요금제 예시</h3><div class="tier-grid"><article class="tier"><h3>Free</h3><div class="cost">0원</div><ul><li>상품 3개</li><li>월 30건 알림</li><li>기본 대기자 리포트</li></ul></article><article class="tier"><h3>Basic</h3><div class="cost">9,900원</div><ul><li>상품 20개</li><li>월 500건 알림</li><li>메시지 커스터마이징</li></ul></article><article class="tier"><h3>Standard</h3><div class="cost">29,900원</div><ul><li>상품 100개</li><li>월 1,500건 알림</li><li>대체 상품 안내</li></ul></article><article class="tier"><h3>Pro</h3><div class="cost">59,900원</div><ul><li>상품 500개</li><li>월 4,000건 알림</li><li>다중 스토어 지원</li></ul></article></div><div class="doc-note">구매 전환은 과장하지 않습니다. 알림 링크 클릭은 정확히 기록하고, 구매는 동일 상품/옵션/시간 기준의 추정 전환으로 표시합니다.</div></div></section>
 
-    <section class="detail" id="detail">
-      <div>
-        <div class="photo-main"><img id="detailImg" src="" alt=""><div class="photo-badge">최근 3일간 판매 BEST 상품</div></div>
-        <div class="thumbs"><button class="arrow">‹</button><div class="mini"><img id="miniImg" src="" alt=""></div><button class="arrow">›</button></div>
-      </div>
-      <div class="info">
-        <h1 id="detailName"></h1>
-        <div class="rating"><span class="star">★</span> 4.77 (최근 6개월 4,810) · 91,822건 리뷰</div>
-        <div class="price-big"><span class="discount" id="detailDiscount"></span><del id="detailListPrice"></del></div>
-        <div class="price-big"><span class="sale" id="detailPrice"></span></div>
-        <div class="fee">🚚 2,500원 (50,000원 이상 무료배송)</div>
-        <div class="boxline"><div class="row"><b>적립</b><div class="coupon">최대 적립 포인트 1,230원 <b>멤버십 시작하고 최대 적립 받기</b></div></div></div>
-        <div class="boxline"><div class="row"><b>배송</b><div><b style="color:#386bff">오늘출발</b> · 평균 2일 이내 도착 확률 100%<br/>내 결제 시 오늘 바로 발송</div></div></div>
-        <div class="boxline">
-          <div class="option-title">옵션 선택 (필수) <span class="required">*</span></div>
-          <div class="select"><button class="select-btn" id="sizeBtn" onclick="toggleDropdown('size')">[1301반팔] 사이즈</button><div class="dropdown" id="sizeDrop"></div></div>
-          <div class="select"><button class="select-btn disabled" id="colorBtn" onclick="toggleDropdown('color')">색상</button><div class="dropdown" id="colorDrop"></div></div>
-          <div class="chosen" id="chosen">
-            <div class="chosen-top"><button class="close-x" onclick="resetOption()">×</button><div class="chosen-name"><span class="today">오늘출발</span><span id="chosenText"></span></div><div class="qty"><button>−</button><span>1</span><button>＋</button></div><div class="chosen-price" id="chosenPrice"></div></div>
-            <div class="chosen-bottom"><b>총 1개</b><div>총 금액 ⓘ <span class="total-red" id="totalPrice"></span></div></div>
-          </div>
-          <div class="flow-note" id="flowNote">선택한 옵션은 현재 품절입니다. 기존 구매 흐름에서는 여기서 고객이 이탈합니다.<br/>재입고 알림은 아래 <b>톡톡문의</b> 버튼으로 신청할 수 있습니다.</div>
-          <div class="actions"><button class="cart" id="cartBtn" onclick="attemptBuy()">🛒 장바구니</button><button class="buy" id="buyBtn" onclick="attemptBuy()">N 바로구매</button></div>
-          <div class="lower"><button>♡ 찜하기</button><button class="talk-btn" onclick="openTalk()">💬 톡톡문의</button><button>🎁 선물하기</button></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="review-strip"><div class="review-title">4점 이상 리뷰가 <b>94%예요</b> ⓘ</div></section>
-  </main>
-
-  <div class="modal-dim" id="dim"></div>
-  <div class="alert" id="alert"><small>smartstore.demo 내용:</small><p>품절인 옵션은 구매하실 수 없습니다.<br>재입고 문의는 톡톡에서 가능합니다.</p><button onclick="closeAlert()">확인</button></div>
-  <div class="toast" id="toast"></div>
+  <button class="side-tab" onclick="toggleDrawer(true)">재고 관리</button><aside class="stock-drawer" id="drawer"><div class="drawer-head"><b>재고 관리</b><button onclick="toggleDrawer(false)">닫기</button></div><div class="drawer-body"><div class="drawer-help">품절 옵션의 재고를 0에서 1 이상으로 채우면, 대기자에게 재입고 알림이 발송되는 흐름을 확인할 수 있습니다.</div><select class="drawer-select" id="stockProduct" onchange="renderStockDrawer()"></select><div id="stockRows"></div><div class="drawer-log" id="stockLog">아직 발송 로그가 없습니다.</div></div></aside>
+  <div class="modal-dim" id="dim"></div><div class="alert" id="alert"><small>smartstore.demo 내용:</small><p>품절인 옵션은 구매하실 수 없습니다.<br>재입고 문의는 톡톡에서 가능합니다.</p><button onclick="closeAlert()">확인</button></div><div class="faq-modal" id="faq"><h2>FAQ</h2><div class="faq-item"><b>고객에게 톡톡 메시지를 보낼 수 있나요?</b><p>고객이 재입고 알림을 신청하면 해당 톡톡 사용자 식별값을 기준으로 재입고 알림을 보낼 수 있습니다.</p></div><div class="faq-item"><b>카카오 알림톡도 가능한가요?</b><p>고객이 휴대전화번호 제공에 동의한 경우 선택 채널로 사용할 수 있습니다. 기본 흐름은 톡톡 알림입니다.</p></div><div class="faq-item"><b>구매 여부도 알 수 있나요?</b><p>알림 링크 클릭은 정확히 추적할 수 있고, 주문 API와 상품/옵션/시간을 비교해 추정 구매 전환을 리포트할 수 있습니다.</p></div><div class="faq-item"><b>재고는 어떻게 감지하나요?</b><p>실서비스에서는 커머스 API 연동으로 감지하고, 이 데모에서는 우측 재고 관리 탭에서 직접 수량을 바꿔 흐름을 확인합니다.</p></div><button class="primary" onclick="closeFaq()">닫기</button></div><div class="toast" id="toast"></div>
 
 <script>
-const TALK_URL = "https://talk.naver.com/ct/wocay2r";
-const DEFAULT_API_BASE = "https://naver-restock-alert.vercel.app";
-const API_BASE = localStorage.getItem("RESTOCK_API_BASE") || DEFAULT_API_BASE;
-
+const TALK_URL="https://talk.naver.com/ct/wocay2r";const DEFAULT_API_BASE="https://naver-restock-alert.vercel.app";const API_BASE=localStorage.getItem("RESTOCK_API_BASE")||DEFAULT_API_BASE;
 const categories=['베스트','할인⌄','상의⌄','하의⌄','악세사리⌄','반팔티','트리플에이(AAA)','프린트스타','디키즈','밴더베이스'];
-const products=[
- {no:'200000001', name:'트리플에이 반팔티 무지 티셔츠 이너 1301',price:6500,list:8500,discount:23,img:'assets/product-1.svg',review:'91,822'},
- {no:'200000002', name:'디키즈 카펜터 워크팬츠 1939 루즈핏',price:59000,list:65000,discount:4,img:'assets/product-2.svg',review:'731'},
- {no:'200000003', name:'트리플에이 반팔티 무지티 18수 20수 30수',price:4900,list:6900,discount:28,img:'assets/product-3.svg',review:'2,108'},
- {no:'200000004', name:'샤카웨어 맥스헤비웨이트 무지티 2XL,3XL',price:13700,list:18900,discount:27,img:'assets/product-4.svg',review:'64'},
- {no:'200000005', name:'트리플에이 반팔티 오버핏 무지티 18수',price:6500,list:8500,discount:23,img:'assets/product-5.svg',review:'10,981'},
- {no:'200000006', name:'챔피온 반바지 메시 운동 바지',price:23000,list:25000,discount:8,img:'assets/product-6.svg',review:'34'},
- {no:'200000007', name:'트리플에이 반팔티 가먼트 다잉 무지 티셔츠',price:11900,list:12900,discount:7,img:'assets/product-7.svg',review:'1,003'},
- {no:'200000008', name:'디키즈 포켓 무지 반팔티 헤비웨이트',price:29900,list:35000,discount:14,img:'assets/product-8.svg',review:'201'},
- {no:'200000009', name:'[B급] 트리플에이 무지티 미세하자',price:4000,list:6500,discount:38,img:'assets/product-9.svg',review:'1,083'},
- {no:'200000010', name:'아메리칸어패럴 여자 무지티 반팔 2102 aa',price:4700,list:17900,discount:73,img:'assets/product-10.svg',review:'42'}
-];
-const sizes=['S(95)','M(100)','L(105)','XL(110)'];
-const colors=[
-  {name:'블랙',sold:false},
-  {name:'화이트',sold:false},
-  {name:'차콜헤더 : 재입고 알림은 톡톡에서 (품절)',sold:true},
-  {name:'애틀레틱헤더',sold:false},
-  {name:'애쉬',sold:false},
-  {name:'네이비',sold:false},
-  {name:'버건디',sold:false}
-];
-let selectedProduct=products[0], selectedSize='', selectedColor='', lastSoldOption='';
-
-function money(n){return n.toLocaleString('ko-KR')+'원'}
-function init(){
-  document.getElementById('nav').innerHTML=categories.map((c,i)=>`<button onclick="goList()" class="${i===0?'active':''}">${c}</button>`).join('');
-  renderGrid();
-  renderOptions();
-}
-function renderGrid(){
-  document.getElementById('grid').innerHTML=products.map((p,i)=>`<button class="card" onclick="openDetail(${i})"><span class="rank">${i+1}</span><div class="thumb"><img src="${p.img}" alt="${p.name}"><span class="like">♡</span></div><div class="pname">${p.name}</div><div class="desc">오늘출발 · 품절 옵션 재입고 알림은 톡톡</div><div class="price-row"><span class="discount">${p.discount}%</span><span class="price">${money(p.price)}</span><span class="ship">ⓘ 2,500원</span></div><div class="review"><span class="star">★</span> 4.77 · 리뷰 ${p.review}</div></button>`).join('');
-}
-function openDetail(i){
-  selectedProduct=products[i];selectedSize='';selectedColor='';lastSoldOption='';
-  document.getElementById('list').classList.add('off');
-  document.getElementById('detail').classList.add('on');
-  document.getElementById('detailImg').src=selectedProduct.img;
-  document.getElementById('miniImg').src=selectedProduct.img;
-  document.getElementById('detailName').textContent=selectedProduct.name;
-  document.getElementById('detailDiscount').textContent=selectedProduct.discount+'%';
-  document.getElementById('detailListPrice').textContent=money(selectedProduct.list);
-  document.getElementById('detailPrice').textContent=money(selectedProduct.price);
-  resetOption(false);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function goList(){
-  document.getElementById('list').classList.remove('off');
-  document.getElementById('detail').classList.remove('on');
-  resetOption(false);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function renderOptions(){
-  document.getElementById('sizeDrop').innerHTML=sizes.map(s=>`<div class="option-row ${selectedSize===s?'selected':''}" onclick="selectSize('${s}')"><span class="check"></span>${s}</div>`).join('');
-  document.getElementById('colorDrop').innerHTML=colors.map(c=>{
-    const cls = c.sold ? 'soldout' : '';
-    return `<div class="option-row ${cls} ${selectedColor===c.name?'selected':''}" onclick="selectColor('${c.name}',${c.sold})"><span class="check"></span><span class="${c.sold?'sold-label':''}">${c.name}</span></div>`;
-  }).join('');
-}
-function toggleDropdown(type){
-  if(type==='color'&&!selectedSize)return toast('먼저 사이즈를 선택해주세요.');
-  const btn=document.getElementById(type+'Btn'),drop=document.getElementById(type+'Drop');
-  btn.classList.toggle('open');drop.classList.toggle('open');
-}
-function selectSize(s){
-  selectedSize=s;
-  selectedColor='';
-  document.getElementById('sizeBtn').textContent='[1301반팔] 사이즈 / '+s;
-  document.getElementById('sizeBtn').classList.remove('open');
-  document.getElementById('sizeDrop').classList.remove('open');
-  document.getElementById('colorBtn').textContent='색상';
-  document.getElementById('colorBtn').classList.remove('disabled');
-  document.getElementById('flowNote').classList.remove('on');
-  document.getElementById('chosen').classList.remove('on');
-  renderOptions();
-  setTimeout(()=>toggleDropdown('color'),120);
-}
-function selectColor(c,sold){
-  if(sold){
-    lastSoldOption=c;
-    selectedColor='';
-    document.getElementById('colorBtn').textContent='색상';
-    document.getElementById('colorBtn').classList.remove('open');
-    document.getElementById('colorDrop').classList.remove('open');
-    document.getElementById('chosen').classList.remove('on');
-    document.getElementById('flowNote').classList.add('on');
-    renderOptions();
-    setTimeout(showAlert,160);
-    return;
-  }
-  selectedColor=c;
-  lastSoldOption='';
-  document.getElementById('flowNote').classList.remove('on');
-  document.getElementById('colorBtn').textContent=c;
-  document.getElementById('colorBtn').classList.remove('open');
-  document.getElementById('colorDrop').classList.remove('open');
-  renderOptions();
-  showChosen();
-}
-function showChosen(){
-  if(!selectedSize||!selectedColor)return;
-  document.getElementById('chosen').classList.add('on');
-  document.getElementById('chosenText').textContent=`${selectedSize} / ${selectedColor}`;
-  document.getElementById('chosenPrice').textContent=money(selectedProduct.price);
-  document.getElementById('totalPrice').textContent=money(selectedProduct.price);
-}
-function resetOption(clear=true){
-  if(clear){selectedSize='';selectedColor='';lastSoldOption=''}
-  document.getElementById('sizeBtn').textContent='[1301반팔] 사이즈';
-  document.getElementById('colorBtn').textContent='색상';
-  document.getElementById('colorBtn').classList.add('disabled');
-  document.getElementById('chosen').classList.remove('on');
-  document.getElementById('flowNote').classList.remove('on');
-  renderOptions();
-}
-function attemptBuy(){
-  if(!selectedSize||!selectedColor)return toast('옵션을 먼저 선택해주세요.');
-  toast('데모 구매 흐름입니다.');
-}
-function showAlert(){
-  document.getElementById('dim').classList.add('on');
-  document.getElementById('alert').classList.add('on');
-}
-function closeAlert(){
-  document.getElementById('dim').classList.remove('on');
-  document.getElementById('alert').classList.remove('on');
-  toast('기존 구매 흐름에서는 여기서 고객이 이탈합니다. 톡톡문의로 재입고 알림을 받을 수 있습니다.');
-}
-async function openTalk(){
-  const productNo = selectedProduct.no;
-  try {
-    await fetch(API_BASE + '/api/naver-talk-webhook', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        event:'open',
-        user:'demo-talk-user',
-        options:{
-          inflow:'button',
-          referer:location.href,
-          from:productNo,
-          productNo,
-          friend:false,
-          under14:false,
-          under19:false
-        }
-      })
-    });
-  } catch(e) {
-    console.warn('mock open failed', e);
-  }
-
-  const url = new URL(TALK_URL);
-  url.searchParams.set('from', productNo);
-  url.searchParams.set('productNo', productNo);
-  if (selectedSize || lastSoldOption) {
-    url.searchParams.set('option', `${selectedSize || '옵션 미선택'} / ${(lastSoldOption || selectedColor || '색상 미선택').replace(' : 재입고 알림은 톡톡에서 (품절)','')}`);
-  }
-  window.open(url.toString(), '_blank', 'noopener');
-  toast('실제 톡톡 탭을 열었습니다. 톡톡 챗봇에서 재입고 알림 신청을 이어가세요.');
-}
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('on');
-  clearTimeout(window.__toast);
-  window.__toast=setTimeout(()=>t.classList.remove('on'),2600);
-}
-init();
-</script>
-</body>
-</html>
+const imageUrls=['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1484516758160-09f077695efb?auto=format&fit=crop&w=900&q=80','https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80'];
+const products=[{no:'200000001',name:'트리플에이 반팔티 무지 티셔츠 이너 1301',price:6500,list:8500,discount:23,review:'91,822'},{no:'200000002',name:'디키즈 카펜터 워크팬츠 1939 루즈핏',price:59000,list:65000,discount:4,review:'731'},{no:'200000003',name:'트리플에이 반팔티 무지티 18수 20수 30수',price:4900,list:6900,discount:28,review:'2,108'},{no:'200000004',name:'샤카웨어 맥스헤비웨이트 무지티 2XL,3XL',price:13700,list:18900,discount:27,review:'64'},{no:'200000005',name:'트리플에이 반팔티 오버핏 무지티 18수',price:6500,list:8500,discount:23,review:'10,981'},{no:'200000006',name:'챔피온 반바지 메시 운동 바지',price:23000,list:25000,discount:8,review:'34'},{no:'200000007',name:'트리플에이 반팔티 가먼트 다잉 무지 티셔츠',price:11900,list:12900,discount:7,review:'1,003'},{no:'200000008',name:'디키즈 포켓 무지 반팔티 헤비웨이트',price:29900,list:35000,discount:14,review:'201'},{no:'200000009',name:'[B급] 트리플에이 무지티 미세하자',price:4000,list:6500,discount:38,review:'1,083'},{no:'200000010',name:'아메리칸어패럴 여자 무지티 반팔 2102 aa',price:4700,list:17900,discount:73,review:'42'}].map((p,i)=>({...p,img:imageUrls[i]}));
+const sizes=['S(95)','M(100)','L(105)','XL(110)'];const colorNames=['블랙','화이트','차콜헤더','애틀레틱헤더','애쉬','네이비','버건디'];
+const saved=JSON.parse(localStorage.getItem('ANDRE_STOCK_STATE')||'null');let stock=saved||Object.fromEntries(products.map(p=>[p.no,Object.fromEntries(colorNames.map(c=>[c,c==='차콜헤더'?0:12]))]));let waitlists=JSON.parse(localStorage.getItem('ANDRE_WAITLISTS')||'{}');products.forEach(p=>{const k=p.no+'|차콜헤더';if(waitlists[k]==null)waitlists[k]=1});let selectedProduct=products[0],selectedSize='',selectedColor='',lastSoldOption='',logs=[];
+function persist(){localStorage.setItem('ANDRE_STOCK_STATE',JSON.stringify(stock));localStorage.setItem('ANDRE_WAITLISTS',JSON.stringify(waitlists))}function money(n){return n.toLocaleString('ko-KR')+'원'}function isSold(p,c){return Number(stock[p.no]?.[c]||0)<=0}function optionLabel(p,c){return isSold(p,c)?`${c} : 재입고 알림은 톡톡에서 (품절)`:c}function optKey(p,c){return `${p.no}-${c.replace(/[^a-zA-Z0-9가-힣]/g,'')}`}
+function init(){document.getElementById('nav').innerHTML=categories.map((c,i)=>`<button onclick="goList()" class="${i===0?'active':''}">${c}</button>`).join('');document.getElementById('stockProduct').innerHTML=products.map(p=>`<option value="${p.no}">${p.name}</option>`).join('');renderGrid();renderOptions();renderStockDrawer();persist()}
+function renderGrid(){document.getElementById('grid').innerHTML=products.map((p,i)=>`<button class="card" onclick="openDetail(${i})"><span class="rank">${i+1}</span><div class="thumb"><img src="${p.img}" alt="${p.name}"><span class="like">♡</span><span class="sold-badge">품절 옵션 있음</span></div><div class="pname">${p.name}</div><div class="desc">오늘출발 · 품절 옵션 재입고 알림은 톡톡</div><div class="price-row"><span class="discount">${p.discount}%</span><span class="price">${money(p.price)}</span><span class="ship">ⓘ 2,500원</span></div><div class="review"><span class="star">★</span> 4.77 · 리뷰 ${p.review}</div></button>`).join('')}
+function openDetail(i){selectedProduct=products[i];selectedSize='';selectedColor='';lastSoldOption='';document.getElementById('list').classList.add('off');document.getElementById('detail').classList.add('on');document.getElementById('detailImg').src=selectedProduct.img;document.getElementById('miniImg').src=selectedProduct.img;document.getElementById('detailName').textContent=selectedProduct.name;document.getElementById('detailDiscount').textContent=selectedProduct.discount+'%';document.getElementById('detailListPrice').textContent=money(selectedProduct.list);document.getElementById('detailPrice').textContent=money(selectedProduct.price);document.getElementById('stockProduct').value=selectedProduct.no;resetOption(false);renderStockDrawer();window.scrollTo({top:0,behavior:'smooth'})}
+function goList(){document.getElementById('list').classList.remove('off');document.getElementById('detail').classList.remove('on');resetOption(false);window.scrollTo({top:0,behavior:'smooth'})}
+function renderOptions(){document.getElementById('sizeDrop').innerHTML=sizes.map(s=>`<div class="option-row ${selectedSize===s?'selected':''}" onclick="selectSize('${s}')"><span class="check"></span>${s}</div>`).join('');document.getElementById('colorDrop').innerHTML=colorNames.map(c=>`<div class="option-row ${isSold(selectedProduct,c)?'soldout':''} ${selectedColor===c?'selected':''}" onclick="selectColor('${c}')"><span class="check"></span><span class="${isSold(selectedProduct,c)?'sold-label':''}">${optionLabel(selectedProduct,c)}</span></div>`).join('')}
+function toggleDropdown(type){if(type==='color'&&!selectedSize)return toast('먼저 사이즈를 선택해주세요.');const btn=document.getElementById(type+'Btn'),drop=document.getElementById(type+'Drop');btn.classList.toggle('open');drop.classList.toggle('open')}
+function selectSize(s){selectedSize=s;selectedColor='';document.getElementById('sizeBtn').textContent='[1301반팔] 사이즈 / '+s;document.getElementById('sizeBtn').classList.remove('open');document.getElementById('sizeDrop').classList.remove('open');document.getElementById('colorBtn').textContent='색상';document.getElementById('colorBtn').classList.remove('disabled');document.getElementById('flowNote').classList.remove('on');document.getElementById('chosen').classList.remove('on');renderOptions();setTimeout(()=>toggleDropdown('color'),120)}
+function selectColor(c){if(isSold(selectedProduct,c)){lastSoldOption=c;selectedColor='';document.getElementById('colorBtn').textContent='색상';document.getElementById('colorBtn').classList.remove('open');document.getElementById('colorDrop').classList.remove('open');document.getElementById('chosen').classList.remove('on');document.getElementById('flowNote').classList.add('on');renderOptions();setTimeout(showAlert,160);return}selectedColor=c;lastSoldOption='';document.getElementById('flowNote').classList.remove('on');document.getElementById('colorBtn').textContent=c;document.getElementById('colorBtn').classList.remove('open');document.getElementById('colorDrop').classList.remove('open');renderOptions();showChosen()}
+function showChosen(){if(!selectedSize||!selectedColor)return;document.getElementById('chosen').classList.add('on');document.getElementById('chosenText').textContent=`${selectedSize} / ${selectedColor}`;document.getElementById('chosenPrice').textContent=money(selectedProduct.price);document.getElementById('totalPrice').textContent=money(selectedProduct.price)}
+function resetOption(clear=true){if(clear){selectedSize='';selectedColor='';lastSoldOption=''}document.getElementById('sizeBtn').textContent='[1301반팔] 사이즈';document.getElementById('colorBtn').textContent='색상';document.getElementById('colorBtn').classList.add('disabled');document.getElementById('chosen').classList.remove('on');document.getElementById('flowNote').classList.remove('on');renderOptions()}function attemptBuy(){if(!selectedSize||!selectedColor)return toast('옵션을 먼저 선택해주세요.');toast('데모 구매 흐름입니다.')}function showAlert(){document.getElementById('dim').classList.add('on');document.getElementById('alert').classList.add('on')}function closeAlert(){document.getElementById('dim').classList.remove('on');document.getElementById('alert').classList.remove('on');toast('기존 구매 흐름에서는 여기서 고객이 이탈합니다. 톡톡문의로 재입고 알림을 받을 수 있습니다.')}
+async function openTalk(){const productNo=selectedProduct.no;const opt=lastSoldOption||selectedColor||'옵션 미선택';if(lastSoldOption){const k=productNo+'|'+lastSoldOption;waitlists[k]=(waitlists[k]||0)+1;logs.unshift(`[대기자 저장] ${selectedProduct.name}\n${selectedSize||'사이즈 미선택'} / ${lastSoldOption} · 대기 ${waitlists[k]}명`);persist();renderStockDrawer()}try{await fetch(API_BASE+'/api/naver-talk-webhook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'open',user:'demo-talk-user',options:{inflow:'button',referer:location.href,from:productNo,productNo,friend:false,under14:false,under19:false}})})}catch(e){console.warn('mock open failed',e)}const url=new URL(TALK_URL);url.searchParams.set('from',productNo);url.searchParams.set('productNo',productNo);url.searchParams.set('option',`${selectedSize||'사이즈 미선택'} / ${opt}`);window.open(url.toString(),'_blank','noopener');toast('실제 톡톡 탭을 열었습니다. 톡톡 챗봇에서 재입고 알림 신청을 이어가세요.')}
+function toggleDrawer(open){document.getElementById('drawer').classList.toggle('open',open)}function renderStockDrawer(){const p=products.find(x=>x.no===document.getElementById('stockProduct').value)||selectedProduct;document.getElementById('stockRows').innerHTML=colorNames.map(c=>{const qty=Number(stock[p.no][c]||0), k=p.no+'|'+c, waiting=waitlists[k]||0;return `<div class="stock-row ${qty<=0?'sold':''}"><div class="stock-row-top"><div><b>${optionLabel(p,c)}</b><div class="stock-state">현재 ${qty}개 · 대기 ${waiting}명</div></div><span>${qty<=0?'품절':'판매중'}</span></div><div class="stock-controls"><input type="number" min="0" value="${qty}" id="stock_${p.no}_${c}"><button onclick="applyStock('${p.no}','${c}')">재고 반영</button></div></div>`}).join('');document.getElementById('stockLog').textContent=logs.length?logs.slice(0,8).join('\n\n'):'아직 발송 로그가 없습니다.'}
+async function applyStock(productNo,color){const p=products.find(x=>x.no===productNo);const input=document.getElementById(`stock_${productNo}_${color}`);const before=Number(stock[productNo][color]||0);const after=Math.max(0,Number(input.value||0));stock[productNo][color]=after;persist();logs.unshift(`[재고 반영] ${p.name}\n${color}: ${before}개 → ${after}개`);if(before<=0&&after>0){const waiting=waitlists[productNo+'|'+color]||0;logs.unshift(`[재입고 알림 발송] ${p.name}\n${color} 재입고 · 톡톡 알림 ${waiting}건 발송 완료`);try{await fetch(API_BASE+'/api/naver-talk-webhook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'admin.update_stock',option_id:optKey(p,color),stock_quantity:after})})}catch(e){console.warn('remote stock update failed',e)}toast(`재입고 처리 완료 · 톡톡 알림 ${waiting}건 발송`)}else{toast('재고가 반영되었습니다.')}if(selectedProduct.no===productNo){renderOptions();if(selectedColor===color&&after<=0)resetOption()}renderGrid();renderStockDrawer()}
+function openFaq(){document.getElementById('dim').classList.add('on');document.getElementById('faq').classList.add('on')}function closeFaq(){document.getElementById('dim').classList.remove('on');document.getElementById('faq').classList.remove('on')}document.getElementById('dim').addEventListener('click',()=>{document.getElementById('dim').classList.remove('on');document.getElementById('alert').classList.remove('on');document.getElementById('faq').classList.remove('on')});function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('on'),2800)}init();
+</script></body></html>
