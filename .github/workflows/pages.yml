@@ -30,6 +30,7 @@ jobs:
           mkdir -p _site
           cp index.html _site/index.html
           cp -R data _site/data
+          cp -R assets _site/assets || true
           cp -R docs _site/docs || true
           touch _site/.nojekyll
           echo "GitHub Pages artifact contents:"
