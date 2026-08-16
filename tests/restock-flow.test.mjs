@@ -19,6 +19,9 @@ assert.doesNotMatch(selectedSoldOut.textContent.text, /로그인 10% 쿠폰/);
 const selectedInStock = await handleEvent({ event: "open", user: "in_stock_user", options: { from: `200000001|${inStockOption.id}` } });
 assert.doesNotMatch(selectedInStock.textContent.text, /알림 받을 채널/);
 
+const reopenedWithoutContext = await handleEvent({ event: "open", user, options: {} });
+assert.equal(reopenedWithoutContext, null, "reopening TalkTalk must not append a fallback message or clear the session");
+
 const completed = await handleEvent({
   event: "send",
   user,
