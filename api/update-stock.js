@@ -25,6 +25,6 @@ export default {
     if (!option) return json({ ok: false, error: "Option not found" }, 404);
 
     const result = await processManualRestockForOption({ optionId, stockQuantity });
-    return json({ ok: true, result });
+    return json({ ok: result.ok !== false, result }, result.ok === false ? 400 : 200);
   }
 };
