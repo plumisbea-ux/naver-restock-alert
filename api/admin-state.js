@@ -1,4 +1,4 @@
-import { db, getOptionById, getProductById, getProductOptions } from "../lib/db.js";
+import { db, getOptionById, getProductById, getProductOptions, hydrateDb } from "../lib/db.js";
 import { json, empty, isPreflight } from "../lib/http.js";
 
 function decorateWaitlist(waitlist) {
@@ -36,6 +36,7 @@ function dashboardMetrics(store) {
 export default {
   async fetch(request) {
     if (isPreflight(request)) return empty();
+    await hydrateDb();
     const store = db();
     return json({
       ok: true,

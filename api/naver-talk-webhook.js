@@ -1,6 +1,6 @@
 import { handleEvent } from "../lib/flow.js";
 import { readJson, json, empty, isPreflight } from "../lib/http.js";
-import { db, getOptionById, getProductById, getProductOptions, resetDb } from "../lib/db.js";
+import { db, getOptionById, getProductById, getProductOptions, hydrateDb, persistDb, resetDb } from "../lib/db.js";
 import { processManualRestockForOption } from "../lib/restock.js";
 
 export const config = {
@@ -85,6 +85,7 @@ async function handleAdminEvent(eventBody) {
 export default {
   async fetch(request) {
     if (isPreflight(request)) return empty();
+    await hydrateDb();
 
     if (request.method === "GET") {
       const url = new URL(request.url);
@@ -108,9 +109,13 @@ export default {
     console.log("[NAVER_TALK_WEBHOOK_MOCK]", JSON.stringify(eventBody));
 
     const adminResponse = await handleAdminEvent(eventBody);
-    if (adminResponse) return json(adminResponse, adminResponse.ok === false ? 400 : 200);
+    if (adminResponse) {
+      await persistDb();
+      return json(adminResponse, adminResponse.ok === false ? 400 : 200);
+    }
 
     const response = await handleEvent(eventBody, request);
+    await persistDb();
     if (!response) return new Response(null, { status: 200 });
 
     return json(response, 200);

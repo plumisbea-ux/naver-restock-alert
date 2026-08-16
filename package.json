@@ -10,6 +10,7 @@
     "zip": "cd .. && zip -r naver-restock-alert-mvp.zip naver-restock-alert-mvp -x 'naver-restock-alert-mvp/node_modules/*'"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "@vercel/functions": "latest"
   },
   "devDependencies": {
