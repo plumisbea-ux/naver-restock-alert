@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { db, getProductByProductNo, resetDb, upsertWaitlist } from "../lib/db.js";
 import { handleEvent } from "../lib/flow.js";
 import { buildRestockText } from "../lib/mockSenders.js";
+import { processManualRestockForOption } from "../lib/restock.js";
 
 resetDb();
 
@@ -23,7 +24,7 @@ const completed = await handleEvent({
   user,
   textContent: { text: "톡톡으로 받기", code: `CHANNEL:NAVER_TALK_ONLY:${product.id}:${soldOutOption.id}` }
 });
-assert.match(completed.textContent.text, /신청이 완료되었습니다/);
+assert.match(completed.textContent.text, /신청이 완료되었어요/);
 assert.match(completed.textContent.text, /해당 옵션이 재입고되면/);
 
 const existing = db().waitlists.find((waitlist) => waitlist.talk_user_id === user && waitlist.option_id === soldOutOption.id);
@@ -34,7 +35,14 @@ assert.equal(existing.status, "WAITING");
 assert.equal(existing.notified_at, null);
 
 const alertText = buildRestockText({ product, option: soldOutOption, waitCount: 1 });
-assert.match(alertText, /\[재입고 안내\]/);
+assert.match(alertText, /재입고 소식/);
 assert.doesNotMatch(alertText, /로그인 10% 쿠폰/);
+
+soldOutOption.stock_quantity = 5;
+existing.status = "WAITING";
+const driftedStock = await processManualRestockForOption({ optionId: soldOutOption.id, stockQuantity: 1 });
+assert.equal(driftedStock.notified_count, 1, "server stock drift must not suppress a waiting customer's alert");
+assert.equal(driftedStock.notified[0].delivery.status, "SENT");
+assert.match(buildRestockText({ product, option: soldOutOption, waitCount: 1 }), /🎉/);
 
 console.log("PASS TalkTalk restock flow");
