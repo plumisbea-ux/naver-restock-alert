@@ -1304,9 +1304,25 @@
     <style>
       .infographic-head {
         display: grid;
-        grid-template-columns: 0.9fr 1.1fr;
-        align-items: end;
-        margin-bottom: 54px;
+        grid-template-columns: 1fr;
+        align-items: start;
+        max-width: 760px;
+        margin-bottom: 42px;
+      }
+      .details {
+        background: #f3f5f4;
+        color: var(--ink);
+      }
+      .details .section-head h2 {
+        max-width: 680px;
+        font-size: clamp(42px, 5vw, 64px);
+        line-height: 1.06;
+      }
+      .details .section-head p {
+        max-width: 560px;
+        color: #596167;
+        font-size: 17px;
+        line-height: 1.65;
       }
       .signal-graphics {
         display: grid;
@@ -1317,16 +1333,25 @@
       }
       .decision-banner {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border-top: 5px solid var(--green);
-        border-right: 1px solid #d9dddc;
-        border-left: 1px solid #d9dddc;
-        background: #fff;
-        color: var(--ink);
+        grid-template-columns: 1.15fr repeat(3, 1fr);
+        margin-bottom: 14px;
+        border: 0;
+        background: #17191b;
+        color: #fff;
+      }
+      .decision-label {
+        display: flex;
+        align-items: center;
+        padding: 24px 28px;
+        border-right: 1px solid #3d4143;
+        color: #20d873;
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1.35;
       }
       .decision-item {
-        padding: 25px 28px 27px;
-        border-right: 1px solid #d9dddc;
+        padding: 24px 28px 26px;
+        border-right: 1px solid #3d4143;
       }
       .decision-item:last-child {
         border-right: 0;
@@ -1334,7 +1359,7 @@
       .decision-item small {
         display: block;
         margin-bottom: 7px;
-        color: #747b80;
+        color: #aeb4b7;
         font-size: 12px;
       }
       .decision-item strong {
@@ -1344,11 +1369,11 @@
         letter-spacing: -0.05em;
       }
       .decision-item:last-child strong {
-        color: var(--green-dark);
+        color: #20d873;
       }
       .signal-card {
-        min-height: 500px;
-        padding: 42px;
+        min-height: 450px;
+        padding: 38px 40px 34px;
         border: 0;
         background: #fff;
         color: var(--ink);
@@ -1356,7 +1381,7 @@
       }
       .signal-card + .signal-card {
         border-left: 1px solid #d9dddc;
-        background: #f6f8f7;
+        background: #fff;
       }
       .signal-title {
         display: flex;
@@ -1376,11 +1401,11 @@
         display: flex;
         align-items: end;
         gap: 12px;
-        margin: 48px 0 42px;
+        margin: 42px 0 38px;
       }
       .timing-hero strong {
         color: var(--green-dark);
-        font-size: 104px;
+        font-size: 92px;
         line-height: 0.8;
         letter-spacing: -0.08em;
         opacity: 0;
@@ -1430,19 +1455,19 @@
         animation: grow39 0.8s 0.75s forwards;
       }
       .timing-callout {
-        margin-top: 38px;
-        padding: 18px 20px;
-        border: 0;
-        background: #17191b;
-        color: #fff;
-        font-size: 18px;
+        margin-top: 34px;
+        padding: 18px 0 0;
+        border-top: 2px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        font-size: 17px;
         font-weight: 900;
       }
       .timing-callout span {
         color: var(--green-dark);
       }
       .stock-summary {
-        display: flex;
+        display: none;
         align-items: end;
         justify-content: space-between;
         margin: 42px 0 30px;
@@ -1465,6 +1490,7 @@
         animation: metricIn 0.55s 0.15s forwards;
       }
       .stock-list {
+        margin-top: 36px;
         border-top: 1px solid var(--ink);
       }
       .stock-row {
@@ -1472,7 +1498,7 @@
         grid-template-columns: 1fr 72px 78px;
         gap: 12px;
         align-items: center;
-        padding: 19px 0;
+        padding: 23px 0;
         border-bottom: 1px solid var(--line);
         opacity: 0;
         transform: translateX(-12px);
@@ -1484,7 +1510,7 @@
       .stock-row b:last-child {
         text-align: right;
         color: var(--green-dark);
-        font-size: 25px;
+        font-size: 30px;
       }
       .signal-card.play .stock-row:nth-child(1) {
         animation: rowIn 0.4s 0.35s forwards;
@@ -1558,13 +1584,18 @@
         .decision-banner {
           grid-template-columns: 1fr;
         }
+        .decision-label {
+          padding: 18px 20px;
+          border-right: 0;
+          border-bottom: 1px solid #3d4143;
+        }
         .decision-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 18px 20px;
           border-right: 0;
-          border-bottom: 1px solid #d9dddc;
+          border-bottom: 1px solid #3d4143;
         }
         .decision-item:last-child {
           border-bottom: 0;
@@ -1753,12 +1784,14 @@
       <section class="details">
         <div class="wrap">
           <div class="section-head infographic-head">
-            <h2>재입고 판단을<br />한 화면에.</h2>
+            <h2>재입고 추천을<br />한눈에.</h2>
             <p>
-              지금 채워야 할 옵션과 시점, 수량만 명확하게 보여드립니다.
+              고객 대기 수요와 구매 전환율을 계산해, 지금 채워야 할 옵션과
+              수량을 바로 보여드립니다.
             </p>
           </div>
           <div class="decision-banner motion-stage">
+            <div class="decision-label">오늘의<br />재입고 결론</div>
             <div class="decision-item"><small>우선 옵션</small><strong>블랙 / 004</strong></div>
             <div class="decision-item"><small>권장 시점</small><strong>3일 이내</strong></div>
             <div class="decision-item"><small>권장 수량</small><strong>14개</strong></div>
