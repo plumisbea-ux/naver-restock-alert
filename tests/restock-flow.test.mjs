@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { db, getProductByProductNo, resetDb, upsertWaitlist } from "../lib/db.js";
 import { handleEvent } from "../lib/flow.js";
 import { buildRestockText } from "../lib/mockSenders.js";
+import { restockApplyPrompt } from "../lib/naverTalkMessages.js";
 import { processManualRestockForOption } from "../lib/restock.js";
 
 resetDb();
@@ -18,6 +19,12 @@ assert.doesNotMatch(selectedSoldOut.textContent.text, /로그인 10% 쿠폰/);
 
 const selectedInStock = await handleEvent({ event: "open", user: "in_stock_user", options: { from: `200000001|${inStockOption.id}` } });
 assert.doesNotMatch(selectedInStock.textContent.text, /알림 받을 채널/);
+
+const soldOutPrompt = restockApplyPrompt(product, [soldOutOption]);
+assert.match(soldOutPrompt.textContent.text, /🛍️ 상품/);
+assert.match(soldOutPrompt.textContent.text, /🚫 현재 품절된 옵션/);
+assert.match(soldOutPrompt.textContent.text, /🎨 품절 옵션/);
+assert.match(soldOutPrompt.textContent.text, /🔔 원하는 옵션/);
 
 const reopenedWithoutContext = await handleEvent({ event: "open", user, options: {} });
 assert.equal(reopenedWithoutContext, null, "reopening TalkTalk must not append a fallback message or clear the session");
