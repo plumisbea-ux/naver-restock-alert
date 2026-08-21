@@ -6,15 +6,16 @@
 .apply-button {
   display: flex;
   width: min(760px, 100%);
-  min-height: 68px;
+  min-height: 92px;
   align-items: center;
   justify-content: center;
   margin: 12px auto 0;
-  border: 1px solid #17191b;
+  padding: 0 34px;
+  border: 0;
   border-radius: 5px;
-  background: #fff;
-  color: #17191b;
-  font-size: 17px;
+  background: var(--green);
+  color: #fff;
+  font-size: 24px;
   font-weight: 900;
   text-decoration: none;
 }
@@ -100,6 +101,11 @@
 @media (max-width: 520px) {
   .hero-demo-button {
     font-size: 24px;
+  }
+
+  .apply-button {
+    min-height: 76px;
+    font-size: 19px;
   }
 
   .journey-stage {
