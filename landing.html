@@ -1316,24 +1316,35 @@
         background: #fff;
       }
       .decision-banner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        padding: 26px 30px;
-        background: var(--green);
-        color: #fff;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 5px solid var(--green);
+        border-right: 1px solid #d9dddc;
+        border-left: 1px solid #d9dddc;
+        background: #fff;
+        color: var(--ink);
       }
-      .decision-banner small {
-        flex: 0 0 auto;
-        font-size: 13px;
-        font-weight: 900;
+      .decision-item {
+        padding: 25px 28px 27px;
+        border-right: 1px solid #d9dddc;
       }
-      .decision-banner strong {
-        font-size: clamp(24px, 3vw, 38px);
-        line-height: 1.2;
-        letter-spacing: -0.045em;
-        text-align: right;
+      .decision-item:last-child {
+        border-right: 0;
+      }
+      .decision-item small {
+        display: block;
+        margin-bottom: 7px;
+        color: #747b80;
+        font-size: 12px;
+      }
+      .decision-item strong {
+        display: block;
+        font-size: clamp(25px, 3vw, 38px);
+        line-height: 1.05;
+        letter-spacing: -0.05em;
+      }
+      .decision-item:last-child strong {
+        color: var(--green-dark);
       }
       .signal-card {
         min-height: 500px;
@@ -1545,13 +1556,24 @@
           border-left: 0;
         }
         .decision-banner {
-          display: block;
-          padding: 23px 20px;
+          grid-template-columns: 1fr;
         }
-        .decision-banner strong {
-          display: block;
-          margin-top: 7px;
-          text-align: left;
+        .decision-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 20px;
+          border-right: 0;
+          border-bottom: 1px solid #d9dddc;
+        }
+        .decision-item:last-child {
+          border-bottom: 0;
+        }
+        .decision-item small {
+          margin: 0;
+        }
+        .decision-item strong {
+          font-size: 25px;
         }
         .infographic-answer {
           grid-template-columns: 1fr;
@@ -1731,15 +1753,15 @@
       <section class="details">
         <div class="wrap">
           <div class="section-head infographic-head">
-            <h2>언제, 무엇을,<br />얼마나.</h2>
+            <h2>재입고 판단을<br />한 화면에.</h2>
             <p>
-              대기 수요와 구매 전환율을 계산해 재입고 순서, 시점, 수량을 바로
-              보여드립니다.
+              지금 채워야 할 옵션과 시점, 수량만 명확하게 보여드립니다.
             </p>
           </div>
           <div class="decision-banner motion-stage">
-            <small>오늘의 재입고 결론</small>
-            <strong>블랙 / 004를 3일 안에 14개 재입고하세요.</strong>
+            <div class="decision-item"><small>우선 옵션</small><strong>블랙 / 004</strong></div>
+            <div class="decision-item"><small>권장 시점</small><strong>3일 이내</strong></div>
+            <div class="decision-item"><small>권장 수량</small><strong>14개</strong></div>
           </div>
           <div class="signal-graphics">
             <article class="signal-card motion-stage">
