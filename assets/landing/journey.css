@@ -31,7 +31,7 @@
 .journey .phone {
   left: 42px;
   top: 44px;
-  z-index: 1;
+  z-index: 4;
   width: 310px;
   border-width: 6px;
   border-radius: 27px;
@@ -46,8 +46,8 @@
 
 .journey .mini-store {
   right: 34px;
-  top: 190px;
-  z-index: 3;
+  top: 210px;
+  z-index: 2;
   width: 400px;
   border-color: #adb4b7;
   box-shadow: 0 24px 55px #00000029;
