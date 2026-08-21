@@ -1303,25 +1303,32 @@
     </style>
     <style>
       .infographic-head {
-        display: grid;
-        grid-template-columns: 1fr;
-        align-items: start;
-        max-width: 760px;
-        margin-bottom: 42px;
+        display: block;
+        max-width: 820px;
+        margin: 0 auto 44px;
+        text-align: center;
       }
       .details {
-        background: #f3f5f4;
+        background: #fff;
         color: var(--ink);
       }
+      .infographic-kicker {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--green-dark);
+        font-size: 18px;
+        font-weight: 900;
+      }
       .details .section-head h2 {
-        max-width: 680px;
-        font-size: clamp(42px, 5vw, 64px);
-        line-height: 1.06;
+        max-width: none;
+        font-size: clamp(38px, 4.5vw, 58px);
+        line-height: 1.1;
       }
       .details .section-head p {
-        max-width: 560px;
-        color: #596167;
-        font-size: 17px;
+        max-width: 620px;
+        margin: 18px auto 0;
+        color: #62696d;
+        font-size: 16px;
         line-height: 1.65;
       }
       .signal-graphics {
@@ -1329,29 +1336,37 @@
         grid-template-columns: 1.05fr 0.95fr;
         gap: 0;
         border: 1px solid #d9dddc;
+        border-radius: 14px;
         background: #fff;
+        box-shadow: 0 8px 24px rgba(20, 35, 28, 0.07);
+        max-width: 960px;
+        margin: 0 auto;
+        overflow: hidden;
       }
       .decision-banner {
         display: grid;
         grid-template-columns: 1.15fr repeat(3, 1fr);
-        margin-bottom: 14px;
-        border: 0;
-        background: #17191b;
-        color: #fff;
+        max-width: 960px;
+        margin: 0 auto 16px;
+        border: 1px solid #bfead0;
+        border-radius: 12px;
+        background: #edfbf3;
+        color: var(--ink);
+        overflow: hidden;
       }
       .decision-label {
         display: flex;
         align-items: center;
         padding: 24px 28px;
-        border-right: 1px solid #3d4143;
-        color: #20d873;
+        border-right: 1px solid #cfe9d9;
+        color: var(--green-dark);
         font-size: 16px;
         font-weight: 900;
         line-height: 1.35;
       }
       .decision-item {
         padding: 24px 28px 26px;
-        border-right: 1px solid #3d4143;
+        border-right: 1px solid #cfe9d9;
       }
       .decision-item:last-child {
         border-right: 0;
@@ -1359,7 +1374,7 @@
       .decision-item small {
         display: block;
         margin-bottom: 7px;
-        color: #aeb4b7;
+        color: #68716c;
         font-size: 12px;
       }
       .decision-item strong {
@@ -1369,7 +1384,7 @@
         letter-spacing: -0.05em;
       }
       .decision-item:last-child strong {
-        color: #20d873;
+        color: var(--green-dark);
       }
       .signal-card {
         min-height: 450px;
@@ -1587,7 +1602,7 @@
         .decision-label {
           padding: 18px 20px;
           border-right: 0;
-          border-bottom: 1px solid #3d4143;
+          border-bottom: 1px solid #cfe9d9;
         }
         .decision-item {
           display: flex;
@@ -1595,7 +1610,7 @@
           justify-content: space-between;
           padding: 18px 20px;
           border-right: 0;
-          border-bottom: 1px solid #3d4143;
+          border-bottom: 1px solid #cfe9d9;
         }
         .decision-item:last-child {
           border-bottom: 0;
@@ -1784,7 +1799,8 @@
       <section class="details">
         <div class="wrap">
           <div class="section-head infographic-head">
-            <h2>재입고 추천을<br />한눈에.</h2>
+            <span class="infographic-kicker">구매 전환 데이터를 통해</span>
+            <h2>재입고 추천을 한눈에.</h2>
             <p>
               고객 대기 수요와 구매 전환율을 계산해, 지금 채워야 할 옵션과
               수량을 바로 보여드립니다.
