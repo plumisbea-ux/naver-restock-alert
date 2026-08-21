@@ -1,3 +1,8 @@
+.hero-demo-button {
+  font-size: 28px;
+  letter-spacing: -.035em;
+}
+
 .journey-stage {
   min-height: 680px;
   background: #f5f7f6;
@@ -77,6 +82,10 @@
 }
 
 @media (max-width: 520px) {
+  .hero-demo-button {
+    font-size: 24px;
+  }
+
   .journey-stage {
     min-height: 700px;
     padding: 0;
