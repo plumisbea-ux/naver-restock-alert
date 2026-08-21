@@ -337,4 +337,4 @@ async function advanceTour(){if(tourIndex<0)return;const current=tourSteps[tourI
 function endTour(showToast=true){clearTourTarget();tourIndex=-1;setMask(null);document.getElementById('tourCard').classList.remove('on');document.getElementById('tourPointer').classList.remove('on');if(showToast)toast('튜토리얼을 종료했습니다.')}
 addEventListener('resize',()=>{if(tourIndex>=0&&tourElement){setMask(tourElement);placeTour(tourElement)}});addEventListener('scroll',()=>{if(tourIndex>=0&&tourElement){setMask(tourElement);placeTour(tourElement)}},{passive:true});
 const pageParams=new URLSearchParams(location.search);if(pageParams.get('tutorial')==='1')setTimeout(startTour,700);else if(!pageParams.get('productNo'))setTimeout(()=>document.getElementById('tourWelcome').classList.add('on'),500);
-</script></body></html>
+</script><link rel="stylesheet" href="assets/tutorial.css"></body></html>

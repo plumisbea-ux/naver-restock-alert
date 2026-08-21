@@ -1,0 +1,44 @@
+.tour-actions button:first-child {
+  height: 28px;
+  padding: 0 9px;
+  border-color: #d8dcde;
+  color: #747b80;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.tour-pointer {
+  width: 32px !important;
+  height: 40px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  animation: tourCursorClick 1.25s ease-in-out infinite !important;
+}
+
+.tour-pointer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 28px;
+  height: 36px;
+  background: #fff;
+  clip-path: polygon(0 0, 0 29px, 8px 21px, 14px 35px, 19px 32px, 13px 19px, 27px 19px);
+  filter: drop-shadow(1px 0 0 #111) drop-shadow(-1px 0 0 #111) drop-shadow(0 1px 0 #111) drop-shadow(0 -1px 0 #111);
+}
+
+.tour-pointer::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 5px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #03c75a;
+  border-radius: 50%;
+  opacity: 0;
+  animation: tourClickRing 1.25s ease-out infinite;
+}
