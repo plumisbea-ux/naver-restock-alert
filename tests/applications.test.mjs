@@ -7,13 +7,11 @@ test("stores applications and protects applicant data", async () => {
   const payload = {
     store_name: "테스트 스토어",
     store_url: "https://smartstore.naver.com/test",
-    soldout_cycle: "매주",
+    soldout_rate_pct: 35,
     contact_name: "담당자",
     phone: "010-1234-5678",
     email: "seller@example.com",
-    contact_date: "2026-08-25",
-    contact_time_start: "13:00",
-    contact_time_end: "15:00",
+    contact_availability: "8월 25일 이후 평일 오후 1시~5시",
     request_details: "옵션별 수요 확인",
     privacy_consent: true
   };

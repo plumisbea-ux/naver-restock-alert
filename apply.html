@@ -1,1 +1,386 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>데모 신청 | 재입고신호</title><meta name="description" content="네이버 스토어 재입고신호 데모 사용을 신청합니다."><style>:root{--ink:#17191b;--muted:#646b70;--line:#dfe3e5;--green:#03c75a;--soft:#f4f6f5}*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:Arial,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--soft);word-break:keep-all}.wrap{width:min(920px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid var(--line);background:#fff}.nav{height:68px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:19px;font-weight:900;letter-spacing:-.05em;text-decoration:none}.brand span{color:var(--green)}.nav a:last-child{color:#555;font-size:13px}.intro{padding:70px 0 35px}.intro h1{max-width:700px;margin:0;font-size:clamp(42px,7vw,72px);line-height:1.02;letter-spacing:-.065em}.intro p{max-width:640px;margin:22px 0 0;color:var(--muted);font-size:18px;line-height:1.65}.form-card{margin-bottom:90px;padding:42px;border:1px solid #cdd2d4;background:#fff}.section-title{margin:0 0 24px;padding-bottom:15px;border-bottom:1px solid var(--ink);font-size:20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 18px}.field.full{grid-column:1/-1}label{display:block;margin-bottom:8px;font-size:13px;font-weight:900}label small{margin-left:5px;color:var(--muted);font-weight:400}input,select,textarea{width:100%;border:1px solid #bfc5c8;border-radius:3px;background:#fff;color:var(--ink);font:inherit}input,select{height:50px;padding:0 13px}textarea{min-height:130px;padding:13px;resize:vertical}.time-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.consent{display:flex;align-items:flex-start;gap:9px;margin:28px 0 20px;padding:17px;background:#f5f7f6;color:#555;font-size:12px;line-height:1.6}.consent input{flex:0 0 auto;width:18px;height:18px;margin-top:1px}.submit{width:100%;height:62px;border:0;border-radius:4px;background:var(--green);color:#fff;font-size:18px;font-weight:900;cursor:pointer}.submit:disabled{opacity:.55;cursor:wait}.status{min-height:22px;margin:13px 0 0;color:#c62828;font-size:13px;text-align:center}.success{display:none;margin-bottom:90px;padding:70px 30px;border:1px solid #bfc5c8;background:#fff;text-align:center}.success.on{display:block}.success strong{display:block;color:#008d41;font-size:54px}.success h2{margin:12px 0;font-size:30px}.success p{color:var(--muted);line-height:1.65}.success a{display:inline-flex;height:48px;align-items:center;margin-top:15px;padding:0 20px;border:1px solid var(--ink);border-radius:4px;text-decoration:none;font-weight:900}.hp{position:absolute;left:-9999px}@media(max-width:650px){.intro{padding:48px 0 28px}.form-card{padding:26px 20px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.time-grid{grid-template-columns:1fr}.intro h1{font-size:44px}}</style></head><body><header><div class="wrap nav"><a class="brand" href="landing.html">재입고<span>신호</span></a><a href="landing.html">서비스 안내로 돌아가기</a></div></header><main class="wrap"><section class="intro"><h1>스토어 데이터로<br>직접 확인해 보세요.</h1><p>신청 내용을 확인한 뒤 연락드려 실제 스토어에 맞춘 데모 사용 일정을 안내합니다.</p></section><form class="form-card" id="applicationForm"><h2 class="section-title">스토어 정보</h2><div class="grid"><div class="field"><label for="storeName">스토어명</label><input id="storeName" name="store_name" maxlength="100" required></div><div class="field"><label for="storeUrl">스토어 URL</label><input id="storeUrl" name="store_url" type="url" placeholder="https://smartstore.naver.com/..." required></div><div class="field full"><label for="soldoutCycle">품절 주기</label><select id="soldoutCycle" name="soldout_cycle" required><option value="">선택해 주세요</option><option>매주 품절 상품이 발생합니다</option><option>월 1~3회 발생합니다</option><option>시즌·행사 때 집중적으로 발생합니다</option><option>상시 품절 옵션이 있습니다</option><option>잘 모르겠습니다</option></select></div></div><h2 class="section-title" style="margin-top:38px">담당자 및 연락 일정</h2><div class="grid"><div class="field"><label for="contactName">담당자명</label><input id="contactName" name="contact_name" maxlength="80" required></div><div class="field"><label for="phone">연락처</label><input id="phone" name="phone" inputmode="tel" placeholder="010-0000-0000" required></div><div class="field full"><label for="email">메일</label><input id="email" name="email" type="email" required></div><div class="field full"><label>연락 가능한 일자 및 시간 <small>한국 시간 기준</small></label><div class="time-grid"><input name="contact_date" type="date" required><input name="contact_time_start" type="time" required aria-label="연락 가능 시작 시간"><input name="contact_time_end" type="time" required aria-label="연락 가능 종료 시간"></div></div><div class="field full"><label for="requestDetails">기타 요청 사항 <small>선택</small></label><textarea id="requestDetails" name="request_details" maxlength="2000" placeholder="현재 품절 관리 방식, 확인하고 싶은 기능 등을 적어주세요."></textarea></div></div><input class="hp" name="website" tabindex="-1" autocomplete="off"><label class="consent"><input name="privacy_consent" type="checkbox" required><span>데모 신청 처리와 연락을 위해 스토어명, URL, 담당자명, 연락처, 메일, 희망 일정을 수집·이용하는 것에 동의합니다. 신청 정보는 데모 상담 목적으로만 사용합니다.</span></label><button class="submit" type="submit">데모 사용 신청하기</button><p class="status" id="formStatus" aria-live="polite"></p></form><section class="success" id="success"><strong>신청 완료</strong><h2>확인 후 연락드리겠습니다.</h2><p>신청 정보가 안전하게 접수되었습니다.<br>선택하신 일자와 시간을 참고해 데모 진행을 안내합니다.</p><a href="landing.html">서비스 안내 다시 보기</a></section></main><script>const API_BASE='https://naver-restock-alert.vercel.app';const form=document.getElementById('applicationForm'),statusEl=document.getElementById('formStatus');form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('.submit');button.disabled=true;statusEl.textContent='';const data=Object.fromEntries(new FormData(form));data.privacy_consent=form.elements.privacy_consent.checked;try{const response=await fetch(API_BASE+'/api/demo-applications',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const result=await response.json();if(!response.ok||!result.ok)throw new Error(result.error||'신청 접수에 실패했습니다.');form.style.display='none';document.getElementById('success').classList.add('on');scrollTo({top:0,behavior:'smooth'})}catch(error){statusEl.textContent=error.message}finally{button.disabled=false}});</script></body></html>
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>데모 신청 | 재입고신호</title>
+    <link rel="stylesheet" href="assets/global-nav.css" />
+    <meta
+      name="description"
+      content="네이버 스토어 재입고신호 데모 사용을 신청합니다."
+    />
+    <style>
+      :root {
+        --ink: #17191b;
+        --muted: #646b70;
+        --line: #dfe3e5;
+        --green: #03c75a;
+        --soft: #f4f6f5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        background: var(--soft);
+        word-break: keep-all;
+      }
+      .wrap {
+        width: min(920px, calc(100% - 32px));
+        margin: auto;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+      .nav {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        font-size: 19px;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        text-decoration: none;
+      }
+      .brand span {
+        color: var(--green);
+      }
+      .nav a:last-child {
+        color: #555;
+        font-size: 13px;
+      }
+      .intro {
+        padding: 70px 0 35px;
+      }
+      .intro h1 {
+        max-width: 700px;
+        margin: 0;
+        font-size: clamp(42px, 7vw, 72px);
+        line-height: 1.02;
+        letter-spacing: -0.065em;
+      }
+      .intro p {
+        max-width: 640px;
+        margin: 22px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.65;
+      }
+      .form-card {
+        margin-bottom: 90px;
+        padding: 42px;
+        border: 1px solid #cdd2d4;
+        background: #fff;
+      }
+      .section-title {
+        margin: 0 0 24px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--ink);
+        font-size: 20px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px 18px;
+      }
+      .field.full {
+        grid-column: 1/-1;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      label small {
+        margin-left: 5px;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid #bfc5c8;
+        border-radius: 3px;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+      }
+      input,
+      select {
+        height: 50px;
+        padding: 0 13px;
+      }
+      textarea {
+        min-height: 130px;
+        padding: 13px;
+        resize: vertical;
+      }
+      .time-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+      }
+      .consent {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin: 28px 0 20px;
+        padding: 17px;
+        background: #f5f7f6;
+        color: #555;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .consent input {
+        flex: 0 0 auto;
+        width: 18px;
+        height: 18px;
+        margin-top: 1px;
+      }
+      .submit {
+        width: 100%;
+        height: 62px;
+        border: 0;
+        border-radius: 4px;
+        background: var(--green);
+        color: #fff;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      .submit:disabled {
+        opacity: 0.55;
+        cursor: wait;
+      }
+      .status {
+        min-height: 22px;
+        margin: 13px 0 0;
+        color: #c62828;
+        font-size: 13px;
+        text-align: center;
+      }
+      .success {
+        display: none;
+        margin-bottom: 90px;
+        padding: 70px 30px;
+        border: 1px solid #bfc5c8;
+        background: #fff;
+        text-align: center;
+      }
+      .success.on {
+        display: block;
+      }
+      .success strong {
+        display: block;
+        color: #008d41;
+        font-size: 54px;
+      }
+      .success h2 {
+        margin: 12px 0;
+        font-size: 30px;
+      }
+      .success p {
+        color: var(--muted);
+        line-height: 1.65;
+      }
+      .success a {
+        display: inline-flex;
+        height: 48px;
+        align-items: center;
+        margin-top: 15px;
+        padding: 0 20px;
+        border: 1px solid var(--ink);
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 900;
+      }
+      .hp {
+        position: absolute;
+        left: -9999px;
+      }
+      @media (max-width: 650px) {
+        .intro {
+          padding: 48px 0 28px;
+        }
+        .form-card {
+          padding: 26px 20px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .field.full {
+          grid-column: auto;
+        }
+        .time-grid {
+          grid-template-columns: 1fr;
+        }
+        .intro h1 {
+          font-size: 44px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="landing.html">재입고<span>신호</span></a
+        ><nav class="global-nav" aria-label="주요 페이지">
+          <a href="landing.html">랜딩 페이지</a>
+          <a href="index.html?tutorial=1">데모 페이지</a>
+          <a href="apply.html" aria-current="page">신청 페이지</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <section class="intro">
+        <h1>스토어 데이터로<br />직접 확인해 보세요.</h1>
+        <p>
+          신청 내용을 확인한 뒤 연락드려 실제 스토어에 맞춘 데모 사용 일정을
+          안내합니다.
+        </p>
+      </section>
+      <form class="form-card" id="applicationForm">
+        <h2 class="section-title">스토어 정보</h2>
+        <div class="grid">
+          <div class="field">
+            <label for="storeName">스토어명</label
+            ><input id="storeName" name="store_name" maxlength="100" required />
+          </div>
+          <div class="field">
+            <label for="storeUrl">스토어 URL</label
+            ><input
+              id="storeUrl"
+              name="store_url"
+              type="url"
+              placeholder="https://smartstore.naver.com/..."
+              required
+            />
+          </div>
+          <div class="field full">
+            <label for="soldoutRate"
+              >월간 평균 품절률
+              <small>대표 상품 1개가 한 달 중 품절 상태인 시간의 비율</small></label
+            ><input
+              id="soldoutRate"
+              name="soldout_rate_pct"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+              placeholder="예: 한 달 중 약 10일 품절이면 33"
+              required
+            />
+          </div>
+        </div>
+        <h2 class="section-title" style="margin-top: 38px">
+          담당자 및 연락 일정
+        </h2>
+        <div class="grid">
+          <div class="field">
+            <label for="contactName">담당자명</label
+            ><input
+              id="contactName"
+              name="contact_name"
+              maxlength="80"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="phone">연락처</label
+            ><input
+              id="phone"
+              name="phone"
+              inputmode="tel"
+              placeholder="010-0000-0000"
+              required
+            />
+          </div>
+          <div class="field full">
+            <label for="email">메일</label
+            ><input id="email" name="email" type="email" required />
+          </div>
+          <div class="field full">
+            <label for="contactAvailability"
+              >연락 가능한 일자 및 시간 <small>자유롭게 적어주세요</small></label
+            ><textarea
+              id="contactAvailability"
+              name="contact_availability"
+              maxlength="500"
+              placeholder="예: 8월 25일 이후 평일 오후 1시~5시, 금요일 제외"
+              required
+            ></textarea>
+          </div>
+          <div class="field full">
+            <label for="requestDetails"
+              >기타 요청 사항 <small>선택</small></label
+            ><textarea
+              id="requestDetails"
+              name="request_details"
+              maxlength="2000"
+              placeholder="현재 품절 관리 방식, 확인하고 싶은 기능 등을 적어주세요."
+            ></textarea>
+          </div>
+        </div>
+        <input
+          class="hp"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+        /><label class="consent"
+          ><input name="privacy_consent" type="checkbox" required /><span
+            >데모 신청 처리와 연락을 위해 스토어명, URL, 담당자명, 연락처, 메일,
+            희망 일정을 수집·이용하는 것에 동의합니다. 신청 정보는 데모 상담
+            목적으로만 사용합니다.</span
+          ></label
+        ><button class="submit" type="submit">데모 사용 신청하기</button>
+        <p class="status" id="formStatus" aria-live="polite"></p>
+      </form>
+      <section class="success" id="success">
+        <strong>신청 완료</strong>
+        <h2>확인 후 연락드리겠습니다.</h2>
+        <p>
+          신청 정보가 안전하게 접수되었습니다.<br />선택하신 일자와 시간을
+          참고해 데모 진행을 안내합니다.
+        </p>
+        <a href="landing.html">서비스 안내 다시 보기</a>
+      </section>
+    </main>
+    <script>
+      const API_BASE = "https://naver-restock-alert.vercel.app";
+      const form = document.getElementById("applicationForm"),
+        statusEl = document.getElementById("formStatus");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = form.querySelector(".submit");
+        button.disabled = true;
+        statusEl.textContent = "";
+        const data = Object.fromEntries(new FormData(form));
+        data.privacy_consent = form.elements.privacy_consent.checked;
+        try {
+          const response = await fetch(API_BASE + "/api/demo-applications", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          const result = await response.json();
+          if (!response.ok || !result.ok)
+            throw new Error(result.error || "신청 접수에 실패했습니다.");
+          form.style.display = "none";
+          document.getElementById("success").classList.add("on");
+          scrollTo({ top: 0, behavior: "smooth" });
+        } catch (error) {
+          statusEl.textContent = error.message;
+        } finally {
+          button.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -20,19 +20,17 @@ function validate(body) {
     id: makeId("application"),
     store_name: text(body.store_name, 100),
     store_url: text(body.store_url, 500),
-    soldout_cycle: text(body.soldout_cycle, 80),
+    soldout_rate_pct: Number(body.soldout_rate_pct),
     contact_name: text(body.contact_name, 80),
     phone: text(body.phone, 40),
     email: text(body.email, 180).toLowerCase(),
-    contact_date: text(body.contact_date, 20),
-    contact_time_start: text(body.contact_time_start, 10),
-    contact_time_end: text(body.contact_time_end, 10),
+    contact_availability: text(body.contact_availability, 500),
     request_details: text(body.request_details, 2000),
     privacy_consent: body.privacy_consent === true,
     status: "NEW",
     created_at: nowIso()
   };
-  if (!application.store_name || !application.store_url || !application.soldout_cycle || !application.contact_name || !application.phone || !application.email || !application.contact_date || !application.contact_time_start || !application.contact_time_end) return { error: "필수 항목을 모두 입력해 주세요." };
+  if (!application.store_name || !application.store_url || !Number.isFinite(application.soldout_rate_pct) || application.soldout_rate_pct < 0 || application.soldout_rate_pct > 100 || !application.contact_name || !application.phone || !application.email || !application.contact_availability) return { error: "필수 항목을 모두 입력해 주세요." };
   try {
     const url = new URL(application.store_url);
     if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error();
