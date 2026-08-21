@@ -1304,29 +1304,56 @@
     <style>
       .infographic-head {
         display: grid;
-        grid-template-columns: 0.8fr 1.2fr;
+        grid-template-columns: 0.9fr 1.1fr;
         align-items: end;
+        margin-bottom: 54px;
       }
       .signal-graphics {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 0;
+        border: 1px solid #d9dddc;
+        background: #fff;
+      }
+      .decision-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 26px 30px;
+        background: var(--green);
+        color: #fff;
+      }
+      .decision-banner small {
+        flex: 0 0 auto;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      .decision-banner strong {
+        font-size: clamp(24px, 3vw, 38px);
+        line-height: 1.2;
+        letter-spacing: -0.045em;
+        text-align: right;
       }
       .signal-card {
-        min-height: 480px;
-        padding: 36px;
-        border: 1px solid #4a4f52;
+        min-height: 500px;
+        padding: 42px;
+        border: 0;
         background: #fff;
         color: var(--ink);
         overflow: hidden;
+      }
+      .signal-card + .signal-card {
+        border-left: 1px solid #d9dddc;
+        background: #f6f8f7;
       }
       .signal-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: 18px;
-        border-bottom: 1px solid var(--line);
-        font-size: 14px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #cfd4d2;
+        font-size: 16px;
         font-weight: 900;
       }
       .signal-title span {
@@ -1338,20 +1365,21 @@
         display: flex;
         align-items: end;
         gap: 12px;
-        margin: 42px 0 34px;
+        margin: 48px 0 42px;
       }
       .timing-hero strong {
         color: var(--green-dark);
-        font-size: 88px;
+        font-size: 104px;
         line-height: 0.8;
         letter-spacing: -0.08em;
         opacity: 0;
         transform: translateY(16px);
       }
       .timing-hero div {
-        font-size: 18px;
+        padding-bottom: 3px;
+        font-size: 20px;
         font-weight: 900;
-        line-height: 1.25;
+        line-height: 1.3;
       }
       .timing-bars {
         display: grid;
@@ -1369,8 +1397,8 @@
         font-size: 16px;
       }
       .timing-track {
-        height: 18px;
-        background: #e9edeb;
+        height: 12px;
+        background: #e7ebe9;
       }
       .timing-track i {
         display: block;
@@ -1391,10 +1419,12 @@
         animation: grow39 0.8s 0.75s forwards;
       }
       .timing-callout {
-        margin-top: 34px;
-        padding: 18px 0 0;
-        border-top: 1px solid var(--ink);
-        font-size: 20px;
+        margin-top: 38px;
+        padding: 18px 20px;
+        border: 0;
+        background: #17191b;
+        color: #fff;
+        font-size: 18px;
         font-weight: 900;
       }
       .timing-callout span {
@@ -1404,15 +1434,17 @@
         display: flex;
         align-items: end;
         justify-content: space-between;
-        margin: 31px 0 25px;
+        margin: 42px 0 30px;
       }
       .stock-summary div {
-        font-size: 17px;
+        max-width: 150px;
+        font-size: 18px;
         font-weight: 900;
+        line-height: 1.35;
       }
       .stock-summary strong {
         color: var(--green-dark);
-        font-size: 58px;
+        font-size: 72px;
         line-height: 0.9;
         letter-spacing: -0.07em;
         opacity: 0;
@@ -1429,18 +1461,19 @@
         grid-template-columns: 1fr 72px 78px;
         gap: 12px;
         align-items: center;
-        padding: 17px 0;
+        padding: 19px 0;
         border-bottom: 1px solid var(--line);
         opacity: 0;
         transform: translateX(-12px);
       }
       .stock-row small {
         color: var(--muted);
+        font-size: 12px;
       }
       .stock-row b:last-child {
         text-align: right;
         color: var(--green-dark);
-        font-size: 23px;
+        font-size: 25px;
       }
       .signal-card.play .stock-row:nth-child(1) {
         animation: rowIn 0.4s 0.35s forwards;
@@ -1452,16 +1485,13 @@
         animation: rowIn 0.4s 0.75s forwards;
       }
       .stock-reason {
-        margin-top: 21px;
+        margin-top: 24px;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 12px;
+        line-height: 1.6;
       }
       .infographic-answer {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        margin-top: 28px;
-        border-top: 1px solid #555;
-        border-bottom: 1px solid #555;
+        display: none;
       }
       .infographic-answer strong {
         padding: 20px;
@@ -1510,6 +1540,19 @@
         .signal-graphics {
           grid-template-columns: 1fr;
         }
+        .signal-card + .signal-card {
+          border-top: 1px solid #d9dddc;
+          border-left: 0;
+        }
+        .decision-banner {
+          display: block;
+          padding: 23px 20px;
+        }
+        .decision-banner strong {
+          display: block;
+          margin-top: 7px;
+          text-align: left;
+        }
         .infographic-answer {
           grid-template-columns: 1fr;
         }
@@ -1531,10 +1574,10 @@
           padding: 26px 20px;
         }
         .timing-hero strong {
-          font-size: 68px;
+          font-size: 76px;
         }
         .stock-summary strong {
-          font-size: 48px;
+          font-size: 58px;
         }
         .stock-row {
           grid-template-columns: 1fr 54px 62px;
@@ -1690,9 +1733,13 @@
           <div class="section-head infographic-head">
             <h2>재입고 추천을<br />한눈에.</h2>
             <p>
-              입고 타이밍과 추천 수량을 설명이 아니라 바로 판단할 수 있는
-              화면으로 제공합니다.
+              품절 수요와 구매 전환율을 계산해, 지금 채워야 할 옵션과 수량을
+              바로 보여드립니다.
             </p>
+          </div>
+          <div class="decision-banner motion-stage">
+            <small>오늘의 재입고 결론</small>
+            <strong>블랙 / 004를 3일 안에 14개 재입고하세요.</strong>
           </div>
           <div class="signal-graphics">
             <article class="signal-card motion-stage">
