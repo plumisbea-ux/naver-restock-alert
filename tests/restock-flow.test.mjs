@@ -29,6 +29,7 @@ const completed = await handleEvent({
 });
 assert.match(completed.textContent.text, /신청이 완료되었어요/);
 assert.match(completed.textContent.text, /해당 옵션이 재입고되면/);
+assert.match(completed.textContent.text, /이제 데모 페이지로 돌아가주세요/);
 
 const existing = db().waitlists.find((waitlist) => waitlist.talk_user_id === user && waitlist.option_id === soldOutOption.id);
 existing.status = "NOTIFIED";
