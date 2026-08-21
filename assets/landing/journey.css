@@ -3,6 +3,22 @@
   letter-spacing: -.035em;
 }
 
+.apply-button {
+  display: flex;
+  width: min(760px, 100%);
+  min-height: 68px;
+  align-items: center;
+  justify-content: center;
+  margin: 12px auto 0;
+  border: 1px solid #17191b;
+  border-radius: 5px;
+  background: #fff;
+  color: #17191b;
+  font-size: 17px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .journey-stage {
   min-height: 680px;
   background: #f5f7f6;
