@@ -278,7 +278,7 @@
           ? rows
               .map(
                 (item) =>
-                  `<article class="application"><div class="application-head"><div><h2>${esc(item.store_name)}</h2><a href="${esc(item.store_url)}" target="_blank" rel="noopener">스토어 열기</a></div><div class="date">${new Date(item.created_at).toLocaleString("ko-KR")}</div></div><div class="data"><div class="datum"><small>월간 평균 품절률</small><b>${esc(item.soldout_rate_pct)}%</b></div><div class="datum"><small>담당자</small><b>${esc(item.contact_name)}</b></div><div class="datum"><small>연락 가능 일정</small><b>${esc(item.contact_availability)}</b></div><div class="datum"><small>연락처</small><a href="tel:${esc(item.phone)}">${esc(item.phone)}</a></div><div class="datum"><small>메일</small><a href="mailto:${esc(item.email)}">${esc(item.email)}</a></div><div class="datum"><small>상태</small><b>${esc(item.status)}</b></div></div>${item.request_details ? `<div class="request">${esc(item.request_details)}</div>` : ""}</article>`,
+                  `<article class="application"><div class="application-head"><div><h2>${esc(item.store_name)}</h2><a href="${esc(item.store_url)}" target="_blank" rel="noopener">스토어 열기</a></div><div class="date">${new Date(item.created_at).toLocaleString("ko-KR")}</div></div><div class="data"><div class="datum"><small>월간 품절 수준</small><b>${esc(item.soldout_rate_pct)}%</b></div><div class="datum"><small>품절 문의 빈도</small><b>${esc(item.inquiry_frequency || "-")}</b></div><div class="datum"><small>담당자</small><b>${esc(item.contact_name)}</b></div><div class="datum"><small>연락 가능 일정</small><b>${esc(item.contact_availability)}</b></div><div class="datum"><small>연락처</small><a href="tel:${esc(item.phone)}">${esc(item.phone)}</a></div><div class="datum"><small>메일</small><a href="mailto:${esc(item.email)}">${esc(item.email)}</a></div><div class="datum"><small>상태</small><b>${esc(item.status)}</b></div></div>${item.request_details ? `<div class="request">${esc(item.request_details)}</div>` : ""}</article>`,
               )
               .join("")
           : '<div class="empty">신청 내역이 없습니다.</div>';
@@ -319,6 +319,7 @@
             "store_name",
             "store_url",
             "soldout_rate_pct",
+            "inquiry_frequency",
             "contact_name",
             "phone",
             "email",

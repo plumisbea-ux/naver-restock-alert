@@ -8,6 +8,7 @@ test("stores applications and protects applicant data", async () => {
     store_name: "테스트 스토어",
     store_url: "https://smartstore.naver.com/test",
     soldout_rate_pct: 35,
+    inquiry_frequency: "자주 있음",
     contact_name: "담당자",
     phone: "010-1234-5678",
     email: "seller@example.com",

@@ -21,6 +21,7 @@ function validate(body) {
     store_name: text(body.store_name, 100),
     store_url: text(body.store_url, 500),
     soldout_rate_pct: Number(body.soldout_rate_pct),
+    inquiry_frequency: text(body.inquiry_frequency, 40),
     contact_name: text(body.contact_name, 80),
     phone: text(body.phone, 40),
     email: text(body.email, 180).toLowerCase(),
@@ -30,7 +31,7 @@ function validate(body) {
     status: "NEW",
     created_at: nowIso()
   };
-  if (!application.store_name || !application.store_url || !Number.isFinite(application.soldout_rate_pct) || application.soldout_rate_pct < 0 || application.soldout_rate_pct > 100 || !application.contact_name || !application.phone || !application.email || !application.contact_availability) return { error: "필수 항목을 모두 입력해 주세요." };
+  if (!application.store_name || !application.store_url || !Number.isFinite(application.soldout_rate_pct) || application.soldout_rate_pct < 0 || application.soldout_rate_pct > 100 || !application.inquiry_frequency || !application.contact_name || !application.phone || !application.email || !application.contact_availability) return { error: "필수 항목을 모두 입력해 주세요." };
   try {
     const url = new URL(application.store_url);
     if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error();

@@ -1300,6 +1300,163 @@
           border-right: 0;
         }
       }
+      .hero .actions {
+        display: grid;
+        gap: 10px;
+        max-width: 520px;
+      }
+      .hero-primary,
+      .hero-secondary {
+        display: flex;
+        min-height: 72px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        font-size: 19px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+      .hero-primary {
+        background: var(--green);
+        color: #fff;
+      }
+      .hero-secondary {
+        border: 1px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+      }
+      .hero-support {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .problem,
+      .beta,
+      .faq {
+        padding: 100px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .problem {
+        background: #17191b;
+        color: #fff;
+      }
+      .problem-inner {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .problem h2,
+      .beta h2,
+      .faq h2 {
+        font-size: clamp(38px, 5vw, 62px);
+        line-height: 1.08;
+        letter-spacing: -0.055em;
+      }
+      .problem-copy {
+        display: grid;
+        gap: 22px;
+        color: #c7ccca;
+        font-size: 20px;
+        line-height: 1.6;
+      }
+      .problem-copy strong {
+        color: #20d873;
+      }
+      .report-example-label {
+        font-size: 11px;
+      }
+      .details-note {
+        max-width: 960px;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: left;
+      }
+      .beta {
+        background: #f4f7f5;
+        text-align: center;
+      }
+      .beta p {
+        margin: 18px auto 34px;
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .beta-points {
+        display: flex;
+        justify-content: center;
+        margin: 0 0 34px;
+        padding: 0;
+        list-style: none;
+      }
+      .beta-points li {
+        padding: 0 22px;
+        border-right: 1px solid #cdd3d0;
+        font-weight: 900;
+      }
+      .beta-points li:last-child {
+        border-right: 0;
+      }
+      .beta-button {
+        display: flex;
+        width: min(660px, 100%);
+        min-height: 86px;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        border-radius: 5px;
+        background: var(--green);
+        color: #fff;
+        font-size: 23px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+      .faq-inner {
+        max-width: 900px;
+      }
+      .faq h2 {
+        margin-bottom: 42px;
+      }
+      .faq details {
+        border-top: 1px solid var(--ink);
+      }
+      .faq details:last-child {
+        border-bottom: 1px solid var(--ink);
+      }
+      .faq summary {
+        padding: 22px 4px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 900;
+      }
+      .faq details p {
+        margin: 0;
+        padding: 0 4px 24px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .demo .demo-button {
+        background: var(--green);
+      }
+      .demo .apply-button {
+        border: 1px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+      }
+      @media (max-width: 850px) {
+        .problem-inner {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+        .beta-points {
+          display: grid;
+          gap: 12px;
+        }
+        .beta-points li {
+          padding: 0;
+          border-right: 0;
+        }
+      }
     </style>
     <style>
       .infographic-head {
@@ -1671,16 +1828,14 @@
           <div>
             <h1>품절 고객을<br />다시 구매로.</h1>
             <p class="hero-copy">
-              고객이 품절 옵션을 발견한 순간부터 재입고 알림을 받고 돌아와
-              구매할 때까지 연결합니다.
+              품절된 옵션을 사고 싶었던 고객의 구매 의사를 저장하고,
+              재입고되는 순간 다시 상품으로 연결합니다.
             </p>
             <div class="actions">
-              <a
-                class="button green hero-demo-button"
-                href="demo.html?tutorial=1"
-                >5분 데모 시작</a
-              >
+              <a class="hero-primary" href="apply.html">내 상품으로 무료 테스트하기</a>
+              <a class="hero-secondary" href="demo.html?tutorial=1">먼저 5분 데모 보기</a>
             </div>
+            <div class="hero-support">상품 1~3개 · 초기 세팅 지원 · 결과 리포트 제공</div>
           </div>
           <div
             class="stage motion-stage"
@@ -1713,6 +1868,15 @@
               class="click-ring store-ring"
               style="left: 72%; top: 56%"
             ></span>
+          </div>
+        </div>
+      </section>
+      <section class="problem">
+        <div class="wrap problem-inner">
+          <h2>품절된 순간,<br />고객은 어디로 갈까요?</h2>
+          <div class="problem-copy">
+            <p>구매 버튼은 사라지고, 판매자는 누가 기다리는지도 알 수 없습니다.</p>
+            <p>재입고신호는 그 고객을 <strong>놓친 방문자가 아닌 구매 대기 수요</strong>로 저장합니다.</p>
           </div>
         </div>
       </section>
@@ -1815,7 +1979,7 @@
           <div class="signal-graphics">
             <article class="signal-card motion-stage">
               <div class="signal-title">
-                재입고 골든타임<span>최근 90일</span>
+                재입고 골든타임<span class="report-example-label">결과 리포트 예시</span>
               </div>
               <div class="timing-hero">
                 <strong>76%</strong>
@@ -1871,20 +2035,41 @@
             ><strong>몇 개를 채울지</strong>
           </div>
           <div class="details-note">
-            화면의 수치는 서비스 설명을 위한 가상 데이터입니다.
+            * 아래 수치는 서비스 이해를 위한 가상 데이터입니다. 실제 서비스에서는 해당 스토어의 데이터를 기준으로 계산합니다.
           </div>
+        </div>
+      </section>
+      <section class="beta">
+        <div class="wrap">
+          <h2>우리 스토어에서도<br />필요한지 확인해 보세요.</h2>
+          <p>자주 품절되는 상품부터 작은 범위로 무료 테스트합니다.</p>
+          <ul class="beta-points">
+            <li>상품 1~3개</li><li>초기 세팅 지원</li><li>실제 고객 반응 테스트</li><li>결과 리포트 제공</li><li>무료</li>
+          </ul>
+          <a class="beta-button" href="apply.html">품절 상품으로 무료 테스트하기</a>
+        </div>
+      </section>
+      <section class="faq">
+        <div class="wrap faq-inner">
+          <h2>신청 전에<br />많이 묻는 질문</h2>
+          <details open><summary>고객은 어떻게 신청하나요?</summary><p>품절 옵션에서 톡톡을 통해 원하는 옵션의 재입고 알림을 신청합니다.</p></details>
+          <details><summary>재입고는 어떻게 확인하나요?</summary><p>실서비스에서는 커머스 API 연동을 통해 상품과 옵션의 재고 변화를 감지합니다.</p></details>
+          <details><summary>고객에게 어떻게 알려주나요?</summary><p>재입고 알림을 신청한 고객에게 해당 상품 링크와 함께 톡톡으로 안내합니다.</p></details>
+          <details><summary>실제 구매까지 확인할 수 있나요?</summary><p>알림 링크 클릭과 주문 데이터를 상품·옵션·시간 기준으로 분석해 구매 전환을 추적합니다.</p></details>
+          <details><summary>처음부터 모든 상품에 적용해야 하나요?</summary><p>아닙니다. 품절이 자주 발생하는 상품 1~3개로 무료 테스트부터 시작할 수 있습니다.</p></details>
+          <details><summary>신청 데이터는 어떻게 사용하나요?</summary><p>테스트 준비와 연락에 필요한 정보만 수집하며, 신청 목적 외에는 사용하지 않습니다.</p></details>
         </div>
       </section>
       <section class="demo">
         <div class="wrap demo-grid">
-          <h2>이 흐름을 직접 작동해 보세요.</h2>
+          <h2>품절되는 동안<br />구매 의사까지 놓치지 마세요.</h2>
           <p>
             품절 옵션 확인부터 톡톡 신청, 재고 반영과 알림 발송까지 안내에 따라
             체험합니다.
           </p>
-          <a class="demo-button" href="demo.html?tutorial=1"
-            ><span>지금 데모 시작</span></a
-          ><a class="apply-button" href="apply.html">사용 신청하기</a>
+          <a class="demo-button" href="apply.html"
+            ><span>내 상품으로 무료 테스트하기</span></a
+          ><a class="apply-button" href="demo.html?tutorial=1">먼저 5분 데모 보기</a>
         </div>
       </section>
     </main>
