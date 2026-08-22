@@ -3564,7 +3564,9 @@
 
     <script>
       const TALK_URL = "https://talk.naver.com/ct/wocay2r";
-      const DEFAULT_API_BASE = "https://naver-restock-alert.vercel.app";
+      const DEFAULT_API_BASE = location.hostname.endsWith("github.io")
+        ? "https://naver-restock-alert.vercel.app"
+        : location.origin;
       const API_BASE =
         localStorage.getItem("RESTOCK_API_BASE") || DEFAULT_API_BASE;
       const categories = [

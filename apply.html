@@ -408,7 +408,9 @@
       </section>
     </main>
     <script>
-      const API_BASE = "https://naver-restock-alert.vercel.app";
+      const API_BASE = location.hostname.endsWith("github.io")
+        ? "https://naver-restock-alert.vercel.app"
+        : location.origin;
       const form = document.getElementById("applicationForm"),
         statusEl = document.getElementById("formStatus");
       form.addEventListener("submit", async (event) => {
