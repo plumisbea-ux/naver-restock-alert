@@ -10,6 +10,7 @@ resetDb();
 const user = "talk_test_user";
 const product = getProductByProductNo("200000001");
 const soldOutOption = db().product_options.find((option) => option.id === "opt_knit_black_004");
+const smsSoldOutOption = db().product_options.find((option) => option.id === "opt_knit_black_005");
 const inStockOption = db().product_options.find((option) => option.id === "opt_knit_navy_004");
 
 const selectedSoldOut = await handleEvent({ event: "open", user, options: { from: `200000001|${soldOutOption.id}` } });
@@ -39,6 +40,25 @@ assert.match(completed.textContent.text, /해당 옵션이 재입고되면/);
 await new Promise((resolve) => setTimeout(resolve, 700));
 const returnGuide = db().message_logs.find((log) => log.message_type === "TUTORIAL_RETURN_GUIDE");
 assert.match(returnGuide.payload.body.textContent.text, /이제 데모 페이지로 돌아가주세요/);
+
+const smsUser = "talk_sms_user";
+await handleEvent({ event: "open", user: smsUser, options: { from: `200000001|${smsSoldOutOption.id}` } });
+await handleEvent({
+  event: "send",
+  user: smsUser,
+  textContent: { text: "톡톡 + SMS로 받기", code: `CHANNEL:SMS:${product.id}:${smsSoldOutOption.id}` }
+});
+const smsCompleted = await handleEvent({
+  event: "profile",
+  user: smsUser,
+  options: { result: "SUCCESS", cellphone: "01062926096" }
+});
+assert.match(smsCompleted.textContent.text, /SMS 수신 정보가 연결되었습니다/);
+await new Promise((resolve) => setTimeout(resolve, 700));
+const smsReturnGuide = db().message_logs.find(
+  (log) => log.message_type === "TUTORIAL_RETURN_GUIDE" && log.payload.body.user === smsUser
+);
+assert.match(smsReturnGuide.payload.body.textContent.text, /이제 데모 페이지로 돌아가주세요/);
 
 const existing = db().waitlists.find((waitlist) => waitlist.talk_user_id === user && waitlist.option_id === soldOutOption.id);
 existing.status = "NOTIFIED";

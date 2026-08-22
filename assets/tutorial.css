@@ -47,7 +47,7 @@
   height: 36px;
   background: #fff;
   clip-path: polygon(0 0, 0 29px, 8px 21px, 14px 35px, 19px 32px, 13px 19px, 27px 19px);
-  filter: drop-shadow(1px 0 0 #111) drop-shadow(-1px 0 0 #111) drop-shadow(0 1px 0 #111) drop-shadow(0 -1px 0 #111);
+  filter: drop-shadow(2px 0 0 #111) drop-shadow(-2px 0 0 #111) drop-shadow(0 2px 0 #111) drop-shadow(0 -2px 0 #111);
 }
 
 .tour-pointer::after {
