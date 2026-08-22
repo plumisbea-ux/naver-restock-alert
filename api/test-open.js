@@ -9,7 +9,7 @@ function buildMockOpenEvent(productNo, user = "al-2eGuGr5WQOnco1_V-FQ") {
     user,
     options: {
       inflow: "button",
-      referer: `https://plumisbea-ux.github.io/naver-restock-alert/?productNo=${product.product_no}`,
+      referer: `https://plumisbea-ux.github.io/naver-restock-alert/demo.html?productNo=${product.product_no}`,
       from: String(product.product_no),
       friend: false,
       under14: false,

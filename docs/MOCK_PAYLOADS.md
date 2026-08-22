@@ -10,7 +10,7 @@
   "user": "al-2eGuGr5WQOnco1_V-FQ",
   "options": {
     "inflow": "button",
-    "referer": "https://plumisbea-ux.github.io/naver-restock-alert/?productNo=200000001",
+    "referer": "https://plumisbea-ux.github.io/naver-restock-alert/demo.html?productNo=200000001",
     "from": "200000001",
     "friend": false,
     "under14": false,
