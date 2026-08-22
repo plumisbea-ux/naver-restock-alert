@@ -1411,6 +1411,47 @@
         font-weight: 900;
         text-decoration: none;
       }
+      .scope {
+        padding: 100px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .scope-head {
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 70px;
+        margin-bottom: 42px;
+      }
+      .scope h2 {
+        font-size: clamp(38px, 5vw, 62px);
+        line-height: 1.08;
+        letter-spacing: -0.055em;
+      }
+      .scope-head p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.7;
+      }
+      .scope-list {
+        border-top: 1px solid var(--ink);
+      }
+      .scope-row {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 30px;
+        padding: 22px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .scope-row strong {
+        color: var(--green-dark);
+      }
+      .scope-row p {
+        margin: 0;
+        color: #555d61;
+        line-height: 1.65;
+      }
+      .scope-row.sms strong {
+        color: #8a5a00;
+      }
       .faq-inner {
         max-width: 900px;
       }
@@ -1444,9 +1485,14 @@
         color: var(--ink);
       }
       @media (max-width: 850px) {
-        .problem-inner {
+        .problem-inner,
+        .scope-head {
           grid-template-columns: 1fr;
           gap: 30px;
+        }
+        .scope-row {
+          grid-template-columns: 1fr;
+          gap: 7px;
         }
         .beta-points {
           display: grid;
@@ -2042,11 +2088,25 @@
       <section class="beta">
         <div class="wrap">
           <h2>우리 스토어에서도<br />필요한지 확인해 보세요.</h2>
-          <p>자주 품절되는 상품부터 작은 범위로 무료 테스트합니다.</p>
+          <p>신청 후 최대한 빠르게 연락드려 연결 범위와 일정을 확인합니다.</p>
           <ul class="beta-points">
-            <li>상품 1~3개</li><li>초기 세팅 지원</li><li>실제 고객 반응 테스트</li><li>결과 리포트 제공</li><li>무료</li>
+            <li>최대 상품 3개</li><li>최대 메시지 30건</li><li>약 2주~1개월</li><li>초기 세팅 지원</li><li>무료</li>
           </ul>
           <a class="beta-button" href="apply.html">품절 상품으로 무료 테스트하기</a>
+        </div>
+      </section>
+      <section class="scope">
+        <div class="wrap">
+          <div class="scope-head">
+            <h2>테스트 범위를<br />먼저 알려드립니다.</h2>
+            <p>신청 내용을 확인한 뒤 최대한 빠르게 연락드립니다. 스토어 연결에 필요한 경우 커머스 API 등 일부 연동 API 키 제공을 요청할 수 있습니다.</p>
+          </div>
+          <div class="scope-list">
+            <div class="scope-row"><strong>테스트 제공</strong><p>최대 3개 상품의 품절 옵션을 약 2주~1개월 추적하고, 톡톡 재입고 메시지를 최대 30건 발송합니다. 정확한 기간은 상품과 연동 환경을 확인한 뒤 안내합니다.</p></div>
+            <div class="scope-row"><strong>구매 전환 분석</strong><p>테스트 중 연결 가능한 알림 클릭·주문 데이터를 기준으로 결과 리포트를 제공합니다.</p></div>
+            <div class="scope-row"><strong>API 연결</strong><p>상품·옵션 재고 확인과 결과 분석을 위해 필요한 범위의 API 연동 정보를 요청할 수 있습니다.</p></div>
+            <div class="scope-row sms"><strong>SMS 발송</strong><p>현재 SMS 발송은 일시적으로 비활성화되어 있습니다. 연동 복구 후 별도로 제공할 예정이며, 현재 테스트는 톡톡 알림을 중심으로 진행합니다.</p></div>
+          </div>
         </div>
       </section>
       <section class="faq">

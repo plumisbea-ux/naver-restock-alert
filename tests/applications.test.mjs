@@ -10,7 +10,7 @@ test("stores applications and protects applicant data", async () => {
     soldout_rate_pct: 35,
     inquiry_frequency: "자주 있음",
     contact_name: "담당자",
-    phone: "010-1234-5678",
+    phone: "",
     email: "seller@example.com",
     contact_availability: "8월 25일 이후 평일 오후 1시~5시",
     request_details: "옵션별 수요 확인",
@@ -27,4 +27,11 @@ test("stores applications and protects applicant data", async () => {
   const result = await allowed.json();
   assert.equal(allowed.status, 200);
   assert.equal(result.applications[0].store_name, payload.store_name);
+
+  const phoneOnly = await handler.fetch(new Request("http://localhost/api/demo-applications", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...payload, phone: "010-1234-5678", email: "" })
+  }));
+  assert.equal(phoneOnly.status, 201, "phone-only contact must be accepted");
 });

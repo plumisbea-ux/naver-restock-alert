@@ -31,15 +31,15 @@ function validate(body) {
     status: "NEW",
     created_at: nowIso()
   };
-  if (!application.store_name || !application.store_url || !Number.isFinite(application.soldout_rate_pct) || application.soldout_rate_pct < 0 || application.soldout_rate_pct > 100 || !application.inquiry_frequency || !application.contact_name || !application.phone || !application.email || !application.contact_availability) return { error: "필수 항목을 모두 입력해 주세요." };
+  if (!application.store_name || !application.store_url || !Number.isFinite(application.soldout_rate_pct) || application.soldout_rate_pct < 0 || application.soldout_rate_pct > 100 || !application.inquiry_frequency || !application.contact_name || (!application.phone && !application.email) || !application.contact_availability) return { error: "필수 항목을 모두 입력해 주세요." };
   try {
     const url = new URL(application.store_url);
     if (url.protocol !== "https:" && url.protocol !== "http:") throw new Error();
   } catch {
     return { error: "스토어 URL을 확인해 주세요." };
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(application.email)) return { error: "메일 주소를 확인해 주세요." };
-  if (application.phone.replace(/\D/g, "").length < 9) return { error: "연락처를 확인해 주세요." };
+  if (application.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(application.email)) return { error: "메일 주소를 확인해 주세요." };
+  if (application.phone && application.phone.replace(/\D/g, "").length < 9) return { error: "연락처를 확인해 주세요." };
   if (!application.privacy_consent) return { error: "개인정보 수집 및 이용에 동의해 주세요." };
   return { application };
 }

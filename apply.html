@@ -77,6 +77,43 @@
         border: 1px solid #cdd2d4;
         background: #fff;
       }
+      .process-note {
+        margin-bottom: 24px;
+        padding: 24px 26px;
+        border: 1px solid #bfc5c8;
+        background: #f5f7f6;
+      }
+      .process-note strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 17px;
+      }
+      .process-note p {
+        margin: 0;
+        color: #555d61;
+        font-size: 14px;
+        line-height: 1.75;
+      }
+      .process-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px 24px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .process-list li {
+        padding-top: 11px;
+        border-top: 1px solid #d5dad7;
+        color: #555d61;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .process-list b {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ink);
+      }
       .section-title {
         margin: 0 0 24px;
         padding-bottom: 15px;
@@ -221,6 +258,9 @@
         .time-grid {
           grid-template-columns: 1fr;
         }
+        .process-list {
+          grid-template-columns: 1fr;
+        }
         .intro h1 {
           font-size: 44px;
         }
@@ -245,6 +285,15 @@
           반복 품절 상품 1~3개로 무료 테스트하고 결과 리포트까지 확인합니다.
         </p>
       </section>
+      <aside class="process-note">
+        <strong>신청 후 진행 과정</strong>
+        <ul class="process-list">
+          <li><b>연락</b>신청 확인 후 최대한 빠르게 연락드립니다.</li>
+          <li><b>연동</b>필요한 경우 일부 API 키 제공을 요청할 수 있습니다.</li>
+          <li><b>무료 테스트</b>최대 3개 상품 · 톡톡 메시지 최대 30건 · 약 2주~1개월</li>
+          <li><b>SMS</b>현재 비활성화 상태이며 연동 복구 후 별도로 제공합니다.</li>
+        </ul>
+      </aside>
       <form class="form-card" id="applicationForm">
         <h2 class="section-title">1. 품절 상황 자가진단</h2>
         <div class="grid">
@@ -300,18 +349,17 @@
             />
           </div>
           <div class="field">
-            <label for="phone">연락처</label
+            <label for="phone">연락처 <small>메일과 둘 중 하나 필수</small></label
             ><input
               id="phone"
               name="phone"
               inputmode="tel"
               placeholder="010-0000-0000"
-              required
             />
           </div>
           <div class="field full">
-            <label for="email">메일</label
-            ><input id="email" name="email" type="email" required />
+            <label for="email">메일 <small>연락처와 둘 중 하나 필수</small></label
+            ><input id="email" name="email" type="email" />
           </div>
           <div class="field full">
             <label for="contactAvailability"
@@ -354,7 +402,7 @@
         <h2>확인 후 연락드리겠습니다.</h2>
         <p>
           신청 정보가 안전하게 접수되었습니다.<br />선택하신 일자와 시간을
-          참고해 데모 진행을 안내합니다.
+          참고해 최대한 빠르게 테스트 진행을 안내합니다.
         </p>
         <a href="landing.html">서비스 안내 다시 보기</a>
       </section>
@@ -370,6 +418,11 @@
         statusEl.textContent = "";
         const data = Object.fromEntries(new FormData(form));
         data.privacy_consent = form.elements.privacy_consent.checked;
+        if (!data.phone.trim() && !data.email.trim()) {
+          statusEl.textContent = "연락처 또는 메일 중 하나를 입력해 주세요.";
+          button.disabled = false;
+          return;
+        }
         try {
           const response = await fetch(API_BASE + "/api/demo-applications", {
             method: "POST",
